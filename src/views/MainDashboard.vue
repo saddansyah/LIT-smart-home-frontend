@@ -4,6 +4,7 @@ import TheWelcome from "@/components/TheWelcome.vue";
 
 <template>
   <main>
-    <TheWelcome />
+    <!-- <TheWelcome /> -->
+    <h1>This is main dashboard</h1>
   </main>
 </template>

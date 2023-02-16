@@ -1,7 +1,12 @@
 <script setup>
+import { ref } from "vue";
 import { RouterLink, RouterView } from "vue-router";
+
 import HelloWorld from "./components/HelloWorld.vue";
 import LogoSVG from "./assets/logo.svg?component";
+
+const username = ref("saddansyah")
+
 </script>
 
 <template>
@@ -9,16 +14,23 @@ import LogoSVG from "./assets/logo.svg?component";
     <LogoSVG alt="Vite logo" class="logo" />
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld msg="Smart Home " />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink :to="{ name: 'Login' }">Login</RouterLink>
+        <RouterLink :to="{ name: 'Register' }">Register</RouterLink>
+
+        <RouterLink to="/">Dashboard</RouterLink>
+        <RouterLink to="/energy-consumption">Energy Consumption</RouterLink>
+        <RouterLink to="/devices">Devices</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/user">{{ username }}</RouterLink>
       </nav>
     </div>
   </header>
 
-  <RouterView />
+  <RouterView :username="username"/>
+  <RouterView :username="username" name="HiddenView"/>
 </template>
 
 <style scoped>

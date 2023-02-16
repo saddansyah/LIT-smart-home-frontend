@@ -8,18 +8,19 @@ import RegisterView from "@/views/RegisterView.vue";
 import EnergyConsumptionView from "@/views/EnergyConsumptionView.vue";
 import DevicesView from "@/views/DevicesView.vue";
 import UserView from "@/views/UserView.vue";
-import HiddenView from "@/views/HiddenView.vue";
+import NotFound from "@/views/NotFound.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      // name: "Home",
-      components: {
-        default: MainDashboard,
-        HiddenView: HiddenView
-      },
+      name: "Main Dashboard",
+      component: MainDashboard
+    },
+    {
+      path: "/main-dashboard",
+      redirect: "/"
     },
     {
       path: "/about",
@@ -52,6 +53,11 @@ const router = createRouter({
       name: "Register",
       component: RegisterView,
     },
+    {
+      path: '/:catchAll(.*)',
+      name: 'NotFound',
+      component: NotFound,
+    }
   ],
 });
 

@@ -3,13 +3,13 @@ import { ref } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 
 import Navbar from "./components/Navbar.vue";
+import Breadcrumbs from "./components/Breadcrumbs.vue";
 
 const username = ref("saddansyah");
 </script>
 
 <template>
-  <div class="">
-    <Navbar> 
+    <Navbar>
       <template #main-dashboard>
         <RouterLink to="/">Dashboard</RouterLink>
       </template>
@@ -23,17 +23,16 @@ const username = ref("saddansyah");
         <RouterLink to="/about">About</RouterLink>
       </template>
       <template #user>
-        <RouterLink to="/user">{{ username }}</RouterLink>
+        <RouterLink class="flex justify-center items-center" to="/user">{{ username }}<v-icon end icon="mdi-account-outline"></v-icon></RouterLink>
       </template>
     </Navbar>
-    
+
     <!-- Login and Register Button -->
-    
+
     <!-- <RouterLink :to="{ name: 'Login' }">Login</RouterLink>
     <RouterLink :to="{ name: 'Register' }">Register</RouterLink> -->
-    
+
     <RouterView :username="username" />
-  </div>
 </template>
 
 <style scoped></style>

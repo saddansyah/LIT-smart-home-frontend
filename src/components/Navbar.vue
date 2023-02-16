@@ -1,7 +1,13 @@
+<script setup>
+import Breadcrumbs from "./Breadcrumbs.vue";
+</script>
+
 <template>
-  <nav class="px-2 sm:px-4 bg-gray-900">
-    <div class="container flex flex-wrap items-center justify-between mx-auto">
-      <a href="/" class="flex items-center">
+  <nav class="px-2 sm:px-4 bg-slate-800">
+    <div
+      class="container p-4 flex flex-wrap items-center justify-between mx-auto"
+    >
+      <a href="/" class="flex items-center md:mb-4 lg:mb-0">
         <img
           src="https://flowbite.com/docs/images/logo.svg"
           class="h-6 mr-3 sm:h-9"
@@ -37,7 +43,7 @@
 
       <div class="hidden w-full md:block md:w-auto" id="navbar-default">
         <ul
-          class="flex flex-col p-2 my-2 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-base"
+          class="flex flex-col rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-base"
         >
           <li>
             <a
@@ -64,16 +70,13 @@
             ></span>
           </li>
           <li>
-            <div
-              class="block">
-              <v-chip size="large" color="primary" variant="elevated">
+            <v-chip class="user-button" size="large" color="blue-darken-1" variant="outlined">
                 <slot name="user"></slot>
-                <v-icon end icon="mdi-account-outline"></v-icon>
-              </v-chip>
-            </div>
+            </v-chip>
           </li>
         </ul>
       </div>
     </div>
   </nav>
+  <Breadcrumbs />
 </template>

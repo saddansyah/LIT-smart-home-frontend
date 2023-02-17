@@ -3,7 +3,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 </script>
 
 <template>
-  <nav class="px-2 sm:px-4 bg-slate-800">
+  <nav class=" bg-slate-800 fixed top-0 right-0 left-0 z-20">
     <div
       class="container p-4 flex flex-wrap items-center justify-between mx-auto"
     >
@@ -70,13 +70,13 @@ import Breadcrumbs from "./Breadcrumbs.vue";
             ></span>
           </li>
           <li>
-            <v-chip class="user-button" size="large" color="blue-darken-1" variant="outlined">
+            <v-chip class="user-button hover:font-bold hover:bg-blue-900" size="large" color="blue-darken-1" variant="outlined">
                 <slot name="user"></slot>
             </v-chip>
           </li>
         </ul>
       </div>
     </div>
+    <Breadcrumbs/>
   </nav>
-  <Breadcrumbs />
 </template>

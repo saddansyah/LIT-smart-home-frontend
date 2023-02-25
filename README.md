@@ -1,8 +1,6 @@
 <h1 align="center">
   ⚡ Smart Home - LIT
 </h1>
-<p align="center">[Saddan Syah Akbar](https://github.com/saddansyah) | [Muhammaf Arif Hidayat](https://github.com/mhmd-arif)</p>
-
 
 ## ❓ About 
 Smart Home - LIT adalah project untuk menampilkan dashboard dan device management di sebuah rumah. Untuk pengembangan, _database_ yang digunakan menggunakan _dummy_ _database_ karena tidak tersambung secara langsung dengan hardware melalui protokol MQTT.
@@ -45,3 +43,7 @@ npm run build
 - vite.config.js        # config file for vite bundler
 - package.json          # dependency and npm scripts
 ```
+
+## 👨‍💻 Contributor
+- [Saddan Syah Akbar](https://github.com/saddansyah)
+- [Muhammad Arif Hidayat](https://github.com/mhmd-arif)

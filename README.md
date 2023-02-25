@@ -1,7 +1,7 @@
 <h1 align="center">
   ⚡ Smart Home - LIT
 </h1>
-<p align="center">Saddan Syah Akbar | Muhammaf Arif Hidayat</p>
+<p align="center">[Saddan Syah Akbar](https://github.com/saddansyah) | [Muhammaf Arif Hidayat](https://github.com/mhmd-arif)</p>
 
 
 ## ❓ About 

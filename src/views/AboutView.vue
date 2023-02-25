@@ -1,9 +1,32 @@
 <template>
   <main class="container p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
-    <h1 class="text-2xl font-bold md:mt-12 lg:mt-0 lg:text-4xl">About</h1>
+    <div class="prose max-w-none">
+      <div v-html="markdownToHtml"></div>
+    </div>
   </main>
 </template>
 
-<style lang="scss">
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { marked } from "marked";
 
-</style>
+const markdown = ref("");
+
+onMounted(() => {
+  const getData = async () => {
+    const response = await fetch(
+      "./README.md"
+      );
+      const data = await response.text();
+      markdown.value = data;
+    };
+    getData();
+  });
+  
+  const markdownToHtml = computed(() => {
+    return marked(markdown.value);
+  });
+
+</script>
+
+<style lang="scss"></style>

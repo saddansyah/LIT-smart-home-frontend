@@ -4,6 +4,7 @@ import { RouterLink, RouterView } from "vue-router";
 
 import Navbar from "./components/Navbar.vue";
 import Breadcrumbs from "./components/Breadcrumbs.vue";
+import Footer from "./components/Footer.vue";
 
 const username = ref("saddansyah");
 </script>
@@ -11,7 +12,7 @@ const username = ref("saddansyah");
 <template>
     <Navbar>
       <template #main-dashboard>
-        <RouterLink to="/">Dashboard</RouterLink>
+        <RouterLink to="/">Main Dashboard</RouterLink>
       </template>
       <template #energy-consumption>
         <RouterLink to="/energy-consumption">Energy Consumption</RouterLink>
@@ -33,6 +34,8 @@ const username = ref("saddansyah");
     <RouterLink :to="{ name: 'Register' }">Register</RouterLink> -->
 
     <RouterView :username="username" />
+
+    <Footer/>
 </template>
 
 <style scoped></style>

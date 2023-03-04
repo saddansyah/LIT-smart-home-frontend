@@ -1,6 +1,6 @@
 <template>
   <div
-    class="inline-block max-w-sm h-20 w-48 lg:h-24 lg:w-64 px-4 mr-5 bg-gray-100 rounded-xl shadow hover:bg-gray-200"
+    class="inline-block max-w-sm h-20 w-48 lg:h-24 lg:w-64 px-4 mr-5 bg-slate-50 rounded-xl shadow hover:bg-gray-200"
   >
     <div class="flex flex-row h-full w-full items-center justify-between">
       <div class="content-left flex flex-row items-center gap-4">

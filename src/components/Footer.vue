@@ -1,7 +1,7 @@
 <template>
   <footer class="mt-12">
     <div
-      class="bg-white p-4 text-center text-neutral-700"
+      class="p-4 text-center text-neutral-700"
     >
       © 2023 Copyright:
       <a

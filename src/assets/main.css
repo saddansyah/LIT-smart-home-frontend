@@ -1,3 +1,10 @@
 @import "./tailwind.css";
 @import "./base.css";
 
+.router-link-active {
+  @apply text-white;
+}
+
+.user-button:has(.router-link-active) {
+  @apply text-white font-bold bg-blue-500;
+}

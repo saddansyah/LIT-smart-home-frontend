@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white relative z-20 shadow">
+  <div class="bg-slate-100 relative z-20 shadow">
     <div class="container mx-auto h-fit">
       <v-breadcrumbs :items="breadcrumbs" class="py-2">
         <template #divider>
@@ -11,22 +11,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const x = 2;
+const routePath = computed(() => route.fullPath)
+const breadcrumbs = ref(["Home", ""]);
 
-const breadcrumbs = ref([
-  {
-    title: "Home",
-    disabled: false,
-    href: "/",
-  },
-  {
-    title: "Child Path",
-    disabled: false,
-    href: "/",
-  },
-]);
+watch(routePath, () => {
+  const newPath = routePath.value.split('/');
+  newPath.shift()
+  breadcrumbs.value = ["Home", ...newPath]
+});
+
 </script>

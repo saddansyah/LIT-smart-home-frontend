@@ -11,9 +11,9 @@
     </div>
     <div class="lg:text-xl font-semibold">
         <h3 class="mb-3">Your Energy Consumption</h3>
-        <!-- Card 1 -->
         <div class="grid lg:grid-rows-3 lg:grid-cols-6 gap-6 h-fit">
-          <div class="flex flex-col gap-8 md:col-span-2 lg:row-span-2 lg:col-span-2 lg:row-start-1 p-6 bg-gray-100 rounded-xl shadow hover:bg-gray-200">
+          <!-- Card 1 -->
+          <div class="flex flex-col gap-8 md:col-span-2 lg:row-span-2 lg:col-span-2 lg:row-start-1 p-6 bg-slate-50 rounded-xl shadow hover:bg-gray-200">
             <div class="content-top flex flex-row justify-between">
               <div class="content-top-left items-center gap-2">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Total Energy Today</h3>
@@ -27,17 +27,20 @@
               <div class="text-6xl lg:text-8xl">⚡</div>
               <div>
                 <h3 class="text-6xl lg:text-8xl font-bold">12</h3>
-                <h1 class="text-xl lg:text-2xl">kilowatt-hour (kWh)</h1>
+                <h1 class="text-xl lg:text-2xl text-gray-600">kilowatt-hour (kWh)</h1>
               </div>
             </div>
             <div class="daily-goal">
               <h3 class="font-bold text-lg inline-block">Daily Goal:</h3>
               <div> (//////////////.....................................) </div>
-              <h4 class="text-base">40% from <span class="font-bold">30 kWh</span></h4>
+              <div class="text-bottom flex justify-between">
+                <p class="text-base">40% from <span class="font-bold">30 kWh</span></p>
+                <p class="text-base underline text-gray-400">Set your goals here</p>
+              </div>
             </div>
           </div>
           <!-- Card 2 -->
-          <div class="flex flex-col gap-6 md:col-span-1 lg:row-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-gray-100 rounded-xl shadow hover:bg-gray-200">
+          <div class="flex flex-col gap-6 md:col-span-1 lg:row-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-slate-50 ounded-xl shadow hover:bg-gray-200">
             <div class="content-top flex flex-row justify-between gap-8">
               <h3 class="font-bold text-xl inline-block">Daily Highest Devices Consumption</h3>
               <a href="/"><h3 class="text-base underline text-gray-400">View All</h3></a>
@@ -54,7 +57,7 @@
             </div>
           </div>
           <!-- Card 3 -->
-          <div class="inline-block row-span-3 md:col-span-3 lg:row-span-3 lg:col-span-4 p-6 bg-gray-100 rounded-xl shadow hover:bg-gray-200">
+          <div class="inline-block row-span-3 md:col-span-3 lg:row-span-3 lg:col-span-4 p-6 bg-slate-50 rounded-xl shadow hover:bg-gray-200">
             <div class="content-top flex flex-row justify-between">
               <div class="content-top-left items-center gap-2">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Daily Energy Consumption</h3>
@@ -72,7 +75,7 @@
 <script setup>
   import { ref } from 'vue';
 
-  import FavoriteDevicesCard from '@/components/FavoriteDevicesCard.vue'
+  import { FavoriteDevicesCard } from "@/utils/componentLoader.js";
 
   const favoriteDevices = ref([
     {id: 1, name: 'Lampu1', state: 'ON', icon: 'mdi-ceiling-light'},

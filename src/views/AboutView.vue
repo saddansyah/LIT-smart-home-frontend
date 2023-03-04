@@ -1,5 +1,5 @@
 <template>
-  <main class="container p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
+  <main class="container px-4 py-8 mx-auto mt-32 md:mt-40 lg:mt-32 bg-slate-50 rounded shadow-sm">
     <div class="prose max-w-none">
       <div v-html="markdownToHtml"></div>
     </div>

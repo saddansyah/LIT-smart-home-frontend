@@ -15,7 +15,11 @@ import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const routePath = computed(() => route.fullPath)
+
+const routePath = computed({
+  get: () => route.fullPath
+});
+
 const breadcrumbs = ref(["Home", ""]);
 
 watch(routePath, () => {

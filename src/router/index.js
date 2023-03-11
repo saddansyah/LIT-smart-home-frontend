@@ -21,11 +21,17 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: LoginView,
+      meta: {
+        title: "Login to Smart Home | Smart Home"
+      }
     },
     {
       path: "/register",
       name: "Register",
       component: RegisterView,
+      meta: {
+        title: "Register to Smart Home | Smart Home"
+      }
     },
     {
       path: "/",
@@ -33,40 +39,58 @@ const router = createRouter({
       component: Home,
       children: [
         {
-          path: "",
-          redirect: "main-dashboard"
+          path: "main-dashboard",
+          redirect: ""
         },
         {
-          path: "main-dashboard",
+          path: "",
           name: "Main Dashboard",
           component: MainDashboard,
+          meta: {
+            title: "Main Dashboard | Smart Home"
+          }
         },
         {
           path: "about",
           name: "About",
           component: AboutView,
+          meta: {
+            title: "About | Smart Home"
+          }
         },
         {
           path: "energy-consumption",
           name: "Energy Consumption",
           component: EnergyConsumptionView,
+          meta: {
+            title: "Energy Consumption | Smart Home"
+          }
         },
         {
           path: "devices",
           name: "Devices",
           component: DevicesView,
+          meta: {
+            title: "Devices | Smart Home"
+          }
         },
         {
           path: "devices/:deviceId",
           name: "Device Details",
           component: DeviceDetailsView,
           props: true,
+          meta: {
+            title: "Devices | Smart Home"
+          }
         },
         {
           path: "user",
           name: "User",
           component: UserView,
-          props: true
+          props: true,
+          meta: {
+            title: "User | Smart Home"
+          }
         },
       ]
     },
@@ -74,8 +98,16 @@ const router = createRouter({
       path: '/:catchAll(.*)',
       name: 'NotFound',
       component: NotFound,
+      meta: {
+        title: "Not Found :( | Smart Home"
+      }
     }
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  document.title = `${to.meta.title}`;
+  next();
 });
 
 

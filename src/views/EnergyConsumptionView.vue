@@ -15,7 +15,8 @@
     </div>
     <div class="main-container flex lg:flex-row lg:gap-12 w-full h-full">
       <div class="card rounded w-64 h-fit shadow">
-        <v-list density="compact" nav class="bg-slate-50">
+        <v-list density="compact" nav class="bg-slate-50" return-object>
+          <v-list-subheader>Pick Category View</v-list-subheader>
           <v-list-item active-color="#1d4ed8" prepend-icon="mdi-view-dashboard" title="All" value="all"></v-list-item>
           <v-list-item active-color="#1d4ed8" prepend-icon="mdi-devices" title="By Devices"
             value="byDevices"></v-list-item>
@@ -23,12 +24,23 @@
             value="byDate"></v-list-item>
         </v-list>
       </div>
-      <PowerContainerAll />
+      <div class="devices w-full" v-if="true">
+        <PowerContainerDevice :key="id" :chartId="item" v-for="(item, id) in ['a', 'b', 'c']"/>
+      </div>
     </div>
   </main>
+  
 </template>
 
 <script setup>
-import { EnergyContainerAll, PowerContainerAll } from "@/utils/componentLoader.js";
+import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerContainerDevice } from "@/utils/componentLoader.js";
+import { computed, ref } from "vue";
+
+
+const categoryItem = [
+  { icon: "mdi-view-dashboard", title: "All", value: "all" },
+  { icon: "mdi-devices", title: "By Devices", value: "byDevices" },
+  { icon: "mdi-calendar-range", title: "By Date", value: "byDate" },
+]
 
 </script>

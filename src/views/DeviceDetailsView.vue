@@ -47,7 +47,7 @@
                         class="flex flex-col gap-6 md:col-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-neutral-50 rounded-xl shadow hover:bg-gray-200">
                         <div class="content-top flex flex-row justify-between gap-8">
                             <h3 class="font-bold text-xl inline-block">Device Peak Power</h3>
-                            <a href="/"><v-icon icon="mdi-information-outline" class="text-gray-400"/></a> 
+                            <a href="/"><v-icon icon="mdi-information-outline" class="text-gray-400" /></a>
                         </div>
                         <div class="main-content flex flex-row justify-between items-center">
                             <div class="main-content-left flex flex-col">
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         <div class="main-content graph">
-                            <!-- graph here -->
+                            <PeakPowerChart :chartId="deviceId"/>
                         </div>
                     </div>
                 </div>
@@ -86,7 +86,20 @@
 
 <script setup>
 
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { PeakPowerChart } from "../utils/componentLoader";
+
+import dynamicTitle from "@/utils/dynamicTitle";
+
+const route = useRoute();
+const deviceId = computed({
+    get: () => route.params.deviceId
+});
+
+onMounted(() => {
+    dynamicTitle({ computed, useRoute });
+})
 
 defineProps({
     device: Object

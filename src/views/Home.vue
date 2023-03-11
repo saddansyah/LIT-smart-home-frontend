@@ -7,7 +7,7 @@
             <RouterLink to="/energy-consumption">Energy Consumption</RouterLink>
         </template>
         <template #devices>
-            <RouterLink to="/devices" :class="route.fullPath.includes('devices') && 'router-link-active'">Devices
+            <RouterLink to="/devices" :class="route.fullPath.includes('devices') && 'router-link-exact-active'">Devices
             </RouterLink>
         </template>
         <template #about>

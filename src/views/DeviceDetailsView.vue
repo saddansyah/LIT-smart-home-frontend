@@ -6,7 +6,7 @@
                 <v-chip size="large" color="green" class="font-semibold">lamp</v-chip>
             </div>
             <button class="self-start h-fit px-6 py-2 rounded-full font-semibold text-white bg-sky-600 shadow-lg">Turn
-                On<v-icon icon="mdi-power"></v-icon></button>
+                On <v-icon icon="mdi-power"></v-icon></button>
         </div>
         <div class="main-content flex flex-row w-full gap-20">
             <div class="side-content flex flex-col">

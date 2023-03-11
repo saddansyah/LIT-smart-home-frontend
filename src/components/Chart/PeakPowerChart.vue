@@ -1,6 +1,23 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import Chart from 'chart.js/auto'
+import {
+  Chart,
+  Colors,
+  BubbleController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Legend
+} from 'chart.js'
+
+Chart.register(
+  Colors,
+  BubbleController,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Legend
+);
 
 const { chartId } = defineProps(['chartId'])
 
@@ -23,17 +40,26 @@ onMounted(() => {
                         data: [12, 20, 3, 5, 12, 4, 19],
                         borderWidth: 1,
                         backgroundColor: '#4ade80'
-                    },
+                    }
                 ],
 
         },
         options: {
+            plugins: {
+                legend: {
+                    position: "top",
+                    align: "end"
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'kilowatt (kW)'
+                        text: 'Watt (W)'
+                    },
+                    ticks: {
+                        callback: value => `${value} W`
                     }
                 },
                 x: {
@@ -55,9 +81,5 @@ onMounted(() => {
 </template>
 
 <style scoped>
-:host {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
+
 </style>

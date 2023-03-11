@@ -1,7 +1,7 @@
 <template>
     <div class="main inline-block w-full">
         <div class="main-top flex w-full h-fit lg:flex-row gap-6">
-            <div class="energy-usage basis-1/2 flex flex-col w-fit gap-6 rounded-xl shadow bg-slate-50 p-6">
+            <div v-ripple class="energy-usage basis-1/2 flex flex-col w-fit gap-6 rounded-xl shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Energy Usage</h3>
                 <div class="energy-usage-main flex gap-2 items-center">
                     <div class="text-6xl lg:text-8xl">⚡</div>
@@ -11,7 +11,7 @@
                     </div>
                 </div>
             </div>
-            <div class="energy-limit basis-1/2 flex flex-col gap-6 rounded-xl w-fit shadow bg-slate-50 p-6">
+            <div v-ripple class="energy-limit basis-1/2 flex flex-col gap-6 rounded-xl w-fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Energy Goal</h3>
                 <div class="energy-usage-main">
                     <div class="energy-usage-main flex gap-2 items-center">
@@ -26,11 +26,14 @@
                 </div>
             </div>
         </div>
-        <div class="energy-chart mt-6 rounded-xl w-full h-96 shadow bg-slate-50 p-6">
+        <div v-ripple class="energy-chart mt-6 rounded-xl w-full h-96 shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
             <h3 class="font-bold text-xl lg:text-2xl inline-block">Energy Chart</h3>
-            <div class="energy-chart-main">
-
-            </div>
+            <EnergyUsageChart chartId="energyConsumptionChart" />
         </div>
     </div>
 </template>
+
+<script setup>
+import { EnergyUsageChart } from "@/utils/componentLoader.js";
+
+</script>

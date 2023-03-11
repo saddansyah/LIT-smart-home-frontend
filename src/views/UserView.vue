@@ -15,8 +15,38 @@
         </v-list-item>
       </v-list>
     </v-card>
-    <v-select label="Select" :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']" return-object ></v-select>
+    <v-select label="Select" :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+      return-object></v-select>
     {{ selected }}
+    <v-tabs v-model="tab" class="bg-slate-500" direction="vertical"> 
+      <v-tab value="one">Item One</v-tab>
+      <v-tab value="two">Item Two</v-tab>
+      <v-tab value="three">Item Three</v-tab>
+    </v-tabs>
+
+    <v-card-text>
+      <v-window v-model="tab">
+        <v-window-item value="one">
+          One
+        </v-window-item>
+
+        <v-window-item value="two">
+          Two
+        </v-window-item>
+
+        <v-window-item value="three">
+          Three
+        </v-window-item>
+      </v-window>
+    </v-card-text>
+
+    <v-slide-group show-arrows>
+      <v-slide-group-item v-for="n in 25" :key="n" v-slot="{ isSelected, toggle }">
+        <v-btn class="ma-2" rounded :color="isSelected ? 'primary' : undefined" @click="toggle">
+          Options {{ n }}
+        </v-btn>
+      </v-slide-group-item>
+    </v-slide-group>
   </main>
 </template>
 
@@ -28,6 +58,7 @@ defineProps({
 });
 
 const selected = ref([])
+const tab = ref(null);
 
 const items = ref([
   { wow: 'Real-Time', icon: 'mdi-clock' },

@@ -14,7 +14,7 @@
       <div class="grid lg:grid-rows-3 lg:grid-cols-6 gap-6 h-fit">
         <!-- Card 1 -->
         <div v-ripple :ripple="{ class: 'text-red' }"
-          class="flex flex-col gap-8 md:col-span-2 lg:row-span-2 lg:col-span-2 lg:row-start-1 p-6 bg-slate-50 rounded-xl shadow hover:bg-gray-200">
+          class="flex flex-col gap-8 md:col-span-2 lg:row-span-2 lg:col-span-2 lg:row-start-1 p-6 bg-slate-50 rounded-xl shadow hover:bg-slate-200 transition-all">
           <div class="content-top flex flex-row justify-between">
             <div class="content-top-left items-center gap-2">
               <h3 class="font-bold text-xl lg:text-2xl inline-block">Total Energy Today</h3>
@@ -44,7 +44,7 @@
         </div>
         <!-- Card 2 -->
         <div v-ripple
-          class="flex flex-col gap-6 md:col-span-1 lg:row-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-slate-50 rounded-xl shadow hover:bg-gray-200">
+          class="flex flex-col gap-6 md:col-span-1 lg:row-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-slate-50 rounded-xl shadow hover:bg-slate-200 transition-all">
           <div class="content-top flex flex-row justify-between gap-8">
             <h3 class="font-bold text-xl inline-block">Daily Highest Devices Consumption</h3>
             <a href="/">
@@ -64,10 +64,10 @@
         </div>
         <!-- Card 3 -->
         <div v-ripple
-          class="inline-block row-span-3 md:col-span-3 lg:row-span-3 lg:col-span-4 p-6 bg-slate-50 rounded-xl shadow hover:bg-gray-200">
+          class="inline-block row-span-3 md:col-span-3 lg:row-span-3 lg:col-span-4 p-6 bg-slate-50 rounded-xl shadow hover:bg-slate-200 transition-all">
           <div class="content-top flex flex-row justify-between">
             <div class="content-top-left items-center gap-2">
-              <h3 class="font-bold text-xl lg:text-2xl inline-block">Daily Energy Consumption</h3>
+              <h3 class="font-bold text-xl lg:text-2xl inline-block mb-3">Daily Energy Consumption</h3>
             </div>
           </div>
           <div class="main-content graph">

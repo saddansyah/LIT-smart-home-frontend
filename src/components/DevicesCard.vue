@@ -1,5 +1,5 @@
 <template>
-    <div class="inline-block h-48 w-96 min-w-fit p-4 mr-5 mb-5 bg-neutral-50 rounded-xl shadow hover:bg-gray-200">
+    <div v-ripple class="inline-block h-48 w-96 min-w-fit p-4 mr-5 mb-5 bg-neutral-50 rounded-xl shadow hover:bg-slate-200 transition-all">
         <div class="flex flex-row gap-6 h-full">
             <div class="icon self-center">
                 <button><v-icon icon="mdi-ceiling-light" class="text-8xl text-sky-800"></v-icon></button>

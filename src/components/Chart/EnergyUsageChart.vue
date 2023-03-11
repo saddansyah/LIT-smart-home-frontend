@@ -1,6 +1,23 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import Chart from 'chart.js/auto'
+import {
+  Chart,
+  Colors,
+  BubbleController,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Legend
+} from 'chart.js'
+
+Chart.register(
+  Colors,
+  BubbleController,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Legend
+);
 
 const { chartId } = defineProps(['chartId'])
 

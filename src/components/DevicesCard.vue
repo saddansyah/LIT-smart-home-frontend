@@ -6,14 +6,14 @@
             </div>
             <div class="content-center flex flex-col justify-between">
                 <div class="content-center-top">
-                    <h3 class="font-bold text-2xl mb-1">{{ device.id }}</h3>
-                    <v-chip size="small" color="green" class="font-semibold">{{ device.category }}</v-chip>
-                    <h4 class="text-base mt-1">{{ device.power }} W</h4>
+                    <h3 class="font-bold text-2xl mb-1">{{ device.device_name }}</h3>
+                    <v-chip size="small" color="green" class="font-semibold">{{ device.type }}</v-chip>
+                    <h4 class="text-base mt-1">{{ device.watt }} W</h4>
                 </div>
                 <div class="content-center-bottom">
-                    <h4>Today usage: <span class="font-semibold text-lg">{{ device.dailyUsage }} kWH</span></h4>
+                    <h4>Today usage: <span class="font-semibold text-lg">{{ device.watt }} kWH</span></h4>
                     <a href="/">
-                        <RouterLink :to="{name: 'Device Details', params: {deviceId: device.id}}"><h4 class="text-base underline text-gray-400">Tap to view details</h4></RouterLink>
+                        <RouterLink :to="{name: 'Device Details', params: {deviceId: device.device_name}}"><h4 class="text-base underline text-gray-400">Tap to view details</h4></RouterLink>
                     </a>
                 </div>
             </div>

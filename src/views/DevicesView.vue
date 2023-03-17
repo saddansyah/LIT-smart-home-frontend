@@ -42,23 +42,29 @@
     <div class="main-container">
       <h3 class="font-bold">You have 1 device(s)</h3>
       <div class="mt-6">
-        <DevicesCard :device="device" />
+        <DevicesCard :device="device" v-for="device in devices" :key="device.device_name"/>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useStore, mapState} from 'vuex';
 
 import DevicesCard from '@/components/DevicesCard.vue'
 
-const device = ref({
-  id: "Lampu1",
-  category: "lamp",
-  power: 14,
-  dailyUsage: 22,
-})
+const store = useStore();
+const devices = computed(() => store.state.device.devices);
+
+(async function fetchDataDevices() {
+    try {
+        store.dispatch('_fetchDataDevices');
+    }
+    catch (error) {
+        alert(error);
+    }
+})();
 
 // -- Dropdown Items --
 

@@ -6,6 +6,7 @@ import EnergyContainerAll from '@/components/EnergyConsumption/EnergyContainerAl
 import PowerContainerAll from '@/components/EnergyConsumption/PowerContainerAll.vue';
 import EnergyContainerDevice from '@/components/EnergyConsumption/EnergyContainerDevice.vue';
 import PowerContainerDevice from '@/components/EnergyConsumption/PowerContainerDevice.vue';
+
 import PeakPowerChart from '@/components/Chart/PeakPowerChart.vue';
 import EnergyUsageChart from '@/components/Chart/EnergyUsageChart.vue';
 
@@ -14,7 +15,7 @@ export {
     EnergyContainerAll,
     PowerContainerAll,
     EnergyContainerDevice,
-    PowerContainerDevice ,
-    PeakPowerChart ,
-    EnergyUsageChart
+    PowerContainerDevice,
+    PeakPowerChart,
+    EnergyUsageChart,
 }

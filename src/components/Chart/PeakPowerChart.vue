@@ -39,7 +39,7 @@ onMounted(() => {
                         label: 'Today',
                         data: [12, 20, 3, 5, 12, 4, 19],
                         borderWidth: 1,
-                        backgroundColor: '#4ade80'
+                        backgroundColor: '#0284c7'
                     }
                 ],
 

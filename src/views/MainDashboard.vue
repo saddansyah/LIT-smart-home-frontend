@@ -6,7 +6,7 @@
     <div class="mb-9">
       <h3 class="mb-3 lg:text-xl font-semibold">Your Favorite Devices</h3>
       <div class="overflow-x-auto overflow-y-hidden whitespace-nowrap pb-2">
-        <FavoriteDevicesCard v-for="device in favoriteDevices" :key="device.id" :device="device" />
+        <FavoriteDevicesCard v-for="device in devices.filter(item => item.is_favorite === 1)" :key="device.id" :device="device" />
       </div>
     </div>
     <div class="lg:text-xl font-semibold">
@@ -14,11 +14,21 @@
       <div class="grid lg:grid-rows-3 lg:grid-cols-6 gap-6 h-fit">
         <!-- Card 1 -->
         <div v-ripple :ripple="{ class: 'text-red' }"
-          class="flex flex-col gap-8 md:col-span-2 lg:row-span-2 lg:col-span-2 lg:row-start-1 p-6 bg-slate-50 rounded-xl shadow hover:bg-slate-200 transition-all">
+          class="flex flex-col gap-8 md:col-span-2 lg:row-span-2 lg:col-span-2 lg:row-start-1 p-6 bg-slate-50 rounded-xl shadow hover:bg-slate-200 group transition-all">
           <div class="content-top flex flex-row justify-between">
             <div class="content-top-left items-center gap-2">
-              <h3 class="font-bold text-xl lg:text-2xl inline-block">Total Energy Today</h3>
-              <v-icon icon="mdi-menu-down" />
+              <button v-ripple
+                class="inline-block px-3 py-1 rounded font-bold text-xl lg:text-2xl">
+                {{ selectedDeviceCategory }}
+                <v-menu activator="parent">
+                  <v-list>
+                    <v-list-item v-for="(item, index) in dropdownItems.deviceCategory" @click="selectDeviceCategory(item)"
+                      :key="index" :title="item.title" v-model="selectedItems">
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-icon icon="mdi-menu-down"></v-icon>
+              </button>
             </div>
             <div class="content-top-right">
               <a href="/"><v-icon icon="mdi-information-outline" class="text-gray-400" /></a>
@@ -34,7 +44,8 @@
           <div class="daily-goal">
             <h3 class="font-bold text-lg inline-block mb-3">Daily Goal:</h3>
             <div class="progress-bar">
-              <v-progress-linear model-value="40" buffer-value="55" color="blue" height="12" class="mb-3"></v-progress-linear>
+              <v-progress-linear model-value="40" buffer-value="55" color="blue" height="12"
+                class="mb-3"></v-progress-linear>
             </div>
             <div class="text-bottom flex justify-between">
               <p class="text-base">40% from <span class="font-bold">30 kWh</span></p>
@@ -80,15 +91,35 @@
 </template> 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import Chart from 'chart.js/auto'
 import { FavoriteDevicesCard, PeakPowerChart } from "@/utils/componentLoader.js";
+import { useStore } from 'vuex';
 
 const favoriteDevices = ref([
   { id: 1, name: 'Lampu1', state: 'ON', icon: 'mdi-ceiling-light' },
   { id: 2, name: 'Lampu2', state: 'OFF', icon: 'mdi-ceiling-light' },
   { id: 3, name: 'Terminal', state: 'OFF', icon: 'mdi-power-socket-eu' }
 ]);
+
+const store = useStore();
+const devices = computed(() => store.state.device.devices);
+
+
+const dropdownItems = ref({
+  deviceCategory: [
+    { title: 'Total Energy Today', value: 'energyToday' },
+    { title: 'Total Energy Weekly', value: 'energyWeekly' },
+    { title: 'Total Energy Monthly', value: 'energyMonthly' },
+  ]
+}
+);
+
+const selectedDeviceCategory = ref("Total Energy Today");
+
+const selectDeviceCategory = (item) => {
+  selectedDeviceCategory.value = item.title
+}
 
 
 </script>

@@ -1,8 +1,14 @@
-const dynamicTitle = ({computed, useRoute}) => {
-    const route = useRoute();
-    const params = computed(() => route.params.deviceId);
-    
-    document.title = `${params.value} | Smart Home`;
+const dynamicTitle = (deviceName) => {
+    return new Promise(async (resolve, reject) => {
+        try{
+            document.title = `${deviceName || 'Device'} | Smart Home`;
+            resolve(document.title);
+        }
+        catch(error){
+            console.error(error);
+            reject(document.title);
+        }
+    })
 }
 
 export default dynamicTitle;

@@ -13,8 +13,8 @@
             {{ selectedDeviceCategory }}
             <v-menu activator="parent">
               <v-list>
-                <v-list-item v-for="(item, index) in dropdownItems.deviceCategory" @click="selectDeviceCategory(item)" :key="index" :title="item.title"
-                  v-model="selectedItems">
+                <v-list-item v-for="(item, index) in dropdownItems.deviceCategory" @click="selectDeviceCategory(item)"
+                  :key="index" :title="item.title" v-model="selectedItems">
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -25,8 +25,8 @@
             {{ selectedSort }}
             <v-menu activator="parent">
               <v-list>
-                <v-list-item v-for="(item, index) in dropdownItems.sort" @click="selectSort(item)" :key="index" :title="item.title"
-                  v-model="selectedItems">
+                <v-list-item v-for="(item, index) in dropdownItems.sort" @click="selectSort(item)" :key="index"
+                  :title="item.title" v-model="selectedItems">
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -37,8 +37,8 @@
             {{ selectedDate }}
             <v-menu activator="parent">
               <v-list>
-                <v-list-item v-for="(item, index) in dropdownItems.date" @click="selectDate(item)" :key="index" :title="item.title"
-                  v-model="selectedItems">
+                <v-list-item v-for="(item, index) in dropdownItems.date" @click="selectDate(item)" :key="index"
+                  :title="item.title" v-model="selectedItems">
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -46,15 +46,15 @@
           </button>
         </div>
         <button v-ripple
-          class="inline-block mt-6 mr-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50">
+          class="inline-block mt-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50">
           {{ selectedType }}
-            <v-menu activator="parent">
-              <v-list>
-                <v-list-item v-for="(item, index) in dropdownItems.type" @click="selectType(item)" :key="index" :title="item.title"
-                  v-model="selectedItems">
-                </v-list-item>
-              </v-list>
-            </v-menu>
+          <v-menu activator="parent">
+            <v-list>
+              <v-list-item v-for="(item, index) in dropdownItems.type" @click="selectType(item)" :key="index"
+                :title="item.title" v-model="selectedItems">
+              </v-list-item>
+            </v-list>
+          </v-menu>
           <v-icon icon="mdi-menu-down"></v-icon>
         </button>
       </div>
@@ -72,7 +72,7 @@
             <PowerContainerAll />
           </v-window-item>
           <v-window-item value="byDevices">
-            <PowerContainerDevice :key="id" :chartId="item" v-for="(item, id) in [1, 2, 3]" />
+            <PowerContainerDevice :chartId="device.id" :device="device" v-for="device in devices" :key="device.id" />
           </v-window-item>
         </v-window>
       </div>
@@ -83,9 +83,13 @@
 <script setup>
 import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerContainerDevice } from "@/utils/componentLoader.js";
 import { computed, ref } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+const devices = computed(() => store?.state?.device?.devices);
+
 
 const tab = ref(null);
-
 const dropdownItems = ref({
   deviceCategory: [
     { title: 'All Devices', value: 'allDevices' },
@@ -109,7 +113,6 @@ const dropdownItems = ref({
   ]
 }
 );
-
 const selectedDeviceCategory = ref("All Devices");
 const selectedSort = ref("Name (A-Z)");
 const selectedDate = ref("Today");

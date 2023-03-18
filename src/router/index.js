@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useStore } from "vuex";
 
 // Plate for logged in view
 import Home from "@/views/Home.vue";
@@ -13,6 +14,7 @@ import DevicesView from "@/views/DevicesView.vue";
 import DeviceDetailsView from "@/views/DeviceDetailsView.vue"
 import UserView from "@/views/UserView.vue";
 import NotFound from "@/views/NotFound.vue"
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -78,9 +80,8 @@ const router = createRouter({
           path: "devices/:deviceId",
           name: "Device Details",
           component: DeviceDetailsView,
-          props: true,
           meta: {
-            title: "Devices | Smart Home"
+            title: "Device | Smart Home"
           }
         },
         {
@@ -109,6 +110,7 @@ router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title}`;
   next();
 });
+
 
 
 export default router;

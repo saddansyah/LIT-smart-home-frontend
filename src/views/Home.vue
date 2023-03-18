@@ -18,7 +18,7 @@
                     icon="mdi-account-outline"></v-icon></RouterLink>
         </template>
     </Navbar>
-
+    
     <RouterView :username="username" />
 
     <Footer />

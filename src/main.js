@@ -1,8 +1,9 @@
 import { createApp } from "vue";
+import * as dotenv from 'dotenv'
 
 import App from "./App.vue";
 import router from "./router";
-import store from './stores'
+import store from './stores';
 
 // Vuetify
 import 'vuetify/styles'

@@ -34,39 +34,36 @@
           </button>
         </div>
         <div class="content-top-right">
-          <button v-ripple class="inline-block mt-6 px-4 py-2 rounded-full font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">Add New
+          <button v-ripple
+            class="inline-block mt-6 px-4 py-2 rounded-full font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">Add
+            New
             Devices <v-icon icon="mdi-plus"></v-icon></button>
         </div>
       </div>
     </div>
     <div class="main-container">
-      <h3 class="font-bold">You have 1 device(s)</h3>
+      <h3 class="font-bold">You have {{ devices.length }} device(s)</h3>
       <div class="mt-6">
-        <DevicesCard :device="device" v-for="device in devices" :key="device.device_name"/>
+        <div v-if="devices">
+          <DevicesCard :device="device" v-for="device in devices" :key="device.id" />
+        </div>
+        <div v-else>
+          <h1>Loading...</h1>
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import { useStore, mapState} from 'vuex';
-
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
 import DevicesCard from '@/components/DevicesCard.vue'
 
 const store = useStore();
-const devices = computed(() => store.state.device.devices);
 
-(async function fetchDataDevices() {
-    try {
-        store.dispatch('_fetchDataDevices');
-    }
-    catch (error) {
-        alert(error);
-    }
-})();
+const devices = computed(() => store?.state?.device?.devices);
 
-// -- Dropdown Items --
 
 const dropdownItems = ref({
   deviceCategory: [
@@ -78,6 +75,8 @@ const dropdownItems = ref({
   sort: [
     { title: 'Name (A-Z)', value: 'nameAscending' },
     { title: 'Name (Z-A)', value: 'nameDescending' },
+    { title: 'By Devices State', value: 'deviceStateAscending' },
+    { title: 'By Favorite Device', value: 'favouriteDeviceAscending' },
   ],
 }
 );
@@ -92,7 +91,6 @@ const selectDeviceCategory = (item) => {
 const selectSort = (item) => {
   selectedSort.value = item.title
 }
-
 
 
 </script>

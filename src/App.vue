@@ -2,7 +2,17 @@
 
 // Device Fetch
 import { useStore } from "vuex";
+
 const store = useStore();
+
+(async function fetchDataDevices() {
+    try {
+        await store.dispatch('_fetchDataDevices');
+    }
+    catch (error) {
+        alert(error);
+    }
+})();
 
 </script>
 

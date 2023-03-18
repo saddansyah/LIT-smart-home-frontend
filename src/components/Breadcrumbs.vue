@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -22,7 +22,7 @@ const routePath = computed({
 
 const breadcrumbs = ref(["Home", ""]);
 
-watch(routePath, () => {
+watchEffect(() => {
   const newPath = routePath.value.split('/');
   newPath.shift()
   breadcrumbs.value = ["Home", ...newPath]

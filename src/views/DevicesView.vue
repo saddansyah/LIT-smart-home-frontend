@@ -44,12 +44,7 @@
     <div class="main-container">
       <h3 class="font-bold">You have {{ devices.length }} device(s)</h3>
       <div class="mt-6">
-        <div v-if="devices">
-          <DevicesCard :device="device" v-for="device in devices" :key="device.id" />
-        </div>
-        <div v-else>
-          <h1>Loading...</h1>
-        </div>
+        <DevicesCard :device="device" v-for="device in devices" :key="device.id" />
       </div>
     </div>
   </main>

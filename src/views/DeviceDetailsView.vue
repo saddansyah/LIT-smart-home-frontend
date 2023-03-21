@@ -146,7 +146,7 @@
 
 <script setup>
 
-import { computed, onBeforeMount, onMounted, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -160,14 +160,14 @@ const backendUrl = 'http://127.0.0.1:8000/api/devices/'
 const deviceId = route.params.deviceId
 const device = computed(() => store?.state?.device?.devices.find(item => item.id === Number(deviceId)));
 
-(async function fetchDataDevice() {
-    try {
-        const response = await store.dispatch('_fetchDataDevice', deviceId);
-        await dynamicTitle(response.device_name);
-    }
-    catch (error) {
-        alert(error);
-    }
+(function setTitleOnReload() {
+    watch(device, () => {
+        dynamicTitle(device.value.device_name)
+    })
+})();
+
+(function setTitle(){
+    dynamicTitle(device?.value?.device_name)
 })();
 
 

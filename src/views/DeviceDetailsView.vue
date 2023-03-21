@@ -1,6 +1,6 @@
 <template>
     <main class="container p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
-
+        {{ !device }}
         <div v-if="!device">
             <h1 class="text-2xl font-mono">Loading...</h1>
         </div>
@@ -33,7 +33,9 @@
                     </div>
                 </div>
                 <button v-ripple @click="$event => updateDeviceState()"
-                    :class="'self-start h-fit px-6 py-2 rounded-full font-semibold text-white shadow-lg transition-all duration-500 ' + (device.state ? 'bg-sky-600': 'bg-red-400 animate-pulse')">{{device.state ? 'Turn On ' : 'Save your energy  '}}<v-icon icon="mdi-power"></v-icon></button>
+                    :class="'self-start h-fit px-6 py-2 rounded-full font-semibold text-white shadow-lg transition-all duration-500 ' + (!device.state ? 'bg-sky-600' : 'bg-red-400 animate-pulse')">{{
+                        !device.state
+                        ? 'Turn On ' : 'Save your energy ' }}<v-icon icon="mdi-power"></v-icon></button>
             </div>
             <div class="main-content flex flex-row w-full gap-20">
                 <div class="side-content flex flex-col">
@@ -49,10 +51,14 @@
                         <p>Ampere: {{ device.ampere }} A</p>
                     </div>
                     <button v-ripple
-                        class="self-start h-fit w-full mt-6 px-6 py-2 rounded-lg font-semibold text-white bg-sky-600 shadow-lg">Edit
+                        class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-slate-400 shadow-lg">Change
+                        Icon
+                        <v-icon icon="mdi-devices"></v-icon></button>
+                    <button v-ripple
+                        class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 shadow-lg">Edit
                         <v-icon icon="mdi-pencil"></v-icon></button>
                     <button v-ripple
-                        class="self-start h-fit w-full mt-3 px-6 py-2 rounded-lg font-semibold text-white bg-red-400 shadow-lg">Delete
+                        class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-red-400 shadow-lg">Delete
                         <v-icon icon="mdi-delete"></v-icon></button>
 
                 </div>
@@ -166,7 +172,7 @@ const device = computed(() => store?.state?.device?.devices.find(item => item.id
     })
 })();
 
-(function setTitle(){
+(function setTitle() {
     dynamicTitle(device?.value?.device_name)
 })();
 

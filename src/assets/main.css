@@ -8,3 +8,25 @@
 .user-button:has(.router-link-exact-active) {
   @apply text-white font-bold bg-blue-500;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 12px;
+  background: #d1d5db;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #0ea5e9; 
+  border-radius: 10px;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #0369a1; 
+}

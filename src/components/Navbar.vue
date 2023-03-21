@@ -3,7 +3,7 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 </script>
 
 <template>
-  <nav class=" bg-slate-800 fixed top-0 right-0 left-0 z-20">
+  <nav class=" bg-slate-800 fixed top-0 right-0 left-0 z-10">
     <div
       class="container p-4 flex flex-wrap items-center justify-between mx-auto"
     >

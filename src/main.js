@@ -1,5 +1,4 @@
 import { createApp } from "vue";
-import * as dotenv from 'dotenv'
 
 import App from "./App.vue";
 import router from "./router";

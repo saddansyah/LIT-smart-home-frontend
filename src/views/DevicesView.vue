@@ -34,32 +34,43 @@
           </button>
         </div>
         <div class="content-top-right">
-          <button v-ripple
-            class="inline-block mt-6 px-4 py-2 rounded-full font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">Add
-            New
-            Devices <v-icon icon="mdi-plus"></v-icon></button>
+          <v-dialog v-model="addDialog" persistent>
+            <template v-slot:activator="{ props }">
+              <button v-ripple v-bind="props"
+                class="inline-block mt-6 px-4 py-2 rounded-full font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                Add New Devices <v-icon icon="mdi-plus"></v-icon>
+              </button>
+            </template>
+            <AddDevice @close="$event => addDialog = false" :deviceCategoryList="deviceCategoryList" :addDialog="addDialog"/>
+          </v-dialog>
         </div>
       </div>
     </div>
     <div class="main-container">
       <h3 class="font-bold">You have {{ devices.length }} device(s)</h3>
-      <div class="mt-6">
-        <DevicesCard :device="device" v-for="device in devices" :key="device.id" />
+      <div v-if="!devices[0]">
+        <h1 class="text-2xl font-mono mt-6">Loading...</h1>
+      </div>
+      <div v-else>
+        <div class="mt-6">
+          <DevicesCard :device="device" v-for="device in devices" :key="device.id" />
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import DevicesCard from '@/components/DevicesCard.vue'
+import { RouterView, RouterLink } from 'vue-router';
+
+import { DevicesCard, AddDevice } from '@/utils/componentLoader';
 
 const store = useStore();
-
 const devices = computed(() => store?.state?.device?.devices);
 
-
+// Category Dropdown
 const dropdownItems = ref({
   deviceCategory: [
     { title: 'All Devices', value: 'allDevices' },
@@ -76,16 +87,22 @@ const dropdownItems = ref({
 }
 );
 
+
 const selectedDeviceCategory = ref("All Devices");
 const selectedSort = ref("Name (A-Z)");
 
 const selectDeviceCategory = (item) => {
-  selectedDeviceCategory.value = item.title
+  selectedDeviceCategory.value = item
 }
 
 const selectSort = (item) => {
   selectedSort.value = item.title
 }
 
+const addDialog = ref(false);
+const deviceCategoryList = ref([]);
+watch(devices, () => {
+    deviceCategoryList.value = [...new Set(devices.value.map(device => device.category))].map(item => { return { 'title': item, 'value': item.split(' ').join('') } })
+})
 
 </script>

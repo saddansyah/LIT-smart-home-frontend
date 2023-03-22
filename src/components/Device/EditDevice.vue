@@ -2,22 +2,20 @@
     <div class="wrapper flex justify-center">
         <div class="form w-72 lg:w-[90vh] z-30 p-9 bg-slate-50 rounded-lg">
             <v-form v-model="form" @submit.prevent="handleUpdate($emit)">
-                <div ref="entryForm" class="content-top flex flex-row justify-between">
+                <div class="content-top flex flex-row justify-between">
                     <h1 class="font-bold text-xl lg:text-2xl mb-9">Edit Device {{ props.device.device_name }}</h1>
                     <button @click.prevent="$emit('close')" class="h-fit"><v-icon icon="mdi-close"></v-icon></button>
                 </div>
-                <v-text-field validate-on="blur" required v-model="deviceName" :rules="[rules.required]" label="Device Name"
+                <v-text-field required v-model="deviceName" :rules="[rules.required]" label="Device Name"
                     clearable placeholder="Example: LIT-Smart-Lamp3"></v-text-field>
-                <v-combobox validate-on="blur" required v-model="deviceCategory" :rules="[rules.required]"
+                <v-combobox required v-model="deviceCategory" :rules="[rules.required]"
                     :items="deviceCategoryList.map(item => item.title)" label="Device Category" chips
                     clearable></v-combobox>
-                <v-text-field validate-on="blur" required v-model="deviceVoltage"
-                    :rules="[rules.required, rules.numberOnly]" label="Device Voltage (V)" clearable
-                    placeholder="Example: 6"></v-text-field>
-                <v-text-field validate-on="blur" required v-model="deviceCurrent"
-                    :rules="[rules.required, rules.numberOnly]" label="Device Current (A)" clearable
-                    placeholder="Example: 2"></v-text-field>
-                <v-text-field validate-on="blur" required v-model="devicePower" :rules="[rules.required, rules.numberOnly]"
+                <v-text-field  required v-model="deviceVoltage" :rules="[rules.required, rules.numberOnly]"
+                    label="Device Voltage (V)" clearable placeholder="Example: 6"></v-text-field>
+                <v-text-field  required v-model="deviceCurrent" :rules="[rules.required, rules.numberOnly]"
+                    label="Device Current (A)" clearable placeholder="Example: 2"></v-text-field>
+                <v-text-field required v-model="devicePower" :rules="[rules.required, rules.numberOnly]"
                     label="Device Power (W)" clearable placeholder="Example: 12"></v-text-field>
                 <v-btn type="submit" v-ripple size="x-large"
                     class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Add
@@ -28,8 +26,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref } from "vue";
 import { useStore } from "vuex";
 
 const props = defineProps({
@@ -40,6 +37,16 @@ const props = defineProps({
 const store = useStore();
 
 const handleUpdate = (emit) => {
+    if( !deviceName.value || !deviceCategory.value || !deviceVoltage.value || !deviceCurrent.value || !devicePower.value ){
+        alert('Text field cant be empty.');
+        return;
+    }
+
+    if (!/^[0-9]+$/.test(deviceVoltage.value) || !/^[0-9]+$/.test(deviceCurrent.value) || !/^[0-9]+$/.test(devicePower.value)){
+        alert('Voltage, Current, and Power must be numeric (0-9) only.');
+        return;
+    }
+
     const newDevice = {
         data: {
             user_id: '1',
@@ -68,7 +75,7 @@ const handleUpdate = (emit) => {
 }
 
 // Edit this device
-const form = ref(false);
+const form = ref(true);
 const rules = ref(
     {
         numberOnly: value => {

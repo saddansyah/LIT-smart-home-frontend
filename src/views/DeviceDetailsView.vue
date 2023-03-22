@@ -60,12 +60,18 @@
                                 class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 shadow-lg">Edit
                                 <v-icon icon="mdi-pencil"></v-icon></button>
                         </template>
-                        <EditDevice @close="$event => editDialog = false" :deviceCategoryList="deviceCategoryList" :device="device"/>
+                        <EditDevice @close="$event => editDialog = false" :deviceCategoryList="deviceCategoryList"
+                            :device="device" />
+                    </v-dialog>
+                    <v-dialog v-model="deleteDialog" persistent @keydown.esc="deleteDialog = false">
+                        <template v-slot:activator="{ props }">
+                            <button v-ripple v-bind="props"
+                                class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-red-400 shadow-lg">Delete
+                                <v-icon icon="mdi-delete"></v-icon></button>
+                        </template>
+                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()" />
                     </v-dialog>
 
-                    <button v-ripple
-                        class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-red-400 shadow-lg">Delete
-                        <v-icon icon="mdi-delete"></v-icon></button>
                 </div>
                 <div class="main-container w-full h-fit rounded-xl">
                     <div class="grid lg:grid-rows-2 lg:grid-cols-6 gap-6 h-fit">
@@ -92,8 +98,11 @@
                             class="flex flex-col gap-6 md:col-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-neutral-50 rounded-xl shadow hover:bg-gray-200 transition-all">
                             <div class="content-top flex flex-row justify-between gap-8">
                                 <h3 class="font-bold text-xl inline-block">Device Peak Power</h3>
-                                <a href="/"><v-icon icon="mdi-information-outline" class="text-gray-400" /></a>
-
+                                <v-tooltip location="top" text="Device's peak power (watt) within a certain time limit (daily, weekly, etc)">
+                                    <template v-slot:activator="{ props }">
+                                        <v-icon v-bind="props" icon="mdi-information-outline" class="text-gray-400" />
+                                    </template>
+                                </v-tooltip>
                             </div>
                             <div class="main-content flex flex-row justify-between items-center">
                                 <div class="main-content-left flex flex-col">
@@ -159,13 +168,14 @@
 
 import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
-import { PeakPowerChart, EditDevice } from "@/utils/componentLoader";
+import { PeakPowerChart, EditDevice, ModalDelete } from "@/utils/componentLoader";
 import dynamicTitle from "@/utils/dynamicTitle";
 
 const store = useStore();
 const route = useRoute();
+const router = useRouter();
 
 const backendUrl = 'http://127.0.0.1:8000/api/devices/'
 const deviceId = route.params.deviceId
@@ -174,6 +184,7 @@ const deviceId = route.params.deviceId
 const devices = computed(() => store?.state?.device?.devices); // To get the category list
 const device = computed(() => store?.state?.device?.devices.find(item => item.id === Number(deviceId)));
 const editDialog = ref(false);
+const deleteDialog = ref(false);
 const deviceCategoryList = ref([]);
 const dropdownItems = ref({
     chartCategory: [
@@ -220,6 +231,7 @@ const updateDeviceState = async () => {
         store.commit('_assign_updated_device', json);
     }
     catch (error) {
+        alert(error);
         console.error(error);
     }
 };
@@ -240,9 +252,23 @@ const updateDeviceFavorite = async () => {
         store.commit('_assign_updated_device', json);
     }
     catch (error) {
+        alert(error);
         console.error(error);
     }
 };
+
+const handleDeleteDevice = () => {
+    const deleteDataDevice = async () => {
+        try {
+            await store.dispatch('_deleteDataDevice', deviceId);
+            router.replace({ name: 'Devices' })
+        }
+        catch (error) {
+            alert(error);
+        }
+    }
+    deleteDataDevice();
+}
 
 </script>
 

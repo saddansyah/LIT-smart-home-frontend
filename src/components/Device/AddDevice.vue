@@ -17,7 +17,7 @@
                     label="Device Current (A)" clearable placeholder="Example: 2"></v-text-field>
                 <v-text-field required v-model.number="devicePower" :rules="[rules.required, rules.numberOnly]"
                     label="Device Power (W)" clearable placeholder="Example: 12"></v-text-field>
-                <v-btn type="button" @click.prevent="$event => handleAdd($emit)" v-ripple :disabled="!form" size="x-large"
+                <v-btn type="button" @click.prevent="$event => handleAddDevice($emit)" v-ripple :disabled="!form" size="x-large"
                     class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Add <v-icon icon="mdi-plus"></v-icon></v-btn>
             </v-form>
         </div>
@@ -35,7 +35,7 @@ defineProps({
 const store = useStore();
 
 
-const handleAdd = (emit) => {
+const handleAddDevice = (emit) => {
     const newDevice = {
         user_id: '1',
         device_name: deviceName.value,

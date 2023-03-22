@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper flex justify-center">
         <div class="form w-72 lg:w-[90vh] z-30 p-9 bg-slate-50 rounded-lg">
-            <v-form v-model="form" @submit.prevent="handleUpdate($emit)">
+            <v-form v-model="form" @submit.prevent="$event => handleUpdateDevice($emit)">
                 <div class="content-top flex flex-row justify-between">
                     <h1 class="font-bold text-xl lg:text-2xl mb-9">Edit Device {{ props.device.device_name }}</h1>
                     <button @click.prevent="$emit('close')" class="h-fit"><v-icon icon="mdi-close"></v-icon></button>
@@ -36,7 +36,7 @@ const props = defineProps({
 
 const store = useStore();
 
-const handleUpdate = (emit) => {
+const handleUpdateDevice = (emit) => {
     if( !deviceName.value || !deviceCategory.value || !deviceVoltage.value || !deviceCurrent.value || !devicePower.value ){
         alert('Text field cant be empty.');
         return;

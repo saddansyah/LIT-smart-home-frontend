@@ -28,7 +28,7 @@
             </div>
             <div class="content-right flex flex-col justify-start">
                 <div class="content-right-top text-gray-500">
-                    <button class="mr-2 text-yellow-500">
+                    <button @click.stop.prevent="updateDeviceFavorite()" class="mr-2 text-yellow-500">
                         <div v-if="device.is_favorite">
                             <v-icon icon="mdi-star" size="large"></v-icon>
                         </div>
@@ -41,7 +41,7 @@
                             <button v-bind="props" @click.prevent="">
                                 <v-icon icon="mdi-delete" size="large"></v-icon></button>
                         </template>
-                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDelete()"/>
+                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()"/>
                     </v-dialog>
                 </div>
             </div>
@@ -52,7 +52,7 @@
 <script setup>
 
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { ModalDelete } from "@/utils/componentLoader";
 
@@ -62,21 +62,40 @@ const props = defineProps({
 const store = useStore();
 
 const deleteDialog = ref(false)
-const loading = ref(false);
+const backendUrl = 'http://127.0.0.1:8000/api/devices/';
+const deviceId = props.device.id;
 
-const handleDelete = () => {
-    loading.value = true;
+const handleDeleteDevice = () => {
     const deleteDataDevice = async () => {
         try {
-            await store.dispatch('_deleteDataDevice', props.device.id);
-            loading.value = false;
+            await store.dispatch('_deleteDataDevice', deviceId);
         }
         catch (error) {
-            loading.value = false;
             alert(error);
         }
     }
     deleteDataDevice();
 }
+
+const updateDeviceFavorite = async () => {
+    const url = backendUrl + 'update_favorite/';
+    const body = { is_favorite: !props.device.is_favorite };
+
+    try {
+        const data = await fetch(url + deviceId, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body)
+        });
+        const json = await data.json();
+        store.commit('_assign_updated_device', json);
+    }
+    catch (error) {
+        alert(error);
+        console.error(error);
+    }
+};
 
 </script>

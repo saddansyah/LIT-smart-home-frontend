@@ -18,7 +18,7 @@
                 <v-text-field required v-model.number="devicePower" :rules="[rules.required, rules.numberOnly]"
                     label="Device Power (W)" clearable placeholder="Example: 12"></v-text-field>
                 <v-btn type="button" @click.prevent="$event => handleAdd($emit)" v-ripple :disabled="!form" size="x-large"
-                    class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Add</v-btn>
+                    class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Add <v-icon icon="mdi-plus"></v-icon></v-btn>
             </v-form>
         </div>
     </div>

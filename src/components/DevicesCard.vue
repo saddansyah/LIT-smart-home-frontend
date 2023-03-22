@@ -7,11 +7,13 @@
             </div>
             <div class="content-center flex flex-col justify-between">
                 <div class="content-center-top">
-                    <h3 class="font-bold text-2xl mb-1">{{ device.device_name }}</h3>
+                    <h3 class="font-bold text-2xl mb-1">{{ device.device_name.length > 12 ? device.device_name.substr(0, 12)
+                        + '...' : device.device_name }}</h3>
                     <v-chip size="small" color="green" class="font-semibold">{{ device.category }}</v-chip>
                     <div class="device-state inline-block">
                         <div v-if="device.state">
-                            <v-chip size="small" prepend-icon="mdi-power" color="blue" class="ml-3 font-semibold">ON</v-chip>
+                            <v-chip size="small" prepend-icon="mdi-power" color="blue"
+                                class="ml-3 font-semibold">ON</v-chip>
                         </div>
                     </div>
                     <h4 class="text-base mt-1">{{ device.watt }} W</h4>
@@ -34,7 +36,13 @@
                             <v-icon icon="mdi-star-outline" size="large"></v-icon>
                         </div>
                     </button>
-                    <button><v-icon icon="mdi-delete" size="large"></v-icon></button>
+                    <v-dialog v-model="deleteDialog" persistent @keydown.esc="deleteDialog = false">
+                        <template v-slot:activator="{ props }">
+                            <button v-bind="props" @click.prevent="">
+                                <v-icon icon="mdi-delete" size="large"></v-icon></button>
+                        </template>
+                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDelete()"/>
+                    </v-dialog>
                 </div>
             </div>
         </div>
@@ -43,10 +51,32 @@
 
 <script setup>
 
+import { ref } from "vue";
 import { RouterLink } from "vue-router";
+import { useStore } from "vuex";
+import { ModalDelete } from "@/utils/componentLoader";
 
-defineProps({
+const props = defineProps({
     device: Object
-})
+});
+const store = useStore();
+
+const deleteDialog = ref(false)
+const loading = ref(false);
+
+const handleDelete = () => {
+    loading.value = true;
+    const deleteDataDevice = async () => {
+        try {
+            await store.dispatch('_deleteDataDevice', props.device.id);
+            loading.value = false;
+        }
+        catch (error) {
+            loading.value = false;
+            alert(error);
+        }
+    }
+    deleteDataDevice();
+}
 
 </script>

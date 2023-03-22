@@ -19,15 +19,20 @@ const mutations = {
     _assign_new_data_device(state, payload) {
         state.devices = [payload, ...state.devices]
     },
-    _assign_updated_devices(state, payload) {
+    _assign_updated_device(state, payload) {
         state.devices = state.devices.map(item => item.id !== payload.id ? item : payload);
+    },
+    _assign_deleted_device(state, payload) {
+        state.devices = state.devices.filter(item => item.id !== payload.id)
     }
 }
 
 const actions = {
     _fetchDataDevices,
     _fetchDataDevice,
-    _storeDataDevice
+    _storeDataDevice,
+    _updateDataDevice,
+    _deleteDataDevice
 }
 
 export default {
@@ -47,13 +52,13 @@ const backendUrl = 'http://127.0.0.1:8000/api';
 function _fetchDataDevices({ commit }) {
     return new Promise(async (resolve, reject) => {
         try {
-            const data = await fetch(`${backendUrl}/devices`, {
+            const response = await fetch(`${backendUrl}/devices`, {
                 headers: {
                     'Accept': 'application/json',
                     'ngrok-skip-browser-warning': 69420
                 }
             });
-            const json = await data.json();
+            const json = await response.json();
             commit('_assign_data_devices', json.data);
             resolve(json);
         }
@@ -67,13 +72,13 @@ function _fetchDataDevices({ commit }) {
 function _fetchDataDevice({ commit }, deviceId) {
     return new Promise(async (resolve, reject) => {
         try {
-            const data = await fetch(`${backendUrl}/devices/${deviceId}`, {
+            const response = await fetch(`${backendUrl}/devices/${deviceId}`, {
                 headers: {
                     'Accept': 'application/json',
                     'ngrok-skip-browser-warning': 69420
                 }
             });
-            const json = await data.json();
+            const json = await response.json();
             commit('_assign_data_device', json);
             resolve(json);
         }
@@ -85,7 +90,6 @@ function _fetchDataDevice({ commit }, deviceId) {
 }
 
 function _storeDataDevice({ commit }, newDevice) {
-    console.log(JSON.stringify(newDevice))
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(`${backendUrl}/devices`, {
@@ -106,17 +110,42 @@ function _storeDataDevice({ commit }, newDevice) {
     })
 }
 
+function _updateDataDevice({ commit }, newDevice, deviceId) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(`${backendUrl}/devices/${deviceId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newDevice)
+            });
+            const json = await response.json();
+            commit('_assign_updated_device', json);
+            resolve(json);
+        }
+        catch (error) {
+            console.log(error);
+            reject(error);
+        }
+    })
+}
 
-// async function _fetchDataDevice({ commit }) {
-//     try {
-//         const data = await fetch(backendUrl);
-//         const json = await data.json();
-//         commit('_assign_data_device', json);
-//     }
-//     catch (error) {
-//         console.error(error);
+function _deleteDataDevice({ commit }, deviceId) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(`${backendUrl}/devices/${deviceId}`, {
+                method: 'DELETE'
+            });
+            const json = await response.json();
+            commit('_assign_deleted_device', json);
+            resolve(json);
+        }
+        catch (error) {
+            console.log(error);
+            reject(error);
+        }
+    })
+}
 
-//     }
-
-// }
 

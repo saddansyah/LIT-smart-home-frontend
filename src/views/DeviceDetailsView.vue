@@ -168,7 +168,7 @@ const device = computed(() => store?.state?.device?.devices.find(item => item.id
 
 (function setTitleOnReload() {
     watch(device, () => {
-        dynamicTitle(device.value.device_name)
+        dynamicTitle(device?.value?.device_name)
     })
 })();
 
@@ -190,7 +190,7 @@ const updateDeviceState = async () => {
             body: JSON.stringify(body)
         });
         const json = await data.json();
-        store.commit('_assign_updated_devices', json);
+        store.commit('_assign_updated_device', json);
     }
     catch (error) {
         console.error(error);
@@ -210,13 +210,14 @@ const updateDeviceFavorite = async () => {
             body: JSON.stringify(body)
         });
         const json = await data.json();
-        store.commit('_assign_updated_devices', json);
+        store.commit('_assign_updated_device', json);
     }
     catch (error) {
         console.error(error);
     }
 };
 
+// Dropdown Items
 const dropdownItems = ref({
     chartCategory: [
         { title: 'Power Load', value: 'powerLoad' },

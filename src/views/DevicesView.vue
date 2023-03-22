@@ -70,6 +70,12 @@ import { DevicesCard, AddDevice } from '@/utils/componentLoader';
 const store = useStore();
 const devices = computed(() => store?.state?.device?.devices);
 
+const addDialog = ref(false);
+const deviceCategoryList = ref([]);
+watch(devices, () => {
+    deviceCategoryList.value = [...new Set(devices.value.map(device => device.category))].map(item => { return { 'title': item, 'value': item.split(' ').join('') } })
+})
+
 // Category Dropdown
 const dropdownItems = ref({
   deviceCategory: [
@@ -99,10 +105,6 @@ const selectSort = (item) => {
   selectedSort.value = item.title
 }
 
-const addDialog = ref(false);
-const deviceCategoryList = ref([]);
-watch(devices, () => {
-    deviceCategoryList.value = [...new Set(devices.value.map(device => device.category))].map(item => { return { 'title': item, 'value': item.split(' ').join('') } })
-})
+
 
 </script>

@@ -1,6 +1,7 @@
 <script setup>
 
 // Device Fetch
+import { computed, watch } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();

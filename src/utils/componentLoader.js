@@ -15,6 +15,9 @@ import DevicesCard from '@/components/DevicesCard.vue'
 import PeakPowerChart from '@/components/Chart/PeakPowerChart.vue';
 import EnergyUsageChart from '@/components/Chart/EnergyUsageChart.vue';
 
+// Other Components
+import ModalDelete from '@/components/ModalDelete.vue'
+
 export {
     FavoriteDevicesCard,
     EnergyContainerAll,
@@ -25,4 +28,5 @@ export {
     DevicesCard,
     PeakPowerChart,
     EnergyUsageChart,
+    ModalDelete
 }

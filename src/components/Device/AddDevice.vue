@@ -26,7 +26,6 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 defineProps({
@@ -74,7 +73,7 @@ const rules = ref(
     }
 )
 const deviceName = ref('');
-const deviceCategory = ref([])
+const deviceCategory = ref('')
 const deviceVoltage = ref('');
 const deviceCurrent = ref('');
 const devicePower = ref('');

@@ -54,13 +54,18 @@
                         class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-slate-400 shadow-lg">Change
                         Icon
                         <v-icon icon="mdi-devices"></v-icon></button>
-                    <button v-ripple
-                        class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 shadow-lg">Edit
-                        <v-icon icon="mdi-pencil"></v-icon></button>
+                    <v-dialog v-model="editDialog" persistent>
+                        <template v-slot:activator="{ props }">
+                            <button v-ripple v-bind="props"
+                                class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 shadow-lg">Edit
+                                <v-icon icon="mdi-pencil"></v-icon></button>
+                        </template>
+                        <EditDevice @close="$event => editDialog = false" :deviceCategoryList="deviceCategoryList" :device="device"/>
+                    </v-dialog>
+
                     <button v-ripple
                         class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-red-400 shadow-lg">Delete
                         <v-icon icon="mdi-delete"></v-icon></button>
-
                 </div>
                 <div class="main-container w-full h-fit rounded-xl">
                     <div class="grid lg:grid-rows-2 lg:grid-cols-6 gap-6 h-fit">
@@ -156,7 +161,7 @@ import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
-import { PeakPowerChart } from "@/utils/componentLoader";
+import { PeakPowerChart, EditDevice } from "@/utils/componentLoader";
 import dynamicTitle from "@/utils/dynamicTitle";
 
 const store = useStore();
@@ -164,7 +169,29 @@ const route = useRoute();
 
 const backendUrl = 'http://127.0.0.1:8000/api/devices/'
 const deviceId = route.params.deviceId
+
+// Refs + Computed -------
+const devices = computed(() => store?.state?.device?.devices); // To get the category list
 const device = computed(() => store?.state?.device?.devices.find(item => item.id === Number(deviceId)));
+const editDialog = ref(false);
+const deviceCategoryList = ref([]);
+const dropdownItems = ref({
+    chartCategory: [
+        { title: 'Power Load', value: 'powerLoad' },
+        { title: 'Energy Consumption', value: 'energyConsumption' }
+    ]
+}
+);
+const selectedChartCategory = ref("Energy Consumption");
+
+// Methods -------
+watch(device, () => {
+    deviceCategoryList.value = [...new Set(devices.value.map(device => device.category))].map(item => { return { 'title': item, 'value': item.split(' ').join('') } });
+});
+
+const selectChartCategory = (item) => {
+    selectedChartCategory.value = item.title
+}
 
 (function setTitleOnReload() {
     watch(device, () => {
@@ -176,7 +203,7 @@ const device = computed(() => store?.state?.device?.devices.find(item => item.id
     dynamicTitle(device?.value?.device_name)
 })();
 
-
+// Async Methods --------
 const updateDeviceState = async () => {
     const url = backendUrl + 'update_state/';
     const body = { state: !device.value.state };
@@ -216,21 +243,6 @@ const updateDeviceFavorite = async () => {
         console.error(error);
     }
 };
-
-// Dropdown Items
-const dropdownItems = ref({
-    chartCategory: [
-        { title: 'Power Load', value: 'powerLoad' },
-        { title: 'Energy Consumption', value: 'energyConsumption' }
-    ]
-}
-);
-
-const selectedChartCategory = ref("Energy Consumption");
-
-const selectChartCategory = (item) => {
-    selectedChartCategory.value = item.title
-}
 
 </script>
 

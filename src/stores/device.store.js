@@ -110,15 +110,15 @@ function _storeDataDevice({ commit }, newDevice) {
     })
 }
 
-function _updateDataDevice({ commit }, newDevice, deviceId) {
+function _updateDataDevice({ commit }, newDevice) {
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await fetch(`${backendUrl}/devices/${deviceId}`, {
+            const response = await fetch(`${backendUrl}/devices/${newDevice.deviceId.value}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(newDevice)
+                body: JSON.stringify(newDevice.data)
             });
             const json = await response.json();
             commit('_assign_updated_device', json);

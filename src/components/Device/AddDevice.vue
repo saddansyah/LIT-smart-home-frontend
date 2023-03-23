@@ -28,12 +28,17 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 
-defineProps({
-    deviceCategoryList: Array
-})
-
 const store = useStore();
 
+const deviceCategoryList = ref([
+  { title: 'Light Bulb', icon_url: 'mdi-lightbulb' },
+  { title: 'Led Strip', icon_url: 'mdi-led-strip' },
+  { title: 'Wall Light', icon_url: 'mdi-wall-sconce-flat' },
+  { title: 'Wall Socket', icon_url: 'mdi-power-socket-eu' },
+  { title: 'Wall Switch', icon_url: 'mdi-electric-switch' },
+  { title: 'Extension Power (Roll)', icon_url: 'mdi-power-plug' },
+  { title: 'Portable Plug', icon_url: 'mdi-power-plug' }
+]);
 
 const handleAddDevice = (emit) => {
     const newDevice = {
@@ -43,8 +48,10 @@ const handleAddDevice = (emit) => {
         volt: deviceVoltage.value,
         ampere: deviceCurrent.value,
         watt: devicePower.value,
-        icon_url: 'mdi-devices'
+        icon_url: deviceCategoryList.value.find(item => item.title === deviceCategory.value)?.icon_url || 'mdi-devices'
     }
+
+    console.log(newDevice)
 
     const storeDataDevice = async () => {
         try {

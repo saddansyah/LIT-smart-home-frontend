@@ -16,6 +16,7 @@
 		"@tailwindcss/typography": "^0.5.9",
 		"chart.js": "^4.2.1",
 		"dotenv": "^16.0.3",
+		"fetch-intercept": "^2.4.0",
 		"json-server": "^0.17.2",
 		"marked": "^4.2.12",
 		"vue": "^3.2.39",

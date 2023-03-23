@@ -18,6 +18,7 @@ import EnergyUsageChart from '@/components/Chart/EnergyUsageChart.vue';
 
 // Other Components
 import ModalDelete from '@/components/ModalDelete.vue';
+import NotifySnackbar from '@/components/NotifySnackbar.vue';
 
 export {
     FavoriteDevicesCard,
@@ -30,5 +31,6 @@ export {
     DevicesCard,
     PeakPowerChart,
     EnergyUsageChart,
-    ModalDelete
+    ModalDelete,
+    NotifySnackbar
 }

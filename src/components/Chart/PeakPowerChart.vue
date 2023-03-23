@@ -65,11 +65,10 @@ onMounted(() => {
                 x: {
                     title: {
                         display: true,
-                        text: 'time'
                     }
                 }
             },
-            responsive: true
+            responsive: true,
         }
     });
 });

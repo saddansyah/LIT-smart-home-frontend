@@ -41,7 +41,7 @@
                             <button v-bind="props" @click.prevent="">
                                 <v-icon icon="mdi-delete" size="large"></v-icon></button>
                         </template>
-                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()"/>
+                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()" />
                     </v-dialog>
                 </div>
             </div>
@@ -54,27 +54,26 @@
 import { ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { ModalDelete } from "@/utils/componentLoader";
+import { ModalDelete, NotifySnackbar } from "@/utils/componentLoader";
 
 const props = defineProps({
     device: Object
 });
+const emit = defineEmits(['notify']);
 const store = useStore();
 
-const deleteDialog = ref(false)
+const deleteDialog = ref(false);
 const backendUrl = 'http://127.0.0.1:8000/api/devices/';
 const deviceId = props.device.id;
 
-const handleDeleteDevice = () => {
-    const deleteDataDevice = async () => {
-        try {
-            await store.dispatch('_deleteDataDevice', deviceId);
-        }
-        catch (error) {
-            alert(error);
-        }
+const handleDeleteDevice = async () => {
+    try {
+        emit('notify', true, `${props.device.device_name} is deleted`);
+        await store.dispatch('_deleteDataDevice', deviceId);
     }
-    deleteDataDevice();
+    catch (error) {
+        emit('notify', true, `${error}`);
+    }
 }
 
 const updateDeviceFavorite = async () => {
@@ -90,11 +89,16 @@ const updateDeviceFavorite = async () => {
             body: JSON.stringify(body)
         });
         const json = await data.json();
+        if (json.is_favorite) {
+            emit('notify', true, `${props.device.device_name} is your favorite(s)`);
+        }
+        else {
+            emit('notify', true, `${props.device.device_name} is removed from your favorite(s)`);
+        }
         store.commit('_assign_updated_device', json);
     }
     catch (error) {
-        alert(error);
-        console.error(error);
+        emit('notify', true, `${error}`);
     }
 };
 

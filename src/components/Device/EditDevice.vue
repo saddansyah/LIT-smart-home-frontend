@@ -18,8 +18,8 @@
                 <v-text-field required v-model="devicePower" :rules="[rules.required, rules.numberOnly]"
                     label="Device Power (W)" clearable placeholder="Example: 12"></v-text-field>
                 <v-btn type="submit" v-ripple size="x-large"
-                    class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Add
-                    <v-icon icon="mdi-plus"></v-icon></v-btn>
+                    class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Edit
+                    <v-icon icon="mdi-pencil"></v-icon></v-btn>
             </v-form>
         </div>
     </div>
@@ -30,19 +30,28 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 
 const props = defineProps({
-    deviceCategoryList: Array,
     device: Object
 })
 
 const store = useStore();
+const deviceCategoryList = ref([
+  { title: 'Light Bulb', icon_url: 'mdi-lightbulb' },
+  { title: 'Led Strip', icon_url: 'mdi-led-strip' },
+  { title: 'Wall Light', icon_url: 'mdi-wall-sconce-flat' },
+  { title: 'Wall Socket', icon_url: 'mdi-power-socket-eu' },
+  { title: 'Wall Switch', icon_url: 'mdi-electric-switch' },
+  { title: 'Extension Power (Roll)', icon_url: 'mdi-power-plug' },
+  { title: 'Portable Plug', icon_url: 'mdi-power-plug' }
+]);
 
 const handleUpdateDevice = (emit) => {
+    const pattern = /[+-]?([0-9]*[.])?[0-9]+/;
     if( !deviceName.value || !deviceCategory.value || !deviceVoltage.value || !deviceCurrent.value || !devicePower.value ){
         alert('Text field cant be empty.');
         return;
     }
 
-    if (!/^[0-9]+$/.test(deviceVoltage.value) || !/^[0-9]+$/.test(deviceCurrent.value) || !/^[0-9]+$/.test(devicePower.value)){
+    if (!pattern.test(deviceVoltage.value) || !pattern.test(deviceCurrent.value) || !pattern.test(devicePower.value)){
         alert('Voltage, Current, and Power must be numeric (0-9) only.');
         return;
     }
@@ -55,10 +64,12 @@ const handleUpdateDevice = (emit) => {
             volt: deviceVoltage.value,
             ampere: deviceCurrent.value,
             watt: devicePower.value,
-            icon_url: 'mdi-devices'
+            icon_url: deviceCategoryList.value.find(item => item.title === deviceCategory.value)?.icon_url || 'mdi-devices'
         },
         deviceId
     }
+
+    console.log(newDevice)
 
     const updateDataDevice = async () => {
         try {
@@ -79,7 +90,7 @@ const form = ref(true);
 const rules = ref(
     {
         numberOnly: value => {
-            const pattern = /^[0-9]+$/
+            const pattern = /[+-]?([0-9]*[.])?[0-9]+/
             return pattern.test(value) || 'Number only (0-9).';
 
         },

@@ -1,6 +1,5 @@
 <template>
     <main class="container p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
-        {{ !device }}
         <div v-if="!device">
             <h1 class="text-2xl font-mono">Loading...</h1>
         </div>
@@ -50,18 +49,13 @@
                         <p>Voltage: {{ device.volt }} V</p>
                         <p>Ampere: {{ device.ampere }} A</p>
                     </div>
-                    <button v-ripple
-                        class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-slate-400 shadow-lg">Change
-                        Icon
-                        <v-icon icon="mdi-devices"></v-icon></button>
                     <v-dialog v-model="editDialog" persistent>
                         <template v-slot:activator="{ props }">
                             <button v-ripple v-bind="props"
                                 class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 shadow-lg">Edit
                                 <v-icon icon="mdi-pencil"></v-icon></button>
                         </template>
-                        <EditDevice @close="$event => editDialog = false" :deviceCategoryList="deviceCategoryList"
-                            :device="device" />
+                        <EditDevice @close="$event => editDialog = false" :device="device" />
                     </v-dialog>
                     <v-dialog v-model="deleteDialog" persistent @keydown.esc="deleteDialog = false">
                         <template v-slot:activator="{ props }">
@@ -98,7 +92,8 @@
                             class="flex flex-col gap-6 md:col-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-neutral-50 rounded-xl shadow hover:bg-gray-200 transition-all">
                             <div class="content-top flex flex-row justify-between gap-8">
                                 <h3 class="font-bold text-xl inline-block">Device Peak Power</h3>
-                                <v-tooltip location="top" text="Device's peak power (watt) within a certain time limit (daily, weekly, etc)">
+                                <v-tooltip location="top"
+                                    text="Device's peak power (watt) within a certain time limit (daily, weekly, etc)">
                                     <template v-slot:activator="{ props }">
                                         <v-icon v-bind="props" icon="mdi-information-outline" class="text-gray-400" />
                                     </template>
@@ -129,10 +124,10 @@
                                     <button v-ripple class="inline-block px-3 py-1 rounded font-bold text-xl lg:text-2xl">
                                         {{ selectedChartCategory }}
                                         <v-menu activator="parent">
-                                            <v-list>
+                                            <v-list v-model="chartCategory">
                                                 <v-list-item v-for="(item, index) in dropdownItems.chartCategory"
-                                                    @click="selectChartCategory(item)" :key="index" :title="item.title"
-                                                    v-model="selectedItems">
+                                                    :value="item.value" @click="selectChartCategory(item)" :key="index"
+                                                    :title="item.title">
                                                 </v-list-item>
                                             </v-list>
                                         </v-menu>
@@ -141,7 +136,14 @@
                                 </div>
                             </div>
                             <div class="main-content graph">
-                                <PeakPowerChart :chartId="deviceId" />
+                                <v-window direction="vertical" v-model="chartCategory" class="p-1">
+                                    <v-window-item value="energyUsage">
+                                        <EnergyUsageChart :chartId="deviceId + 'energyUsage'" />
+                                    </v-window-item>
+                                    <v-window-item value="powerLoad">
+                                        <PeakPowerChart :chartId="deviceId + 'powerLoad'" />
+                                    </v-window-item>
+                                </v-window>
                             </div>
                             <div class="content-bottom flex flex-row justify-between">
                                 <div class="min text-center">
@@ -170,7 +172,7 @@ import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 
-import { PeakPowerChart, EditDevice, ModalDelete } from "@/utils/componentLoader";
+import { PeakPowerChart, EnergyUsageChart, EditDevice, ModalDelete } from "@/utils/componentLoader";
 import dynamicTitle from "@/utils/dynamicTitle";
 
 const store = useStore();
@@ -185,23 +187,19 @@ const devices = computed(() => store?.state?.device?.devices); // To get the cat
 const device = computed(() => store?.state?.device?.devices.find(item => item.id === Number(deviceId)));
 const editDialog = ref(false);
 const deleteDialog = ref(false);
-const deviceCategoryList = ref([]);
+const chartCategory = ref('energyUsage');
 const dropdownItems = ref({
     chartCategory: [
+        { title: 'Energy Usage', value: 'energyUsage' },
         { title: 'Power Load', value: 'powerLoad' },
-        { title: 'Energy Consumption', value: 'energyConsumption' }
     ]
 }
 );
-const selectedChartCategory = ref("Energy Consumption");
-
-// Methods -------
-watch(device, () => {
-    deviceCategoryList.value = [...new Set(devices.value.map(device => device.category))].map(item => { return { 'title': item, 'value': item.split(' ').join('') } });
-});
+const selectedChartCategory = ref("Energy Usage");
 
 const selectChartCategory = (item) => {
     selectedChartCategory.value = item.title
+    chartCategory.value = item.value
 }
 
 (function setTitleOnReload() {

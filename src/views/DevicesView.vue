@@ -1,5 +1,6 @@
 <template>
   <main class="container w-full p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
+    <NotifySnackbar :state="notify.state" :message="notify.message" @close="$event => notify.state = false" />
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Devices</h1>
     </div>
@@ -14,7 +15,7 @@
             <v-menu activator="parent">
               <v-list>
                 <v-list-item v-for="(item, index) in dropdownItems.deviceCategory" @click="selectDeviceCategory(item)"
-                  :key="index" :title="item.title" v-model="selectedItems">
+                  :key="index" :title="item.title" v-model="selectedDeviceCategory">
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -26,7 +27,7 @@
             <v-menu activator="parent">
               <v-list>
                 <v-list-item v-for="(item, index) in dropdownItems.sort" @click="selectSort(item)" :key="index"
-                  :title="item.title" v-model="selectedItems">
+                  :title="item.title" v-model="selectedSort">
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -41,7 +42,7 @@
                 Add New Devices <v-icon icon="mdi-plus"></v-icon>
               </button>
             </template>
-            <AddDevice @close="$event => addDialog = false" :addDialog="addDialog"/>
+            <AddDevice @close="$event => addDialog = false" :addDialog="addDialog" />
           </v-dialog>
         </div>
       </div>
@@ -53,7 +54,7 @@
       </div>
       <div v-else>
         <div class="mt-6">
-          <DevicesCard :device="device" v-for="device in devices" :key="device.id" />
+          <DevicesCard :device="device" v-for="device in devices" :key="device.id" @notify="emitNotify"/>
         </div>
       </div>
     </div>
@@ -65,12 +66,21 @@ import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { RouterView, RouterLink } from 'vue-router';
 
-import { DevicesCard, AddDevice } from '@/utils/componentLoader';
+import { DevicesCard, AddDevice, NotifySnackbar } from '@/utils/componentLoader';
 
 const store = useStore();
 const devices = computed(() => store?.state?.device?.devices);
 
 const addDialog = ref(false);
+const notify = ref({
+  state: false,
+  message: ''
+});
+
+const emitNotify = (state, message) => {
+  notify.value.state = state;
+  notify.value.message = message;
+}
 
 // watch(devices, () => {
 //     deviceCategoryList.value = [...new Set(devices.value.map(device => device.category))].map(item => { return { 'title': item, 'value': item.split(' ').join('') } })
@@ -98,7 +108,7 @@ const selectedDeviceCategory = ref("All Devices");
 const selectedSort = ref("Name (A-Z)");
 
 const selectDeviceCategory = (item) => {
-  selectedDeviceCategory.value = item
+  selectedDeviceCategory.value = item.title
 }
 
 const selectSort = (item) => {

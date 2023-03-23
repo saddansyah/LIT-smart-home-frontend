@@ -14,7 +14,7 @@
             <v-menu activator="parent">
               <v-list>
                 <v-list-item v-for="(item, index) in dropdownItems.deviceCategory" @click="selectDeviceCategory(item)"
-                  :key="index" :title="item.title" v-model="selectedItems">
+                  :key="index" :title="item.title" v-model="selectedDeviceCategory">
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -26,7 +26,7 @@
             <v-menu activator="parent">
               <v-list>
                 <v-list-item v-for="(item, index) in dropdownItems.sort" @click="selectSort(item)" :key="index"
-                  :title="item.title" v-model="selectedItems">
+                  :title="item.title" v-model="selectedSort">
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -38,7 +38,7 @@
             <v-menu activator="parent">
               <v-list>
                 <v-list-item v-for="(item, index) in dropdownItems.date" @click="selectDate(item)" :key="index"
-                  :title="item.title" v-model="selectedItems">
+                  :title="item.title" v-model="selectedDate">
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -51,7 +51,7 @@
           <v-menu activator="parent">
             <v-list>
               <v-list-item v-for="(item, index) in dropdownItems.type" @click="selectType(item)" :key="index"
-                :title="item.title" v-model="selectedItems">
+                :title="item.title" v-model="selectedType">
               </v-list-item>
             </v-list>
           </v-menu>
@@ -66,13 +66,23 @@
           <v-tab value="byDevices" prepend-icon="mdi-devices" selected-class="bg-sky-200">By Device</v-tab>
         </v-tabs>
       </div>
-      <div class="devices w-full" v-if="true">
-        <v-window v-model="tab" class="p-1">
+      <div class="devices w-full" v-if="selectedType === 'Power'">
+        <v-window direction="vertical" v-model="tab" class="p-1">
           <v-window-item value="all">
             <PowerContainerAll />
           </v-window-item>
           <v-window-item value="byDevices">
             <PowerContainerDevice :chartId="device.id" :device="device" v-for="device in devices" :key="device.id" />
+          </v-window-item>
+        </v-window>
+      </div>
+      <div class="devices w-full" v-else-if="selectedType === 'Energy'">
+        <v-window direction="vertical" v-model="tab" class="p-1">
+          <v-window-item value="all">
+            <EnergyContainerAll />
+          </v-window-item>
+          <v-window-item value="byDevices">
+            <EnergyContainerDevice />
           </v-window-item>
         </v-window>
       </div>

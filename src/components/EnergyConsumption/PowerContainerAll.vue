@@ -7,8 +7,8 @@
                 <div class="energy-usage-main flex gap-2 items-center">
                     <div class="text-6xl lg:text-8xl">⚡</div>
                     <div class="content-right">
-                        <h3 class="text-6xl lg:text-8xl font-bold">12</h3>
-                        <p class="text-xl text-gray-600">kilo-watt hour (kWH)</p>
+                        <h3 class="text-6xl lg:text-8xl font-bold">740</h3>
+                        <p class="text-xl text-gray-600">kilo-watt (kW)</p>
                     </div>
                 </div>
             </div>
@@ -34,9 +34,17 @@
             </div>
         </div>
         <div v-ripple
-            class="energy-chart mt-6 rounded-xl w-full h-96 shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
-            <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Chart</h3>
-            <PeakPowerChart chartId="powerConsumptionChart" />
+            class="energy-chart mt-6 rounded-xl w-full h-fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
+            <div class="content-top flex justify-between items-start">
+                <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Chart</h3>
+                <button v-ripple v-bind="props"
+                    class="inline-block px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                    Refresh <v-icon icon="mdi-plus"></v-icon>
+                </button>
+            </div>
+            <div class="chart mt-6">
+                <PeakPowerChart chartId="powerConsumptionChart" />
+            </div>
         </div>
     </div>
 </template>

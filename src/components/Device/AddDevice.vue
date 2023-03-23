@@ -51,8 +51,6 @@ const handleAddDevice = (emit) => {
         icon_url: deviceCategoryList.value.find(item => item.title === deviceCategory.value)?.icon_url || 'mdi-devices'
     }
 
-    console.log(newDevice)
-
     const storeDataDevice = async () => {
         try {
             await store.dispatch('_storeDataDevice', newDevice);
@@ -72,8 +70,8 @@ const form = ref(false);
 const rules = ref(
     {
         numberOnly: value => {
-            const pattern = /^[0-9]+$/
-            return pattern.test(value) || 'Number only (0-9).';
+            const pattern = /[+-]?([0-9]*[.])?[0-9]+/
+            return pattern.test(value) || 'Float only (0-9).';
 
         },
         required: value => !!value || 'Required.'

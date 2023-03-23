@@ -6,7 +6,8 @@
                 <div v-ripple class="device-title flex flex-col basis-[20%] min-w-fit p-6 bg-slate-50 rounded-xl shadow ">
                     <v-icon :icon="device.icon_url" class="text-4xl lg:text-6xl text-sky-800 mb-4"></v-icon>
                     <div class="content-center-top">
-                        <h3 class="font-bold text-2xl lg:text-3xl mb-1">{{ device.device_name }}</h3>
+                        <h3 class="font-bold text-2xl lg:text-3xl mb-1">{{ device.device_name.length > 14 ? device.device_name.substr(0, 12)
+                        + '...' : device.device_name }}</h3>
                         <v-chip size="small" color="green" class="font-semibold">{{ device.category }}</v-chip>
                         <div v-if="device.state">
                             <h4 class="text-base mt-1">State: ON</h4>

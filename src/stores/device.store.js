@@ -20,7 +20,7 @@ const mutations = {
         state.devices = [payload, ...state.devices]
     },
     _assign_updated_device(state, payload) {
-        state.devices = state.devices.map(item => item.id !== payload.id ? item : payload);
+        state.devices = state.devices.map(item => item.id !== payload.id ? item : payload).sort((a, b) => {return Number(b.is_favorite) - Number(a.is_favorite)});
     },
     _assign_deleted_device(state, payload) {
         state.devices = state.devices.filter(item => item.id !== payload.id)
@@ -59,6 +59,7 @@ function _fetchDataDevices({ commit }) {
                 }
             });
             const json = await response.json();
+
             commit('_assign_data_devices', json.data);
             resolve(json);
         }
@@ -121,6 +122,7 @@ function _updateDataDevice({ commit }, newDevice) {
                 body: JSON.stringify(newDevice.data)
             });
             const json = await response.json();
+            console.log(json);
             commit('_assign_updated_device', json);
             resolve(json);
         }

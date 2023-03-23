@@ -30,16 +30,16 @@ onMounted(() => {
             datasets:
                 [
                     {
-                        label: 'Today',
-                        data: [12, 20, 3, 5, 12, 4, 19],
-                        borderWidth: 1,
-                        backgroundColor: '#22c55e'
-                    },
-                    {
                         label: 'Yesterday',
                         data: [13, 19, 3, 5, 2, 3, 8],
                         borderWidth: 1,
-                        backgroundColor: "#6b7280"
+                        backgroundColor: "#d1d5db"
+                    },
+                    {
+                        label: 'Today',
+                        data: [12, 20, 3, 5],
+                        borderWidth: 1,
+                        backgroundColor: '#059669'
                     },
                 ],
 
@@ -56,11 +56,10 @@ onMounted(() => {
                 x: {
                     title: {
                         display: true,
-                        text: 'time'
                     }
                 }
             },
-            responsive: true
+            responsive: true,
         }
     });
 });

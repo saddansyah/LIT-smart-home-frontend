@@ -35,17 +35,17 @@ const props = defineProps({
 
 const store = useStore();
 const deviceCategoryList = ref([
-  { title: 'Light Bulb', icon_url: 'mdi-lightbulb' },
-  { title: 'Led Strip', icon_url: 'mdi-led-strip' },
-  { title: 'Wall Light', icon_url: 'mdi-wall-sconce-flat' },
-  { title: 'Wall Socket', icon_url: 'mdi-power-socket-eu' },
-  { title: 'Wall Switch', icon_url: 'mdi-electric-switch' },
-  { title: 'Extension Power (Roll)', icon_url: 'mdi-power-plug' },
-  { title: 'Portable Plug', icon_url: 'mdi-power-plug' }
+    { title: 'Light Bulb', icon_url: 'mdi-lightbulb' },
+    { title: 'Led Strip', icon_url: 'mdi-led-strip' },
+    { title: 'Wall Light', icon_url: 'mdi-wall-sconce-flat' },
+    { title: 'Wall Socket', icon_url: 'mdi-power-socket-eu' },
+    { title: 'Wall Switch', icon_url: 'mdi-electric-switch' },
+    { title: 'Extension Power (Roll)', icon_url: 'mdi-power-plug' },
+    { title: 'Portable Plug', icon_url: 'mdi-power-plug' }
 ]);
+const pattern = /^[+]?\d+(\.\d+)?$/;
 
 const handleUpdateDevice = (emit) => {
-    const pattern = /[+-]?([0-9]*[.])?[0-9]+/;
     if( !deviceName.value || !deviceCategory.value || !deviceVoltage.value || !deviceCurrent.value || !devicePower.value ){
         alert('Text field cant be empty.');
         return;
@@ -69,14 +69,14 @@ const handleUpdateDevice = (emit) => {
         deviceId
     }
 
-    console.log(newDevice)
-
     const updateDataDevice = async () => {
         try {
             await store.dispatch('_updateDataDevice', newDevice);
+            emit('notify', true, `${deviceName.value} is edited`);
             emit('close');
         }
         catch (error) {
+            emit('notify', true, `${error}`);
             alert(error);
         }
     }
@@ -90,8 +90,7 @@ const form = ref(true);
 const rules = ref(
     {
         numberOnly: value => {
-            const pattern = /[+-]?([0-9]*[.])?[0-9]+/
-            return pattern.test(value) || 'Number only (0-9).';
+            return pattern.test(value) || 'Float only (0-9).';
 
         },
         required: value => !!value || 'Required.'

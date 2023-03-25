@@ -3,7 +3,7 @@
         <div class="main-top flex w-full h-fit lg:flex-row gap-6">
             <div v-ripple
                 class="energy-usage basis-1/2 flex flex-col w-fit gap-6 rounded-xl shadow bg-slate-50 hover:bg-slate-200 transition-all p-6 ">
-                <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Usage</h3>
+                <h3 class="font-bold text-xl lg:text-2xl inline-block">Peak Power</h3>
                 <div class="energy-usage-main flex gap-2 items-center">
                     <div class="text-6xl lg:text-8xl">⚡</div>
                     <div class="content-right">
@@ -37,9 +37,9 @@
             class="energy-chart mt-6 rounded-xl w-full h-fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
             <div class="content-top flex justify-between items-start">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Chart</h3>
-                <button v-ripple v-bind="props"
+                <button v-ripple
                     class="inline-block px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
-                    Refresh <v-icon icon="mdi-plus"></v-icon>
+                    Refresh <v-icon icon="mdi-refresh"></v-icon>
                 </button>
             </div>
             <div class="chart mt-6">

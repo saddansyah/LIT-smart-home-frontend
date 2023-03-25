@@ -1,7 +1,8 @@
 <template>
     <main class="container p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
+        <NotifySnackbar :state="notify.state" :message="notify.message" @close="$event => notify.state = false" />
         <div v-if="!device">
-            <h1 class="text-2xl font-mono">Loading...</h1>
+            <MainDashboardLoading/>
         </div>
         <div v-else>
             <div class="content-top mb-9 flex flex-row justify-between">
@@ -55,7 +56,7 @@
                                 class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 shadow-lg">Edit
                                 <v-icon icon="mdi-pencil"></v-icon></button>
                         </template>
-                        <EditDevice @close="$event => editDialog = false" :device="device" />
+                        <EditDevice @close="$event => editDialog = false" :device="device" @notify="emitNotify" />
                     </v-dialog>
                     <v-dialog v-model="deleteDialog" persistent @keydown.esc="deleteDialog = false">
                         <template v-slot:activator="{ props }">
@@ -101,17 +102,17 @@
                             </div>
                             <div class="main-content flex flex-row justify-between items-center">
                                 <div class="main-content-left flex flex-col">
-                                    <h3 class="text-2xl lg:text-6xl font-bold">{{ device.watt }}</h3>
+                                    <h3 class="text-2xl lg:text-6xl font-bold">{{ deviceUsages.reduce((acc, curr) => acc.kwh < curr.kwh ? acc : curr).watt }}</h3>
                                     <h1 class="text-xl self-start text-gray-400">Watt</h1>
                                 </div>
-                                <div class="main-content-right text-xl flex flex-col items-center text-gray-400">
+                                <div class="main-content-right text-xl flex flex-col items-end text-gray-400">
                                     <div class="voltage flex gap-2">
                                         <v-icon icon="mdi-flash-triangle"></v-icon>
-                                        <h4>12.1 V</h4>
+                                        <h4>{{ device.volt }} V</h4>
                                     </div>
                                     <div class="ampere flex gap-2">
                                         <v-icon icon="mdi-current-dc"></v-icon>
-                                        <h4>2.1 A</h4>
+                                        <h4>{{ device.ampere }} A</h4>
                                     </div>
                                 </div>
                             </div>
@@ -135,16 +136,22 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="main-content graph">
-                                <v-window direction="vertical" v-model="chartCategory" class="p-1">
-                                    <v-window-item value="energyUsage">
-                                        <EnergyUsageChart :chartId="deviceId + 'energyUsage'" />
-                                    </v-window-item>
-                                    <v-window-item value="powerLoad">
-                                        <PeakPowerChart :chartId="deviceId + 'powerLoad'" />
-                                    </v-window-item>
-                                </v-window>
+                            <div v-if="!deviceUsages[0]">
+                                <GraphLoading/>
                             </div>
+                            <div v-else>
+                                <div class="main-content graph">
+                                    <v-window direction="vertical" v-model="chartCategory" class="p-1">
+                                        <v-window-item value="energyUsage">
+                                            <EnergyUsageChart chartId="energyUsage" :data="deviceUsages" />
+                                        </v-window-item>
+                                        <v-window-item value="powerLoad">
+                                            <PeakPowerChart chartId="powerLoad" />
+                                        </v-window-item>
+                                    </v-window>
+                                </div>
+                            </div>
+
                             <div class="content-bottom flex flex-row justify-between">
                                 <div class="min text-center">
                                     <p class="font-semibold">Min: 0 kW</p>
@@ -172,19 +179,30 @@ import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 
-import { PeakPowerChart, EnergyUsageChart, EditDevice, ModalDelete } from "@/utils/componentLoader";
+import { PeakPowerChart, EnergyUsageChart, EditDevice, ModalDelete, NotifySnackbar, GraphLoading, MainDashboardLoading } from "@/utils/componentLoader";
 import dynamicTitle from "@/utils/dynamicTitle";
 
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
 
-const backendUrl = 'http://127.0.0.1:8000/api/devices/'
-const deviceId = route.params.deviceId
+// Pre-fetch total usage
+(async function fetchTotalUsage() {
+  try {
+    await store.dispatch('_fetchDataTotalUsages', 'hourly');
+  }
+  catch (error) {
+    alert(error);
+    console.error(error);
+  }
+})();
+
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+const deviceId = route.params.deviceId;
 
 // Refs + Computed -------
-const devices = computed(() => store?.state?.device?.devices); // To get the category list
 const device = computed(() => store?.state?.device?.devices.find(item => item.id === Number(deviceId)));
+const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id == Number(deviceId)));
 const editDialog = ref(false);
 const deleteDialog = ref(false);
 const chartCategory = ref('energyUsage');
@@ -196,6 +214,16 @@ const dropdownItems = ref({
 }
 );
 const selectedChartCategory = ref("Energy Usage");
+const notify = ref({
+    state: false,
+    message: ''
+});
+
+// Methods
+const emitNotify = (state, message) => {
+    notify.value.state = state;
+    notify.value.message = message;
+}
 
 const selectChartCategory = (item) => {
     selectedChartCategory.value = item.title
@@ -214,11 +242,11 @@ const selectChartCategory = (item) => {
 
 // Async Methods --------
 const updateDeviceState = async () => {
-    const url = backendUrl + 'update_state/';
+    const url = `${BASE_URL}/devices/update_state/${deviceId}`
     const body = { state: !device.value.state };
 
     try {
-        const data = await fetch(url + deviceId, {
+        const data = await fetch(url, {
             method: 'PATCH',
             headers: {
                 "Content-Type": "application/json",
@@ -227,6 +255,14 @@ const updateDeviceState = async () => {
         });
         const json = await data.json();
         store.commit('_assign_updated_device', json);
+
+        if (json.state) {
+            emitNotify(true, `${json.device_name} is on`)
+        }
+        else {
+            emitNotify(true, `${json.device_name} is off`)
+        }
+
     }
     catch (error) {
         alert(error);
@@ -235,11 +271,10 @@ const updateDeviceState = async () => {
 };
 
 const updateDeviceFavorite = async () => {
-    const url = backendUrl + 'update_favorite/';
+    const url = `${BASE_URL}/devices/update_favorite/${deviceId}`
     const body = { is_favorite: !device.value.is_favorite };
-
     try {
-        const data = await fetch(url + deviceId, {
+        const data = await fetch(url, {
             method: 'PATCH',
             headers: {
                 "Content-Type": "application/json",
@@ -248,6 +283,13 @@ const updateDeviceFavorite = async () => {
         });
         const json = await data.json();
         store.commit('_assign_updated_device', json);
+
+        if (json.is_favorite) {
+            emitNotify(true, `${json.device_name} is your favorite(s)`)
+        }
+        else {
+            emitNotify(true, `${json.device_name} is removed from your favorite(s)`)
+        }
     }
     catch (error) {
         alert(error);

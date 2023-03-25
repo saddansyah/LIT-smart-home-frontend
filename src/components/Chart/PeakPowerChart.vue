@@ -77,6 +77,7 @@ onMounted(() => {
 
 <template>
     <canvas :id="chartId" width="auto"> </canvas>
+    
 </template>
 
 <style scoped>

@@ -54,10 +54,12 @@ const handleAddDevice = (emit) => {
     const storeDataDevice = async () => {
         try {
             await store.dispatch('_storeDataDevice', newDevice);
+            emit('notify', true, `${newDevice.device_name} is added`);
             emit('close');
         }
         catch (error) {
             alert(error);
+            emit('notify', true, `${error}`);
         }
     }
 
@@ -70,7 +72,7 @@ const form = ref(false);
 const rules = ref(
     {
         numberOnly: value => {
-            const pattern = /[+-]?([0-9]*[.])?[0-9]+/
+            const pattern = /^[+]?\d+(\.\d+)?$/
             return pattern.test(value) || 'Float only (0-9).';
 
         },

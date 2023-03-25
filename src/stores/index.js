@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 
 import device from './device.store'
+import deviceUsage from './deviceUsage.store';
 
 export default createStore({
   state: {
@@ -12,6 +13,7 @@ export default createStore({
   actions: {
   },
   modules: {
-    device
+    device,
+    deviceUsage
   }
 });

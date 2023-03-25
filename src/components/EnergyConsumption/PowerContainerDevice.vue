@@ -37,7 +37,7 @@
 import { PeakPowerChart } from "@/utils/componentLoader.js";
 
 
-defineProps({
+const {chartId, device} = defineProps({
     chartId: Number,
     device: Object
 });

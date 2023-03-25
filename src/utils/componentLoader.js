@@ -12,9 +12,15 @@ import AddDevice from '@/components/Device/AddDevice.vue';
 import EditDevice from '@/components/Device/EditDevice.vue';
 import DevicesCard from '@/components/DevicesCard.vue';
 
-// Chart Component
+// Chart Components
 import PeakPowerChart from '@/components/Chart/PeakPowerChart.vue';
 import EnergyUsageChart from '@/components/Chart/EnergyUsageChart.vue';
+
+// Loading Components
+import FavoriteDeviceLoading from '@/components/Loading/FavoriteDeviceLoading.vue';
+import MainDashboardLoading from '@/components/Loading/MainDashboardLoading.vue';
+import BasicLoading from '@/components/Loading/BasicLoading.vue';
+import GraphLoading from '@/components/Loading/GraphLoading.vue';
 
 // Other Components
 import ModalDelete from '@/components/ModalDelete.vue';
@@ -32,5 +38,9 @@ export {
     PeakPowerChart,
     EnergyUsageChart,
     ModalDelete,
-    NotifySnackbar
+    NotifySnackbar,
+    FavoriteDeviceLoading,
+    MainDashboardLoading,
+    BasicLoading,
+    GraphLoading
 }

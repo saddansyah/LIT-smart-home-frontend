@@ -1,43 +1,51 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, watch } from 'vue';
 import {
-  Chart,
-  Colors,
-  BubbleController,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Legend
+    Chart,
+    Colors,
+    BubbleController,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    Legend
 } from 'chart.js'
 
 Chart.register(
-  Colors,
-  BubbleController,
-  PointElement,
-  CategoryScale,
-  LinearScale,
-  Legend
+    Colors,
+    BubbleController,
+    PointElement,
+    CategoryScale,
+    LinearScale,
+    Legend
 );
 
-const { chartId } = defineProps(['chartId'])
+const { chartId, data } = defineProps(['chartId', 'data']);
+
+// Get Today and Yesterday (Y-m-d)
+const today = new Date;
+const yesterday = new Date;
+yesterday.setDate(yesterday.getDate() - 1);
+
+const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+const formattedYesterday = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`
 
 onMounted(() => {
     const ctx = document.getElementById(chartId);
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: data?.map(item => item.hour) || [],
             datasets:
                 [
                     {
                         label: 'Yesterday',
-                        data: [13, 19, 3, 5, 2, 3, 8],
+                        data: data?.filter(item => String(item.date) === String(formattedYesterday)).map(item => item.kwh) || [],
                         borderWidth: 1,
                         backgroundColor: "#d1d5db"
                     },
                     {
                         label: 'Today',
-                        data: [12, 20, 3, 5],
+                        data: data?.filter(item => String(item.date) === String(formattedToday)).map(item => item.kwh) || [],
                         borderWidth: 1,
                         backgroundColor: '#059669'
                     },
@@ -45,6 +53,12 @@ onMounted(() => {
 
         },
         options: {
+            plugins: {
+                legend: {
+                    position: "top",
+                    align: "end"
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -56,6 +70,7 @@ onMounted(() => {
                 x: {
                     title: {
                         display: true,
+                        text: 'time'
                     }
                 }
             },

@@ -7,8 +7,15 @@
                 <div class="energy-usage-main flex gap-2 items-center">
                     <div class="text-6xl lg:text-8xl">⚡</div>
                     <div class="content-right">
-                        <h3 class="text-6xl lg:text-8xl font-bold">12</h3>
-                        <p class="text-xl text-gray-600">kilo-watt hour (kWH)</p>
+                        <div v-if="!totalUsagesToday">
+                            <div class="w-72">
+                                <BasicLoading />
+                            </div>
+                        </div>
+                        <div v-else>
+                            <h3 class="text-4xl lg:text-6xl font-bold">{{ totalUsagesToday }}</h3>
+                            <p class="text-xl text-gray-600">kilo-watt hour (kWH)</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,24 +43,35 @@
             class="energy-chart mt-6 rounded-xl w-full fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
             <div class="content-top flex justify-between items-start">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Energy Chart</h3>
-                <button v-ripple v-bind="props"
+                <button v-ripple
                     class="inline-block px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
-                    Refresh <v-icon icon="mdi-plus"></v-icon>
+                    Refresh <v-icon icon="mdi-refresh"></v-icon>
                 </button>
             </div>
             <div class="chart mt-6">
-                <EnergyUsageChart chartId="energyUsageChart"/>
+                <div v-if="!totalUsagesToday">
+                    <GraphLoading />
+                </div>
+                <div v-else>
+                    <EnergyUsageChart chartId="energyUsageChart" :data="totalUsages" />
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { EnergyUsageChart } from "@/utils/componentLoader.js";
+import { EnergyUsageChart, BasicLoading, GraphLoading } from "@/utils/componentLoader.js";
 import { computed, ref } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const totalUsages = computed(() => store?.state.deviceUsage.totalUsages);
+const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages[store.state.deviceUsage.totalUsages.length - 1]?.kwh);
 
 const limit = ref(14);
-const watt = ref(12);
-const value = computed(() => Math.round((watt.value / limit.value) * 100));
+const kwh = ref(12);
+const value = computed(() => Math.round((kwh.value / limit.value) * 100));
 
 </script>

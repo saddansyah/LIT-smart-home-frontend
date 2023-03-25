@@ -42,7 +42,7 @@
                 Add New Devices <v-icon icon="mdi-plus"></v-icon>
               </button>
             </template>
-            <AddDevice @close="$event => addDialog = false" :addDialog="addDialog" />
+            <AddDevice @close="$event => addDialog = false" :addDialog="addDialog" @notify="emitNotify"/>
           </v-dialog>
         </div>
       </div>
@@ -72,6 +72,8 @@ const store = useStore();
 const devices = computed(() => store?.state?.device?.devices);
 
 const addDialog = ref(false);
+
+// Notify Snackbar
 const notify = ref({
   state: false,
   message: ''
@@ -81,10 +83,6 @@ const emitNotify = (state, message) => {
   notify.value.state = state;
   notify.value.message = message;
 }
-
-// watch(devices, () => {
-//     deviceCategoryList.value = [...new Set(devices.value.map(device => device.category))].map(item => { return { 'title': item, 'value': item.split(' ').join('') } })
-// })
 
 // Category Dropdown
 const dropdownItems = ref({

@@ -59,45 +59,62 @@
         </button>
       </div>
     </div>
-    <div class="main-container flex lg:flex-row lg:gap-12 w-full h-full">
-      <div class="card rounded-lg w-64 h-fit shadow bg-slate-50">
-        <v-tabs v-model="tab" color="blue-darken-3" direction="vertical" density="comfortable" mandatory hide-slider grow>
-          <v-tab value="all" prepend-icon="mdi-view-dashboard" selected-class="bg-sky-200">All</v-tab>
-          <v-tab value="byDevices" prepend-icon="mdi-devices" selected-class="bg-sky-200">By Device</v-tab>
-        </v-tabs>
-      </div>
-      <div class="devices w-full" v-if="selectedType === 'Power'">
-        <v-window direction="vertical" v-model="tab" class="p-1">
-          <v-window-item value="all">
-            <PowerContainerAll />
-          </v-window-item>
-          <v-window-item value="byDevices">
-            <PowerContainerDevice :chartId="device.id" :device="device" v-for="device in devices" :key="device.id" />
-          </v-window-item>
-        </v-window>
-      </div>
-      <div class="devices w-full" v-else-if="selectedType === 'Energy'">
-        <v-window direction="vertical" v-model="tab" class="p-1">
-          <v-window-item value="all">
-            <EnergyContainerAll />
-          </v-window-item>
-          <v-window-item value="byDevices">
-            <EnergyContainerDevice />
-          </v-window-item>
-        </v-window>
+    <div class="" v-if="false">
+      <MainDashboardLoading />
+    </div>
+    <div class="" v-else>
+      <div class="main-container flex lg:flex-row lg:gap-12 w-full h-full">
+        <div class="card rounded-lg w-64 h-fit shadow bg-slate-50">
+          <v-tabs v-model="tab" color="blue-darken-3" direction="vertical" density="comfortable" mandatory hide-slider
+            grow>
+            <v-tab value="all" prepend-icon="mdi-view-dashboard" selected-class="bg-sky-200">All</v-tab>
+            <v-tab value="byDevices" prepend-icon="mdi-devices" selected-class="bg-sky-200">By Device</v-tab>
+          </v-tabs>
+        </div>
+        <div class="devices w-full" v-if="selectedType === 'Power'">
+          <v-window direction="vertical" v-model="tab" class="p-1">
+            <v-window-item value="all">
+              <PowerContainerAll />
+            </v-window-item>
+            <v-window-item value="byDevices">
+              <PowerContainerDevice :chartId="device.id" :device="device" v-for="device in devices" :key="device.id" />
+            </v-window-item>
+          </v-window>
+        </div>
+        <div class="devices w-full" v-else-if="selectedType === 'Energy'">
+          <v-window direction="vertical" v-model="tab" class="p-1">
+            <v-window-item value="all">
+              <EnergyContainerAll/>
+            </v-window-item>
+            <v-window-item value="byDevices">
+              <EnergyContainerDevice :chartId="device.id" :device="device" v-for="device in devices" :key="device.id" />
+            </v-window-item>
+          </v-window>
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerContainerDevice } from "@/utils/componentLoader.js";
+import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerContainerDevice, MainDashboardLoading } from "@/utils/componentLoader.js";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-const devices = computed(() => store?.state?.device?.devices);
 
+// Pre-fetch total usage
+(async function fetchTotalUsage() {
+  try {
+    await store.dispatch('_fetchDataTotalUsages', 'hourly');
+  }
+  catch (error) {
+    alert(error);
+    console.error(error);
+  }
+})();
+
+const devices = computed(() => store?.state?.device?.devices);
 
 const tab = ref(null);
 const dropdownItems = ref({
@@ -126,7 +143,7 @@ const dropdownItems = ref({
 const selectedDeviceCategory = ref("All Devices");
 const selectedSort = ref("Name (A-Z)");
 const selectedDate = ref("Today");
-const selectedType = ref("Power");
+const selectedType = ref("Energy");
 
 const selectDeviceCategory = (item) => {
   selectedDeviceCategory.value = item.title

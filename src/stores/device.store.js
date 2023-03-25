@@ -46,13 +46,13 @@ export default {
 
 // async method 
 
-const backendUrl = 'http://127.0.0.1:8000/api';
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 // const backendUrl = 'https://fd30-182-253-183-6.ap.ngrok.io/api/devices/';
 
 function _fetchDataDevices({ commit }) {
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await fetch(`${backendUrl}/devices`, {
+            const response = await fetch(`${BASE_URL}/devices`, {
                 headers: {
                     'Accept': 'application/json',
                     'ngrok-skip-browser-warning': 69420
@@ -73,14 +73,14 @@ function _fetchDataDevices({ commit }) {
 function _fetchDataDevice({ commit }, deviceId) {
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await fetch(`${backendUrl}/devices/${deviceId}`, {
+            const response = await fetch(`${BASE_URL}/devices/${deviceId}`, {
                 headers: {
                     'Accept': 'application/json',
                     'ngrok-skip-browser-warning': 69420
                 }
             });
             const json = await response.json();
-            commit('_assign_data_device', json);
+            commit('_assign_data_device', json.data);
             resolve(json);
         }
         catch (error) {
@@ -93,7 +93,7 @@ function _fetchDataDevice({ commit }, deviceId) {
 function _storeDataDevice({ commit }, newDevice) {
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await fetch(`${backendUrl}/devices`, {
+            const response = await fetch(`${BASE_URL}/devices`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ function _storeDataDevice({ commit }, newDevice) {
                 body: JSON.stringify(newDevice)
             });
             const json = await response.json();
-            commit('_assign_new_data_device', json);
+            commit('_assign_new_data_device', json.data);
             resolve(json);
         }
         catch (error) {
@@ -114,7 +114,7 @@ function _storeDataDevice({ commit }, newDevice) {
 function _updateDataDevice({ commit }, newDevice) {
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await fetch(`${backendUrl}/devices/${newDevice.deviceId.value}`, {
+            const response = await fetch(`${BASE_URL}/devices/${newDevice.deviceId.value}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ function _updateDataDevice({ commit }, newDevice) {
             });
             const json = await response.json();
             console.log(json);
-            commit('_assign_updated_device', json);
+            commit('_assign_updated_device', json.data);
             resolve(json);
         }
         catch (error) {
@@ -136,11 +136,11 @@ function _updateDataDevice({ commit }, newDevice) {
 function _deleteDataDevice({ commit }, deviceId) {
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await fetch(`${backendUrl}/devices/${deviceId}`, {
+            const response = await fetch(`${BASE_URL}/devices/${deviceId}`, {
                 method: 'DELETE'
             });
             const json = await response.json();
-            commit('_assign_deleted_device', json);
+            commit('_assign_deleted_device', json.data);
             resolve(json);
         }
         catch (error) {

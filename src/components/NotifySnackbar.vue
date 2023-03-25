@@ -1,5 +1,5 @@
 <template>
-    <v-snackbar timeout="4000" color="#0284c7" location="bottom right" v-model="notify.state">
+    <v-snackbar timeout="2000" color="#0284c7" location="bottom right" v-model="notify.state">
         {{ notify.message }}
         <template v-slot:actions>
             <v-btn color="white" variant="text" @click="$emit('close')">

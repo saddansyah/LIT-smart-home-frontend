@@ -1,18 +1,24 @@
-import { useRoute } from "vue-router"
-
 const state = () => ({
+    allDeviceUsages: [],
+    totalUsages: [],
     deviceUsages: []
-}) // fungsi yang mengembalikan suatu object
+})
 
 const mutations = {
+    _assign_data_allDeviceUsages(state, payload) {
+        state.allDeviceUsages = payload
+    },
+    _assign_data_totalUsages(state, payload) {
+        state.totalUsages = payload
+    },
     _assign_data_deviceUsages(state, payload) {
         state.deviceUsages = payload
-    }
+    },
 }
 
 const actions = {
-    _fetchDataDevicesUsages,
-    _fetchDataDeviceUsage
+    _fetchDataDeviceUsages,
+    _fetchDataTotalUsages,
 }
 
 export default {
@@ -22,36 +28,47 @@ export default {
     actions
 }
 
-const backendUrl = 'http://127.0.0.1:8000/api/device_usages/';
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
-function _fetchDataDevicesUsages({ commit }) {
+function _fetchDataDeviceUsages({ commit }) {
     return new Promise(async (resolve, reject) => {
-        try{
-            const data = await fetch(backendUrl);
+        try {
+            const data = await fetch(`${BASE_URL}/device_usages`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'ngrok-skip-browser-warning': 69420
+                }
+            });
             const json = await data.json();
-            commit('_assign_data_devices', json.data);
-            console.log(json.data)
+            commit('_assign_data_allDeviceUsages', json.data);
             resolve(json);
         }
-        catch(error){   
+        catch (error) {
             console.error(error);
             reject(error);
         }
-    })
-}
+    });
+};
 
-function _fetchDataDeviceUsage({ commit }, deviceUsageId) {
+function _fetchDataTotalUsages({ commit }, timeRange) {
     return new Promise(async (resolve, reject) => {
-        try{
-            const data = await fetch(backendUrl + deviceUsageId);
+        try {
+            const data = await fetch(`${BASE_URL}/total_usages/${timeRange}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'ngrok-skip-browser-warning': 69420
+                }
+            });
             const json = await data.json();
-            commit('_assign_data_devices', json);
-            resolve(json);
+            commit('_assign_data_totalUsages', json.data.total_usages);
+            commit('_assign_data_deviceUsages', json.data.device_usages);
+            resolve(json.data);
         }
-        catch(error){   
+        catch (error) {
             console.error(error);
             reject(error);
         }
-    })
+    }
+    )
 }
 

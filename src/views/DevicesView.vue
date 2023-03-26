@@ -5,7 +5,7 @@
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Devices</h1>
     </div>
     <div class="mb-9">
-      <v-text-field name="Search" append-icon="mdi-magnify" clear-icon="mdi-close" label="Search" hide-details
+      <v-text-field name="Search" v-model="searchText" append-icon="mdi-magnify" clear-icon="mdi-close" label="Search" hide-details
         clearable></v-text-field>
       <div class="content-top flex flex-row justify-between">
         <div class="content-top-left">
@@ -54,7 +54,7 @@
       </div>
       <div v-else>
         <div class="mt-6">
-          <DevicesCard :device="device" v-for="device in devices" :key="device.id" @notify="emitNotify"/>
+          <DevicesCard :device="device" v-for="device in filteredDevices" :key="device.id" @notify="emitNotify"/>
         </div>
       </div>
     </div>
@@ -70,6 +70,10 @@ import { DevicesCard, AddDevice, NotifySnackbar } from '@/utils/componentLoader'
 
 const store = useStore();
 const devices = computed(() => store?.state?.device?.devices);
+const searchText = ref('')
+const filteredDevices = computed(() => store?.state?.device?.devices.filter(item => {
+  return item.device_name.toLowerCase().includes(searchText.value.toLowerCase())
+}))
 
 const addDialog = ref(false);
 

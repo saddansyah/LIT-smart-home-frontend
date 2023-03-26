@@ -133,9 +133,10 @@ const goalPercentage = computed(() => (Number(totalUsagesToday.value) / Number(e
 
 const dropdownItems = ref({
   deviceCategory: [
-    { title: 'Total Energy Today', value: 'energyToday' },
-    { title: 'Total Energy Weekly', value: 'energyWeekly' },
-    { title: 'Total Energy Monthly', value: 'energyMonthly' },
+    { title: 'Total Energy Today', value: 'hourly' },
+    { title: 'Total Energy Daily', value: 'daily' },
+    { title: 'Total Energy Weekly', value: 'weekly' },
+    { title: 'Total Energy Monthly', value: 'monthly' },
   ]
 }
 );

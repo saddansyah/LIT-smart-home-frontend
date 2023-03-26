@@ -37,7 +37,7 @@
                                 </v-progress-circular>
                             </div>
                             <div class="content-right">
-                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsagesToday }} W</h3>
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsagesToday }} kWH</h3>
                                 <p class="text-xl text-gray-600">from goals: {{ limit }} kWH</p>
                                 <v-chip size="large" :color="percentageCategory < 90 ? 'green' : 'amber'"
                                     class="font-semibold">{{ percentageCategory < 90 ? 'Safe' : 'Warning' }}</v-chip>

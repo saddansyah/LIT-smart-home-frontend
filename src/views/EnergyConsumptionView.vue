@@ -4,8 +4,8 @@
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Energy Consumption</h1>
     </div>
     <div class="mb-9">
-      <v-text-field name="Search" append-icon="mdi-magnify" clear-icon="mdi-close" label="Search" hide-details
-        clearable></v-text-field>
+      <v-text-field name="Search" v-model="searchText" append-icon="mdi-magnify" clear-icon="mdi-close" label="Search"
+        hide-details clearable></v-text-field>
       <div class="filter-wrapper flex flex-row justify-between">
         <div class="content-left">
           <button v-ripple
@@ -77,17 +77,19 @@
               <PowerContainerAll />
             </v-window-item>
             <v-window-item value="byDevices">
-              <PowerContainerDevice :chartId="device.id" :device="device" v-for="device in devices" :key="device.id" />
+              <PowerContainerDevice :chartId="device.id" :device="device" v-for="device in filteredDevices"
+                :key="device.id" />
             </v-window-item>
           </v-window>
         </div>
         <div class="devices w-full" v-else-if="selectedType === 'Energy'">
           <v-window direction="vertical" v-model="tab" class="p-1">
             <v-window-item value="all">
-              <EnergyContainerAll/>
+              <EnergyContainerAll />
             </v-window-item>
             <v-window-item value="byDevices">
-              <EnergyContainerDevice :chartId="device.id" :device="device" v-for="device in devices" :key="device.id" />
+              <EnergyContainerDevice :chartId="device.id" :device="device" v-for="device in filteredDevices"
+                :key="device.id" />
             </v-window-item>
           </v-window>
         </div>
@@ -115,15 +117,15 @@ const store = useStore();
 })();
 
 const devices = computed(() => store?.state?.device?.devices);
+const searchText = ref('')
+const filteredDevices = computed(() => store?.state?.device?.devices.filter(item => {
+  return item.device_name.toLowerCase().includes(searchText.value.toLowerCase())
+}))
 
 const tab = ref(null);
 const dropdownItems = ref({
-  deviceCategory: [
-    { title: 'All Devices', value: 'allDevices' },
-    { title: 'lamp', value: 'lamp' },
-    { title: 'terminal', value: 'terminal' },
-    { title: 'smart charger', value: 'smartCharger' },
-  ],
+  deviceCategory: [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
+                                      .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })],
   sort: [
     { title: 'Name (A-Z)', value: 'nameAscending' },
     { title: 'Name (Z-A)', value: 'nameDescending' },

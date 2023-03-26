@@ -32,13 +32,13 @@ onMounted(() => {
                 [
                     {
                         label: 'Yesterday',
-                        data: data?.filter(item => String(item.date) === String(yesterday)).map(item => item.kwh) || [],
+                        data: data?.filter(item => String(item.date) === String(yesterday)).map(item => { return { 'x': item.hour, 'y': item.kwh } }) || [],
                         borderWidth: 1,
                         backgroundColor: "#d1d5db"
                     },
                     {
                         label: 'Today',
-                        data: data?.filter(item => String(item.date) === String(today)).map(item => item.kwh) || [],
+                        data: data?.filter(item => String(item.date) === String(today)).map(item => { return { 'x': item.hour, 'y': item.kwh } }) || [],
                         borderWidth: 1,
                         backgroundColor: '#059669'
                     },

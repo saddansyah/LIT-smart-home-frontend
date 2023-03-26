@@ -118,14 +118,54 @@ const store = useStore();
 
 const devices = computed(() => store?.state?.device?.devices);
 const searchText = ref('')
-const filteredDevices = computed(() => store?.state?.device?.devices.filter(item => {
-  return item.device_name.toLowerCase().includes(searchText.value.toLowerCase())
-}))
+const filteredDevices = computed(() => {
+
+  let filtered = store?.state?.device?.devices.filter(item => {
+    return item.device_name.toLowerCase().includes(searchText.value.toLowerCase())
+  });
+
+  if (selectedDeviceCategory) {
+    filtered = categoryFilterDevices(selectedDeviceCategory, filtered);
+  }
+
+  if (selectedSort) {
+    filtered = sortDevices(selectedSort, filtered);
+  };
+
+  return filtered;
+
+})
+
+// Filter Device
+const categoryFilterDevices = (key, data) => {
+  return key.value === 'All Devices' ? data : data.filter(item => String(item.category) === String(key.value))
+}
+
+// Sorting
+const sortDevices = (key, data) => {
+
+  if (key.value === 'Name (A-Z)') {
+    return data.sort((a, b) => a.device_name.toLowerCase().localeCompare(b.device_name.toLowerCase()));
+  }
+  else if (key.value === 'Name (Z-A)') {
+    return data.sort((a, b) => b.device_name.toLowerCase().localeCompare(a.device_name.toLowerCase()));
+  }
+  else if (key.value === 'By Devices State') {
+    return data.sort((a, b) => Number(b.state) - Number(a.state));
+  }
+  else if (key.value === 'By Favorite Device') {
+    return data.sort((a, b) => Number(b.is_favorite() - Number(a.is_favorite)));
+  }
+  else {
+    return data
+  }
+}
+
 
 const tab = ref(null);
 const dropdownItems = ref({
   deviceCategory: [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
-                                      .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })],
+    .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })],
   sort: [
     { title: 'Name (A-Z)', value: 'nameAscending' },
     { title: 'Name (Z-A)', value: 'nameDescending' },

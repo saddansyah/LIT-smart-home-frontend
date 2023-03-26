@@ -48,7 +48,7 @@
               <div class="main-content flex flex-row gap-4 items-center">
                 <div class="text-6xl lg:text-8xl">⚡</div>
                 <div>
-                  <h3 class="text-4xl lg:text-6xl font-bold">{{ totalUsagesToday }}</h3>
+                  <h3 class="text-4xl lg:text-6xl font-bold">{{ totalUsagesToday[totalUsagesToday.length - 1].kwh }}</h3>
                   <h1 class="text-xl lg:text-2xl text-gray-600">kilowatt-hour (kWh)</h1>
                 </div>
               </div>
@@ -95,7 +95,9 @@
                 </button>
               </div>
               <div class="main-content graph">
-                <EnergyUsageChart chartId="mainDashboardChart" :data="totalUsages"/>
+                <div v-if="selectedDeviceCategory === 'Total Energy Today'">
+                  <EnergyUsageChart chartId="mainDashboardChart" :data="totalUsages" :past="yesterday" :current="today"/>
+                </div>
               </div>
             </div>
           </div>
@@ -110,6 +112,7 @@ import { ref, computed } from 'vue';
 import Chart from 'chart.js/auto'
 import { FavoriteDevicesCard, EnergyUsageChart, FavoriteDeviceLoading, MainDashboardLoading } from "@/utils/componentLoader.js";
 import { useStore } from 'vuex';
+import { today, yesterday } from '@/utils/getTime';
 
 const store = useStore();
 
@@ -126,10 +129,10 @@ const store = useStore();
 
 const devices = computed(() => store?.state?.device?.devices);
 const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
-const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages[0].kwh);
+const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages.filter(item => String(item.date) === String(today)));
 const highestDeviceUsage = computed(() => devices?.value?.find(item => Number(item.last_kwh) === Math.max.apply(Math, devices?.value?.map(function (item) { return item.last_kwh; }))))
 const energyGoal = ref(5);
-const goalPercentage = computed(() => (Number(totalUsagesToday.value) / Number(energyGoal.value)) * 100);
+const goalPercentage = computed(() => (Number(totalUsagesToday.value[totalUsagesToday.value.length - 1].kwh) / Number(energyGoal.value)) * 100);
 
 const dropdownItems = ref({
   deviceCategory: [

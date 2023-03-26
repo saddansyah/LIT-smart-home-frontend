@@ -80,12 +80,16 @@ const devices = computed(() => store?.state?.device?.devices);
 const searchText = ref('')
 const filteredDevices = computed(() => {
 
-  const filtered = store?.state?.device?.devices.filter(item => {
+  let filtered = store?.state?.device?.devices.filter(item => {
     return item.device_name.toLowerCase().includes(searchText.value.toLowerCase())
   });
 
+  if(selectedDeviceCategory) {
+    filtered = categoryFilterDevices(selectedDeviceCategory, filtered);
+  }
+
   if (selectedSort) {
-    return sortDevices(selectedSort, filtered)
+    filtered = sortDevices(selectedSort, filtered);
   };
 
   return filtered;
@@ -94,14 +98,19 @@ const filteredDevices = computed(() => {
 
 const addDialog = ref(false);
 
+// Filter Device
+const categoryFilterDevices = (key, data) => {
+  return key.value === 'All Devices' ? data : data.filter(item => String(item.category) === String(key.value))
+}
+
 // Sorting
 const sortDevices = (key, data) => {
 
   if (key.value === 'Name (A-Z)') {
-    return data.sort();
+    return data.sort((a, b) => a.device_name.toLowerCase().localeCompare(b.device_name.toLowerCase()));
   }
   else if (key.value === 'Name (Z-A)') {
-    return data.sort().reverse();
+    return data.sort((a, b) => b.device_name.toLowerCase().localeCompare(a.device_name.toLowerCase()));
   }
   else if (key.value === 'By Devices State') {
     return data.sort((a, b) => Number(b.state) - Number(a.state));
@@ -115,7 +124,6 @@ const sortDevices = (key, data) => {
 }
 
 
-
 // Notify Snackbar
 const notify = ref({
   state: false,
@@ -126,7 +134,6 @@ const emitNotify = (state, message) => {
   notify.value.state = state;
   notify.value.message = message;
 }
-
 
 
 
@@ -153,4 +160,5 @@ const selectDeviceCategory = (item) => {
 const selectSort = (item) => {
   selectedSort.value = item.title;
 }
+
 </script>

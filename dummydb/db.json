@@ -6,7 +6,8 @@
             "type": "Smart Lamp",
             "volt": "100",
             "ampere": "1",
-            "watt": "100"
+            "watt": "100",
+            "state": 1
         },
         {
             "user_id": 1,
@@ -14,7 +15,8 @@
             "type": "Smart Lamp",
             "volt": "100",
             "ampere": "1",
-            "watt": "200"
+            "watt": "200",
+            "state": 0
         }
     ]
 }

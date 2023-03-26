@@ -95,7 +95,7 @@
                 </button>
               </div>
               <div class="main-content graph">
-                <EnergyUsageChart chartId="mainDashboardChart" :data="totalUsages" />
+                <EnergyUsageChart chartId="mainDashboardChart" :data="totalUsages"/>
               </div>
             </div>
           </div>
@@ -134,9 +134,8 @@ const goalPercentage = computed(() => (Number(totalUsagesToday.value) / Number(e
 const dropdownItems = ref({
   deviceCategory: [
     { title: 'Total Energy Today', value: 'hourly' },
-    { title: 'Total Energy Daily', value: 'daily' },
-    { title: 'Total Energy Weekly', value: 'weekly' },
-    { title: 'Total Energy Monthly', value: 'monthly' },
+    { title: 'Total Energy Weekly', value: 'daily' },
+    { title: 'Total Energy Monthly', value: 'weekly' },
   ]
 }
 );

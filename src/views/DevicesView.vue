@@ -4,78 +4,117 @@
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Devices</h1>
     </div>
-    <div class="mb-9">
-      <v-text-field name="Search" v-model="searchText" append-icon="mdi-magnify" clear-icon="mdi-close" label="Search" hide-details
-        clearable></v-text-field>
-      <div class="content-top flex flex-row justify-between">
-        <div class="content-top-left">
-          <button v-ripple
-            class="inline-block mt-6 mr-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50">
-            {{ selectedDeviceCategory }}
-            <v-menu activator="parent">
-              <v-list>
-                <v-list-item v-for="(item, index) in dropdownItems.deviceCategory" @click="selectDeviceCategory(item)"
-                  :key="index" :title="item.title" v-model="selectedDeviceCategory">
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            <v-icon icon="mdi-menu-down"></v-icon>
-          </button>
-          <button v-ripple
-            class="inline-block mt-6 mr-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50">
-            {{ selectedSort }}
-            <v-menu activator="parent">
-              <v-list>
-                <v-list-item v-for="(item, index) in dropdownItems.sort" @click="selectSort(item)" :key="index"
-                  :title="item.title" v-model="selectedSort">
-                </v-list-item>
-              </v-list>
-            </v-menu>
-            <v-icon icon="mdi-menu-down"></v-icon>
-          </button>
+    <div v-if="!devices[0]">
+      <MainDashboardLoading />
+    </div>
+    <div v-else>
+      <div class="mb-9">
+        <v-text-field name="Search" v-model="searchText" append-icon="mdi-magnify" clear-icon="mdi-close" label="Search"
+          hide-details clearable></v-text-field>
+
+        <div class="content-top flex flex-row justify-between">
+          <div class="content-top-left">
+            <button v-ripple
+              class="inline-block mt-6 mr-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50">
+              {{ selectedDeviceCategory }}
+              <v-menu activator="parent">
+                <v-list>
+                  <v-list-item v-for="(item, index) in dropdownItems.deviceCategory" @click="selectDeviceCategory(item)"
+                    :key="index" :title="item.title" v-model="selectedDeviceCategory">
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+              <v-icon icon="mdi-menu-down"></v-icon>
+            </button>
+            <button v-ripple
+              class="inline-block mt-6 mr-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50">
+              {{ selectedSort }}
+              <v-menu activator="parent">
+                <v-list>
+                  <v-list-item v-for="(item, index) in dropdownItems.sort" @click="selectSort(item);" :key="index"
+                    :title="item.title" v-model="selectedSort">
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+              <v-icon icon="mdi-menu-down"></v-icon>
+            </button>
+          </div>
+          <div class="content-top-right">
+            <v-dialog v-model="addDialog" persistent>
+              <template v-slot:activator="{ props }">
+                <button v-ripple v-bind="props"
+                  class="inline-block mt-6 px-4 py-2 rounded-full font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                  Add New Devices <v-icon icon="mdi-plus"></v-icon>
+                </button>
+              </template>
+              <AddDevice @close="$event => addDialog = false" :addDialog="addDialog" @notify="emitNotify" />
+            </v-dialog>
+          </div>
         </div>
-        <div class="content-top-right">
-          <v-dialog v-model="addDialog" persistent>
-            <template v-slot:activator="{ props }">
-              <button v-ripple v-bind="props"
-                class="inline-block mt-6 px-4 py-2 rounded-full font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
-                Add New Devices <v-icon icon="mdi-plus"></v-icon>
-              </button>
-            </template>
-            <AddDevice @close="$event => addDialog = false" :addDialog="addDialog" @notify="emitNotify"/>
-          </v-dialog>
+      </div>
+      <div class="main-container">
+        <h3 class="font-bold">You have {{ devices.length }} device(s)</h3>
+        <div v-if="!devices[0]">
+          <h1 class="text-2xl font-mono mt-6">Loading...</h1>
+        </div>
+        <div v-else>
+          <div class="mt-6">
+            <DevicesCard :device="device" v-for="device in filteredDevices" :key="device.id" @notify="emitNotify" />
+          </div>
         </div>
       </div>
     </div>
-    <div class="main-container">
-      <h3 class="font-bold">You have {{ devices.length }} device(s)</h3>
-      <div v-if="!devices[0]">
-        <h1 class="text-2xl font-mono mt-6">Loading...</h1>
-      </div>
-      <div v-else>
-        <div class="mt-6">
-          <DevicesCard :device="device" v-for="device in filteredDevices" :key="device.id" @notify="emitNotify"/>
-        </div>
-      </div>
-    </div>
+    <br/><br/>
   </main>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, watchEffect } from 'vue';
 import { useStore } from 'vuex';
 import { RouterView, RouterLink } from 'vue-router';
 
-import { DevicesCard, AddDevice, NotifySnackbar } from '@/utils/componentLoader';
+import { DevicesCard, AddDevice, NotifySnackbar, MainDashboardLoading } from '@/utils/componentLoader';
 
 const store = useStore();
 const devices = computed(() => store?.state?.device?.devices);
 const searchText = ref('')
-const filteredDevices = computed(() => store?.state?.device?.devices.filter(item => {
-  return item.device_name.toLowerCase().includes(searchText.value.toLowerCase())
-}))
+const filteredDevices = computed(() => {
+
+  const filtered = store?.state?.device?.devices.filter(item => {
+    return item.device_name.toLowerCase().includes(searchText.value.toLowerCase())
+  });
+
+  if (selectedSort) {
+    return sortDevices(selectedSort, filtered)
+  };
+
+  return filtered;
+
+})
 
 const addDialog = ref(false);
+
+// Sorting
+const sortDevices = (key, data) => {
+
+  if (key.value === 'Name (A-Z)') {
+    return data.sort();
+  }
+  else if (key.value === 'Name (Z-A)') {
+    return data.sort().reverse();
+  }
+  else if (key.value === 'By Devices State') {
+    return data.sort((a, b) => Number(b.state) - Number(a.state));
+  }
+  else if (key.value === 'By Favorite Device') {
+    return data.sort((a, b) => Number(b.is_favorite() - Number(a.is_favorite)));
+  }
+  else {
+    return data
+  }
+}
+
+
 
 // Notify Snackbar
 const notify = ref({
@@ -88,35 +127,30 @@ const emitNotify = (state, message) => {
   notify.value.message = message;
 }
 
+
+
+
 // Category Dropdown
 const dropdownItems = ref({
-  deviceCategory: [
-    { title: 'All Devices', value: 'allDevices' },
-    { title: 'lamp', value: 'lamp' },
-    { title: 'terminal', value: 'terminal' },
-    { title: 'smart charger', value: 'smartCharger' },
-  ],
+  deviceCategory: [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
+    .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })],
   sort: [
     { title: 'Name (A-Z)', value: 'nameAscending' },
     { title: 'Name (Z-A)', value: 'nameDescending' },
     { title: 'By Devices State', value: 'deviceStateAscending' },
-    { title: 'By Favorite Device', value: 'favouriteDeviceAscending' },
+    { title: 'By Favorite Device (Default)', value: 'favouriteDeviceAscending' },
   ],
 }
 );
 
-
 const selectedDeviceCategory = ref("All Devices");
-const selectedSort = ref("Name (A-Z)");
+const selectedSort = ref("By Favorite Device (Default)");
 
 const selectDeviceCategory = (item) => {
-  selectedDeviceCategory.value = item.title
+  selectedDeviceCategory.value = item.title;
 }
 
 const selectSort = (item) => {
-  selectedSort.value = item.title
+  selectedSort.value = item.title;
 }
-
-
-
 </script>

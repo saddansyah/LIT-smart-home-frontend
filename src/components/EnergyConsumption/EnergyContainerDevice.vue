@@ -43,6 +43,7 @@
 import { EnergyUsageChart, GraphLoading } from "@/utils/componentLoader.js";
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { today, yesterday } from '@/utils/getTime';
 
 const store = useStore();
 

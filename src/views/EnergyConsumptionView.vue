@@ -127,9 +127,12 @@ const dropdownItems = ref({
   sort: [
     { title: 'Name (A-Z)', value: 'nameAscending' },
     { title: 'Name (Z-A)', value: 'nameDescending' },
+    { title: 'By Devices State', value: 'deviceStateAscending' },
+    { title: 'By Favorite Device', value: 'favouriteDeviceAscending' },
   ],
   date: [
-    { title: 'Today', value: 'today' },
+    { title: 'Today', value: 'hourly' },
+    { title: 'Daily', value: 'daily' },
     { title: 'Weekly', value: 'weekly' },
     { title: 'Monthly', value: 'monthly' },
     { title: 'Select Date Range', value: 'selectDateRange' },

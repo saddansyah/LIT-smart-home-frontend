@@ -9,6 +9,7 @@ import {
     PointElement,
     Legend
 } from 'chart.js'
+import { today, yesterday } from '@/utils/getTime';
 
 Chart.register(
     Colors,
@@ -21,14 +22,6 @@ Chart.register(
 
 const { chartId, data } = defineProps(['chartId', 'data']);
 
-// Get Today and Yesterday (Y-m-d)
-const today = new Date;
-const yesterday = new Date;
-yesterday.setDate(yesterday.getDate() - 1);
-
-const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
-const formattedYesterday = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`
-
 onMounted(() => {
     const ctx = document.getElementById(chartId);
     new Chart(ctx, {
@@ -39,13 +32,13 @@ onMounted(() => {
                 [
                     {
                         label: 'Yesterday',
-                        data: data?.filter(item => String(item.date) === String(formattedYesterday)).map(item => item.kwh) || [],
+                        data: data?.filter(item => String(item.date) === String(yesterday)).map(item => item.kwh) || [],
                         borderWidth: 1,
                         backgroundColor: "#d1d5db"
                     },
                     {
                         label: 'Today',
-                        data: data?.filter(item => String(item.date) === String(formattedToday)).map(item => item.kwh) || [],
+                        data: data?.filter(item => String(item.date) === String(today)).map(item => item.kwh) || [],
                         borderWidth: 1,
                         backgroundColor: '#059669'
                     },

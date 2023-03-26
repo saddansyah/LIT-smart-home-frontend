@@ -9,6 +9,7 @@ import {
   PointElement,
   Legend
 } from 'chart.js'
+import { today, yesterday } from '@/utils/getTime';
 
 Chart.register(
   Colors,
@@ -19,25 +20,25 @@ Chart.register(
   Legend
 );
 
-const { chartId } = defineProps(['chartId'])
+const { chartId, data } = defineProps(['chartId', 'data'])
 
 onMounted(() => {
     const ctx = document.getElementById(chartId);
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: data?.map(item => item.hour) || [],
             datasets:
                 [
                     {
                         label: 'Yesterday',
-                        data: [13, 19, 3, 5, 2, 3, 8],
+                        data: data?.filter(item => String(item.date) === String(yesterday)).map(item => item.watt) || [],
                         borderWidth: 1,
                         backgroundColor: '#d1d5db'
                     },
                     {
                         label: 'Today',
-                        data: [12, 20, 3, 5, 12, 4, 19],
+                        data: data?.filter(item => String(item.date) === String(today)).map(item => item.watt) || [],
                         borderWidth: 1,
                         backgroundColor: '#0284c7'
                     }
@@ -77,7 +78,6 @@ onMounted(() => {
 
 <template>
     <canvas :id="chartId" width="auto"> </canvas>
-    
 </template>
 
 <style scoped>

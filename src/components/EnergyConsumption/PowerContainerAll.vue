@@ -7,8 +7,15 @@
                 <div class="energy-usage-main flex gap-2 items-center">
                     <div class="text-6xl lg:text-8xl">⚡</div>
                     <div class="content-right">
-                        <h3 class="text-6xl lg:text-8xl font-bold">740</h3>
-                        <p class="text-xl text-gray-600">kilo-watt (kW)</p>
+                        <div v-if="!totalPower">
+                            <div class="w-72">
+                                <BasicLoading />
+                            </div>
+                        </div>
+                        <div v-else>
+                            <h3 class="text-6xl lg:text-8xl font-bold">{{ totalPowerToday }}</h3>
+                            <p class="text-xl text-gray-600">kilo-watt (kW)</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -16,18 +23,27 @@
                 class="energy-limit basis-1/2 flex flex-col gap-6 rounded-xl w-fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Limit</h3>
                 <div class="energy-usage-main">
-                    <div class="energy-usage-main flex gap-2 items-center">
-                        <div class="mr-4 text-2xl">
-                            <v-progress-circular :rotate="360" :size="150" :width="25" :model-value="value" color="#0ea5e9">
-                                {{ value }}%
-                            </v-progress-circular>
+                    <div v-if="!totalPower">
+                        <div class="w-72">
+                            <BasicLoading />
                         </div>
-                        <div class="content-right">
-                            <h3 class="text-2xl lg:text-4xl font-bold">12 W</h3>
-                            <p class="text-xl text-gray-600">from limit: {{ limit }} VA</p>
-                            <v-chip size="large" color="green" class="font-semibold">Safe</v-chip>
-                            <p class="text-base mt-4 underline text-gray-400">Set your usage limit here</p>
-                            <p class="text-base underline text-gray-400">See your electricity cost here</p>
+                    </div>
+                    <div v-else>
+                        <div class="energy-usage-main flex gap-2 items-center">
+                            <div class="mr-4 text-2xl">
+                                <v-progress-circular :rotate="360" :size="150" :width="25" :model-value="percentage"
+                                    color="#0ea5e9">
+                                    {{ percentage }}%
+                                </v-progress-circular>
+                            </div>
+                            <div class="content-right">
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalPowerToday }} W</h3>
+                                <p class="text-xl text-gray-600">from limit: {{ limit }} VA</p>
+                                <v-chip size="large" color="green" class="font-semibold">{{ percentageCategory < 90 ? 'Safe'
+                                    : 'Warning' }}</v-chip>
+                                        <p class="text-base mt-4 underline text-gray-400">Set your usage limit here</p>
+                                        <p class="text-base underline text-gray-400">See your electricity cost here</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,18 +59,24 @@
                 </button>
             </div>
             <div class="chart mt-6">
-                <PeakPowerChart chartId="powerConsumptionChart" />
+                <PeakPowerChart chartId="powerConsumptionChart" :data="totalPower" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { PeakPowerChart } from "@/utils/componentLoader.js";
+import { PeakPowerChart, BasicLoading } from "@/utils/componentLoader.js";
 import { computed, ref } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const totalPower = computed(() => store?.state.deviceUsage.totalUsages);
+const totalPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages.reduce((prev, current) => (prev.watt > current.watt) ? prev : current).watt);
 
 const limit = ref(900);
-const watt = ref(310);
-const value = computed(() => Math.round((watt.value/limit.value)*100));
+const percentage = computed(() => Math.round((totalPowerToday.value / limit.value) * 100));
+const percentageCategory = ref('');
 
 </script>

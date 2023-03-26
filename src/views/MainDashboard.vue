@@ -126,9 +126,9 @@ const store = useStore();
 
 const devices = computed(() => store?.state?.device?.devices);
 const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
-const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages[store.state.deviceUsage.totalUsages.length - 1]?.kwh);
+const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages[0].kwh);
 const highestDeviceUsage = computed(() => devices?.value?.find(item => Number(item.last_kwh) === Math.max.apply(Math, devices?.value?.map(function (item) { return item.last_kwh; }))))
-const energyGoal = ref(1);
+const energyGoal = ref(5);
 const goalPercentage = computed(() => (Number(totalUsagesToday.value) / Number(energyGoal.value)) * 100);
 
 const dropdownItems = ref({

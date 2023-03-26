@@ -20,7 +20,7 @@ const mutations = {
         state.devices = [payload, ...state.devices]
     },
     _assign_updated_device(state, payload) {
-        state.devices = state.devices.map(item => item.id !== payload.id ? item : payload).sort((a, b) => {return Number(b.is_favorite) - Number(a.is_favorite)});
+        state.devices = state.devices.map(item => item.id !== payload.id ? item : payload).sort((a, b) => { return Number(b.is_favorite) - Number(a.is_favorite) });
     },
     _assign_deleted_device(state, payload) {
         state.devices = state.devices.filter(item => item.id !== payload.id)
@@ -97,6 +97,7 @@ function _storeDataDevice({ commit }, newDevice) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 69420
                 },
                 body: JSON.stringify(newDevice)
             });
@@ -118,6 +119,7 @@ function _updateDataDevice({ commit }, newDevice) {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 69420
                 },
                 body: JSON.stringify(newDevice.data)
             });
@@ -137,7 +139,8 @@ function _deleteDataDevice({ commit }, deviceId) {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(`${BASE_URL}/devices/${deviceId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                'ngrok-skip-browser-warning': 69420
             });
             const json = await response.json();
             commit('_assign_deleted_device', json.data);

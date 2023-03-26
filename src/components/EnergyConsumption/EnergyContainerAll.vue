@@ -23,17 +23,26 @@
                 class="energy-limit basis-1/2 flex flex-col gap-6 rounded-xl w-fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Energy Goal</h3>
                 <div class="energy-usage-main">
-                    <div class="energy-usage-main flex gap-2 items-center">
-                        <div class="mr-4 text-2xl">
-                            <v-progress-circular :rotate="360" :size="150" :width="25" :model-value="value" color="#0ea5e9">
-                                {{ value }}%
-                            </v-progress-circular>
+                    <div v-if="!totalUsagesToday">
+                        <div class="w-72">
+                            <BasicLoading />
                         </div>
-                        <div class="content-right">
-                            <h3 class="text-2xl lg:text-4xl font-bold">12 W</h3>
-                            <p class="text-xl text-gray-600">from goals: {{ limit }} kWH</p>
-                            <v-chip size="large" color="green" class="font-semibold">Safe</v-chip>
-                            <p class="text-base mt-4 underline text-gray-400">Set your goals here</p>
+                    </div>
+                    <div v-else>
+                        <div class="energy-usage-main flex gap-2 items-center">
+                            <div class="mr-4 text-2xl">
+                                <v-progress-circular :rotate="360" :size="150" :width="25" :model-value="percentage"
+                                    color="#0ea5e9">
+                                    {{ percentage }}%
+                                </v-progress-circular>
+                            </div>
+                            <div class="content-right">
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsagesToday }} W</h3>
+                                <p class="text-xl text-gray-600">from goals: {{ limit }} kWH</p>
+                                <v-chip size="large" :color="percentageCategory < 90 ? 'green' : 'amber'"
+                                    class="font-semibold">{{ percentageCategory < 90 ? 'Safe' : 'Warning' }}</v-chip>
+                                        <p class="text-base mt-4 underline text-gray-400">Set your goals here</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,8 +79,9 @@ const store = useStore();
 const totalUsages = computed(() => store?.state.deviceUsage.totalUsages);
 const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages[store.state.deviceUsage.totalUsages.length - 1]?.kwh);
 
-const limit = ref(14);
-const kwh = ref(12);
-const value = computed(() => Math.round((kwh.value / limit.value) * 100));
+// Energy Goals
+const limit = ref(5);
+const percentage = computed(() => Math.round((totalUsagesToday.value / limit.value) * 100));
+const percentageCategory = ref('');
 
 </script>

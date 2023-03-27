@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch } from 'vue';
+import { onMounted } from 'vue';
 import {
     Chart,
     Colors,
@@ -9,7 +9,6 @@ import {
     PointElement,
     Legend
 } from 'chart.js'
-import { today, yesterday } from '@/utils/getTime';
 
 Chart.register(
     Colors,
@@ -20,25 +19,29 @@ Chart.register(
     Legend
 );
 
-const { chartId, data } = defineProps(['chartId', 'data']);
+const { chartId, data, past, current, labels } = defineProps(['chartId', 'data', 'past' ,'current', 'labels']);
+
+console.log(data, past, current)
 
 onMounted(() => {
     const ctx = document.getElementById(chartId);
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: data?.map(item => item.hour) || [],
+            labels: labels || [],
             datasets:
                 [
                     {
                         label: 'Yesterday',
-                        data: data?.filter(item => String(item.date) === String(yesterday)).map(item => { return { 'x': item.hour, 'y': item.kwh } }) || [],
+                        // data: data?.filter(item => String(item.date) === String(past)).map(item => { return { 'x': item.hour, 'y': item.kwh } }) || [],
+                        data: past || [],
                         borderWidth: 1,
                         backgroundColor: "#d1d5db"
                     },
                     {
                         label: 'Today',
-                        data: data?.filter(item => String(item.date) === String(today)).map(item => { return { 'x': item.hour, 'y': item.kwh } }) || [],
+                        // data: data?.filter(item => String(item.date) === String(current)).map(item => { return { 'x': item.hour, 'y': item.kwh } }) || [],
+                        data: current || [],
                         borderWidth: 1,
                         backgroundColor: '#059669'
                     },

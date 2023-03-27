@@ -77,6 +77,7 @@ import { DevicesCard, AddDevice, NotifySnackbar, MainDashboardLoading } from '@/
 
 const store = useStore();
 const devices = computed(() => store?.state?.device?.devices);
+const addDialog = ref(false);
 const searchText = ref('')
 const filteredDevices = computed(() => {
 
@@ -96,7 +97,6 @@ const filteredDevices = computed(() => {
 
 })
 
-const addDialog = ref(false);
 
 // Filter Device
 const categoryFilterDevices = (key, data) => {

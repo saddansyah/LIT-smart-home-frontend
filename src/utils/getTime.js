@@ -9,15 +9,17 @@ const yesterday = `${_yesterday.getFullYear()}-${String(_yesterday.getMonth() + 
 
 // yearweek
 const date = new Date();
-const year = date.getFullYear();
-const _currentWeek = Math.ceil((date - new Date(year, 0, 1)) / (604800000));
-const _pastWeek = Math.ceil((date - new Date(year, 0, 1)) / (604800000+8640000));
-const currentWeek = `${year}${_currentWeek}`;
-const pastWeek = `${year}${_pastWeek}`;
+const currentYear = date.getFullYear();
+const _currentWeek = Math.ceil((date - new Date(currentYear, 0, 1)) / (604800000));
+const _pastWeek = Math.ceil((date - new Date(currentYear, 0, 1)) / (604800000+(86400000/2)));
+const currentWeek = `${currentYear}${_currentWeek}`;
+const pastWeek = `${currentYear}${_pastWeek}`;
 
 // month
-const currentMonth = `${year}-0${date.getMonth() + 1}`
-const pastMonth = `${year}-0${date.getMonth()}`
+const currentMonth = `0${date.getMonth() + 1}`
+const pastMonth = `0${date.getMonth()}`
+
+//year
 
 export {
     today,
@@ -25,5 +27,6 @@ export {
     currentWeek,
     pastWeek,
     currentMonth,
-    pastMonth
+    pastMonth,
+    currentYear
 }

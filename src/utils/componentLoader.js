@@ -21,6 +21,7 @@ import FavoriteDeviceLoading from '@/components/Loading/FavoriteDeviceLoading.vu
 import MainDashboardLoading from '@/components/Loading/MainDashboardLoading.vue';
 import BasicLoading from '@/components/Loading/BasicLoading.vue';
 import GraphLoading from '@/components/Loading/GraphLoading.vue';
+import LineLoading from '@/components/Loading/LineLoading.vue';
 
 // Other Components
 import ModalDelete from '@/components/ModalDelete.vue';
@@ -42,5 +43,6 @@ export {
     FavoriteDeviceLoading,
     MainDashboardLoading,
     BasicLoading,
-    GraphLoading
+    GraphLoading,
+    LineLoading
 }

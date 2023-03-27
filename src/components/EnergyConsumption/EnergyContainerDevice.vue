@@ -25,13 +25,37 @@
                     <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ device.last_kwh }}</h3>
                     <h4 class="text-base text-gray-400 mt-1">kilowatt-hour (kWH)</h4>
                 </div>
-                <div v-ripple class="inline-block w-full h-full min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow">
-                    <div v-if="!totalUsages[0]">
-                        <GraphLoading/>
+                <div v-ripple class="inline-block min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow">
+                    <!-- <div v-if="!totalUsages[0]">
+                        <GraphLoading />
                     </div>
                     <div v-else>
                         <div></div>
-                        <EnergyUsageChart :chartId="chartId" :data="deviceUsages" />
+                        <EnergyUsageChart :chartId="chartId"
+                            :past="deviceUsages?.filter(item => String(item.date) === String(yesterday))?.map(item => chartObjectBuilder(item.hour, item.kwh))"
+                            :current="deviceUsages?.filter(item => String(item.date) === String(today))?.map(item => chartObjectBuilder(item.hour, item.kwh))"
+                            :labels="deviceUsages?.map(item => item.hour)" />
+                    </div> -->
+                    <div v-if="isLoading">
+                        <GraphLoading />
+                    </div>
+                    <div v-else-if="selectedDate === 'Today' && !isLoading">
+                        <EnergyUsageChart :chartId="chartId"
+                            :past="deviceUsages?.filter(item => String(item.date) === String(yesterday))?.map(item => chartObjectBuilder(item.hour, item.kwh))"
+                            :current="deviceUsages?.filter(item => String(item.date) === String(today))?.map(item => chartObjectBuilder(item.hour, item.kwh))"
+                            :labels="deviceUsages?.map(item => item.hour)" />
+                    </div>
+                    <div v-else-if="selectedDate === 'Weekly' && !isLoading">
+                        <EnergyUsageChart :chartId="chartId"
+                            :past="deviceUsages?.filter(item => String(item.week) === String(pastWeek))?.map(item => chartObjectBuilder(item.date, item.kwh))"
+                            :current="deviceUsages?.filter(item => String(item.week) === String(currentWeek))?.map(item => chartObjectBuilder(item.date, item.kwh))"
+                            :labels="deviceUsages?.map(item => item.date)" />
+                    </div>
+                    <div v-else-if="selectedDate === 'Monthly' && !isLoading">
+                        <EnergyUsageChart :chartId="chartId"
+                            :past="deviceUsages?.filter(item => String(item.month) === String(pastMonth))?.map(item => chartObjectBuilder(item.week, item.kwh))"
+                            :current="deviceUsages?.filter(item => String(item.month) === String(currentMonth))?.map(item => chartObjectBuilder(item.week, item.kwh))"
+                            :labels="deviceUsages?.map(item => item.week)" />
                     </div>
                 </div>
             </div>
@@ -40,20 +64,27 @@
 </template>
 
 <script setup>
-import { EnergyUsageChart, GraphLoading } from "@/utils/componentLoader.js";
+import { EnergyUsageChart, GraphLoading, BasicLoading } from "@/utils/componentLoader.js";
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { today, yesterday } from '@/utils/getTime';
+
+import { today, yesterday, currentWeek, pastWeek, currentMonth, pastMonth } from '@/utils/getTime';
+import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 
 const store = useStore();
+const { chartId, device, selectedDate, isLoading } = defineProps(['chartId', 'device', 'selectedDate', 'isLoading']);
 
 const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
-const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id));
+// const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.date) === String(today)) ?? 0);
+// const totalUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.week) === String(currentWeek)) ?? 0);
+// const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.month) === String(currentMonth)) ?? 0);
 
-const { chartId, device } = defineProps({
-    chartId: Number,
-    device: Object,
-});
+const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id));
+// const deviceUsagesToday = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id && String(item.date) === String(today)));
+// const deviceUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id && String(item.week) === String(currentWeek)));
+// const deviceUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id && String(item.month) === String(currentMonth)));
+
+
 
 
 </script>

@@ -1,10 +1,10 @@
 <script setup>
-
-// Device Fetch
-import { computed, watch } from "vue";
 import { useStore } from "vuex";
+import { initFetchIntercept } from "@/fetchInterceptor.js";
 
 const store = useStore();
+
+const unregister = initFetchIntercept();
 
 // Pre-fetch to put on the vuex store
 (async function fetchDataDevices() {
@@ -16,7 +16,6 @@ const store = useStore();
         console.error(error);
     }
 })();
-
 
 </script>
 

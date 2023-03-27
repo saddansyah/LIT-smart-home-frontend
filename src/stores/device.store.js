@@ -55,7 +55,7 @@ function _fetchDataDevices({ commit }) {
             const response = await fetch(`${BASE_URL}/devices`, {
                 headers: {
                     'Accept': 'application/json',
-                    'ngrok-skip-browser-warning': 69420
+                    // 'ngrok-skip-browser-warning': 69420
                 }
             });
             const json = await response.json();

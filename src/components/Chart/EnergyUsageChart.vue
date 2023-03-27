@@ -21,8 +21,6 @@ Chart.register(
 
 const { chartId, data, past, current, labels } = defineProps(['chartId', 'data', 'past' ,'current', 'labels']);
 
-console.log(data, past, current)
-
 onMounted(() => {
     const ctx = document.getElementById(chartId);
     new Chart(ctx, {

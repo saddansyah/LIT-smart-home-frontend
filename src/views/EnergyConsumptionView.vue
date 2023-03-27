@@ -74,7 +74,7 @@
         <div class="devices w-full" v-if="selectedType === 'Power'">
           <v-window direction="vertical" v-model="tab" class="p-1">
             <v-window-item value="all">
-              <PowerContainerAll />
+              <PowerContainerAll @refreshChart="refreshFetch()"/>
             </v-window-item>
             <v-window-item value="byDevices">
               <PowerContainerDevice :chartId="device.id" :device="device" v-for="device in filteredDevices"
@@ -85,10 +85,10 @@
         <div class="devices w-full" v-else-if="selectedType === 'Energy'">
           <v-window direction="vertical" v-model="tab" class="p-1">
             <v-window-item value="all">
-              <EnergyContainerAll />
+              <EnergyContainerAll :isLoading="isLoading" :selectedDate="selectedDate" @refreshChart="refreshFetch()" />
             </v-window-item>
             <v-window-item value="byDevices">
-              <EnergyContainerDevice :chartId="device.id" :device="device" v-for="device in filteredDevices"
+              <EnergyContainerDevice :isLoading="isLoading" :selectedDate="selectedDate" :chartId="device.id" :device="device" v-for="device in filteredDevices"
                 :key="device.id" />
             </v-window-item>
           </v-window>
@@ -99,25 +99,71 @@
 </template>
 
 <script setup>
-import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerContainerDevice, MainDashboardLoading } from "@/utils/componentLoader.js";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
+import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerContainerDevice, MainDashboardLoading, GraphLoading, BasicLoading, LineLoading } from "@/utils/componentLoader.js";
 
 const store = useStore();
 
 // Pre-fetch total usage
-(async function fetchTotalUsage() {
+const isLoading = ref(false)
+async function fetchTotalUsage(timeRange) {
   try {
-    await store.dispatch('_fetchDataTotalUsages', 'hourly');
+    isLoading.value = true
+    await store.dispatch('_fetchDataTotalUsages', timeRange);
+    isLoading.value = false
   }
   catch (error) {
     alert(error);
     console.error(error);
   }
-})();
+};
+fetchTotalUsage('hourly')
 
 const devices = computed(() => store?.state?.device?.devices);
 const searchText = ref('')
+const tab = ref(null);
+const dropdownItems = ref({
+  deviceCategory: [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
+    .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })],
+  sort: [
+    { title: 'Name (A-Z)', value: 'nameAscending' },
+    { title: 'Name (Z-A)', value: 'nameDescending' },
+    { title: 'By Devices State', value: 'deviceStateAscending' },
+    { title: 'By Favorite Device', value: 'favouriteDeviceAscending' },
+  ],
+  date: [
+    { title: 'Today', value: 'hourly' },
+    { title: 'Weekly', value: 'daily' },
+    { title: 'Monthly', value: 'weekly' },
+  ],
+  type: [
+    { title: 'Energy', value: 'energy' },
+    { title: 'Power', value: 'power' },
+  ]
+}
+);
+const selectedDeviceCategory = ref("All Devices");
+const selectedSort = ref("Name (A-Z)");
+const selectedDate = ref("Today");
+const selectedType = ref("Energy");
+
+const selectDeviceCategory = (item) => {
+  selectedDeviceCategory.value = item.title
+}
+
+const selectSort = (item) => {
+  selectedSort.value = item.title
+}
+
+const selectDate = (item) => {
+  selectedDate.value = item.title
+}
+
+const selectType = (item) => {
+  selectedType.value = item.title
+}
+
 const filteredDevices = computed(() => {
 
   let filtered = store?.state?.device?.devices.filter(item => {
@@ -161,49 +207,23 @@ const sortDevices = (key, data) => {
   }
 }
 
-
-const tab = ref(null);
-const dropdownItems = ref({
-  deviceCategory: [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
-    .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })],
-  sort: [
-    { title: 'Name (A-Z)', value: 'nameAscending' },
-    { title: 'Name (Z-A)', value: 'nameDescending' },
-    { title: 'By Devices State', value: 'deviceStateAscending' },
-    { title: 'By Favorite Device', value: 'favouriteDeviceAscending' },
-  ],
-  date: [
-    { title: 'Today', value: 'hourly' },
-    { title: 'Daily', value: 'daily' },
-    { title: 'Weekly', value: 'weekly' },
-    { title: 'Monthly', value: 'monthly' },
-    { title: 'Select Date Range', value: 'selectDateRange' },
-  ],
-  type: [
-    { title: 'Energy', value: 'energy' },
-    { title: 'Power', value: 'power' },
-  ]
-}
-);
-const selectedDeviceCategory = ref("All Devices");
-const selectedSort = ref("Name (A-Z)");
-const selectedDate = ref("Today");
-const selectedType = ref("Energy");
-
-const selectDeviceCategory = (item) => {
-  selectedDeviceCategory.value = item.title
+// Fetch Refresh
+const refreshFetch = () => {
+  if (selectedDate.value === 'Today') {
+    fetchTotalUsage('hourly');
+  }
+  else if (selectedDate.value === 'Weekly') {
+    fetchTotalUsage('daily');
+  }
+  else if (selectedDate.value === 'Monthly') {
+    fetchTotalUsage('weekly');
+  }
+  else {
+    fetchTotalUsage('hourly');
+  }
 }
 
-const selectSort = (item) => {
-  selectedSort.value = item.title
-}
+watch(selectedDate, refreshFetch)
 
-const selectDate = (item) => {
-  selectedDate.value = item.title
-}
-
-const selectType = (item) => {
-  selectedType.value = item.title
-}
 
 </script>

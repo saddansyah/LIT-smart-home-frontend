@@ -150,8 +150,10 @@ import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 const store = useStore();
 const { selectedDate, isLoading } = defineProps(['selectedDate', 'isLoading'])
 
+// Total Power (Chart) -----
 const totalPower = computed(() => store?.state.deviceUsage.totalUsages);
 
+// Total Used Power by time range -----
 const totalUsedPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.date) === String(today))
     ?.find((item, index, array) => { return index === (array.length - 1) }));
@@ -162,26 +164,26 @@ const totalUsedPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.tot
     ?.filter(item => String(item.month) === String(currentMonth) ?? 0)
     ?.find((item, index, array) => { return index === (array.length - 1) }));
 
-
+// Total Peak Power by time range -----
 const totalPeakPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.date) === String(today))
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) ?? 0);
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) || 0);
 const totalPeakPowerCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.week) === String(currentWeek))
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) ?? 0);
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) || 0);
 const totalPeakPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.month) === String(currentMonth))
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) ?? 0);
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) || 0);
 
 
-// Energy Goal
-const powerLimit = 900
+// Power Limit -----
+const powerLimit = 900 // Soon choosed by user
 const powerLimitToday = ref(powerLimit);
 const powerLimitWeekly = ref(powerLimit * 7);
 const powerLimitMonthly = ref(powerLimit * 30);
 
-const powerPercentageToday = computed(() => Math.round((Number(totalUsedPowerToday?.value.watt) / Number(powerLimitToday.value)) * 100));
-const powerPercentageWeekly = computed(() => Math.round((Number(totalUsedPowerToday?.value.watt) / Number(powerLimitWeekly.value)) * 100));
-const powerPercentageMonthly = computed(() => Math.round((Number(totalUsedPowerToday?.value.watt) / Number(powerLimitMonthly.value)) * 100));
+const powerPercentageToday = computed(() => Math.round((Number(totalUsedPowerToday?.value.watt) / Number(powerLimitToday.value)) * 100) || 0);
+const powerPercentageWeekly = computed(() => Math.round((Number(totalUsedPowerCurrentWeek?.value.watt) / Number(powerLimitWeekly.value)) * 100) || 0);
+const powerPercentageMonthly = computed(() => Math.round((Number(totalUsedPowerCurrentMonth?.value.watt) / Number(powerLimitMonthly.value)) * 100) || 0);
 
 </script>

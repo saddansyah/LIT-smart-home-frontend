@@ -14,17 +14,17 @@
                         </div>
                         <div v-else-if="selectedDate === 'Today' && !isLoading">
                             <h3 class="text-4xl lg:text-6xl font-bold">
-                                {{ totalUsagesToday[totalUsagesToday.length - 1]?.kwh ?? 0 }}
+                                {{ totalUsagesToday?.kwh || 0 }}
                             </h3>
                         </div>
                         <div v-else-if="selectedDate === 'Weekly' && !isLoading">
                             <h3 class="text-4xl lg:text-6xl font-bold">
-                                {{ totalUsagesCurrentWeek[totalUsagesCurrentWeek.length - 1]?.kwh ?? 0 }}
+                                {{ totalUsagesCurrentWeek?.kwh || 0 }}
                             </h3>
                         </div>
                         <div v-else-if="selectedDate === 'Monthly' && !isLoading">
                             <h3 class="text-4xl lg:text-6xl font-bold">
-                                {{ totalUsagesCurrentMonth[totalUsagesCurrentMonth.length - 1]?.kwh ?? 0 }}
+                                {{ totalUsagesCurrentMonth?.kwh || 0 }}
                             </h3>
                         </div>
                         <p class="text-xl text-gray-600">kilo-watt hour (kWH)</p>
@@ -140,19 +140,28 @@ import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 const store = useStore();
 const { selectedDate, isLoading } = defineProps(['selectedDate', 'isLoading'])
 
+// Total Usages (Chart) -----
 const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
-const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.date) === String(today)) ?? 0);
-const totalUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.week) === String(currentWeek)) ?? 0);
-const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.month) === String(currentMonth)) ?? 0);
 
-// Energy Goal
-const energyGoal = 1.18
+// Total Usages by time range -----
+const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages
+  ?.filter(item => String(item.date) === String(today))
+  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
+const totalUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
+  ?.filter(item => String(item.week) === String(currentWeek))
+  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
+const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
+  ?.filter(item => String(item.month) === String(currentMonth))
+  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
+
+// Energy Goal -----
+const energyGoal = 1.18 // Soon choosed by user
 const energyGoalToday = ref(energyGoal);
 const energyGoalWeekly = ref(energyGoal * 7);
 const energyGoalMonthly = ref(energyGoal * 30);
 
-const goalPercentageToday = computed(() => Math.round((Number(totalUsagesToday.value[totalUsagesToday.value.length - 1]?.kwh) / Number(energyGoalToday.value)) * 100));
-const goalPercentageWeekly = computed(() => Math.round((Number(totalUsagesCurrentWeek.value[totalUsagesCurrentWeek.value.length - 1]?.kwh) / Number(energyGoalWeekly.value)) * 100));
-const goalPercentageMonthly = computed(() => Math.round((Number(totalUsagesCurrentMonth.value[totalUsagesCurrentMonth.value.length - 1]?.kwh) / Number(energyGoalMonthly.value)) * 100));
+const goalPercentageToday = computed(() => Math.round((Number(totalUsagesToday.value?.kwh) / Number(energyGoalToday.value)) * 100) || 0);
+const goalPercentageWeekly = computed(() => Math.round((Number(totalUsagesCurrentWeek.value?.kwh) / Number(energyGoalWeekly.value)) * 100) || 0);
+const goalPercentageMonthly = computed(() => Math.round((Number(totalUsagesCurrentMonth.value?.kwh) / Number(energyGoalMonthly.value)) * 100) || 0);
 
 </script>

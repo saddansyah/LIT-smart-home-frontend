@@ -21,7 +21,7 @@
                         <h4 class="text-base mt-1 text-gray-500">Device Power <span class="text-black">{{ device.watt }} W</span></h4>
                     </div>
                     <div class="content-center-bottom">
-                        <h4>Today usage: <span class="font-semibold text-lg">{{ device.watt }} kWH</span></h4>
+                        <h4>Today usage: <span class="font-semibold text-lg">{{ device.last_kwh }} kWH</span></h4>
                     </div>
                 </div>
                 <div class="content-right flex flex-col justify-start">

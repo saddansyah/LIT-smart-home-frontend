@@ -7,7 +7,7 @@
                 <v-text-field 
                     v-model="email" 
                     :readonly="loading" 
-                    :rules="[required]" 
+                    :rules="[rules.required, rules.emailOnly]" 
                     class="mb-2" 
                     clearable
                     prepend-inner-icon="mdi-at"
@@ -17,7 +17,7 @@
                 <v-text-field 
                     v-model="password" 
                     :readonly="loading" 
-                    :rules="[required]"
+                    :rules="[rules.required, rules.upperCaseRequired, rules.lowerCaseRequired, rules.digitsRequired, rules.minLength]"
                     :type="showPassword ? 'text' : 'password'" 
                     clearable
                     prepend-inner-icon="mdi-lock"
@@ -30,7 +30,7 @@
                 <v-text-field 
                     v-model="confirmPassword" 
                     :readonly="loading" 
-                    :rules="[required]"
+                    :rules="[rules.confirmPassword]"
                     :type="showConfirmPassword ? 'text' : 'password'" 
                     clearable
                     prepend-inner-icon="mdi-lock"
@@ -43,6 +43,7 @@
                 <br>
     
                 <v-btn 
+                    v-ripple
                     :disabled="!form" 
                     :loading="loading" 
                     block 
@@ -68,18 +69,23 @@ const showPassword = ref(false);
 const confirmPassword = ref('');
 const showConfirmPassword = ref(false);
 
-const loading = ref(false);
+const rules = ref(
+    {
+        emailOnly: value => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'Your email is not in correct format',
+        upperCaseRequired: value => /(?=.*?[A-Z])/.test(value) || 'At least one uppercase.',
+        lowerCaseRequired: value => /(?=.*?[a-z])/.test(value) || 'At least one lowercase.',
+        digitsRequired: value => /(?=.*?[0-9])/.test(value) || 'At least one digit.',
+        minLength: value => /.{8,}/.test(value) || 'At least have 8 characters.',
+        required: value => !!value || 'Required.',
+        confirmPassword: value => value === password.value || 'Your confirm password is not matched'
+    }
+)
 
+const loading = ref(false);
 const onSubmit = () => {
     if (!this.form) return
-
-    this.loading = true
-
-    setTimeout(() => (this.loading = false), 2000)
 }
 
-const rules = ref({
-})
 
 
 </script>

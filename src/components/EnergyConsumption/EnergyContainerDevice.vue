@@ -64,17 +64,8 @@ import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 const store = useStore();
 const { chartId, device, selectedDate, isLoading } = defineProps(['chartId', 'device', 'selectedDate', 'isLoading']);
 
-const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
-// const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.date) === String(today)) ?? 0);
-// const totalUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.week) === String(currentWeek)) ?? 0);
-// const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.month) === String(currentMonth)) ?? 0);
-
+// Device Usages (Chart) -----
 const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id));
-// const deviceUsagesToday = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id && String(item.date) === String(today)));
-// const deviceUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id && String(item.week) === String(currentWeek)));
-// const deviceUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id && String(item.month) === String(currentMonth)));
-
-
 
 
 </script>

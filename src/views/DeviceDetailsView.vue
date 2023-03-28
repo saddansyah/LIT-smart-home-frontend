@@ -73,8 +73,7 @@
                         <div v-ripple
                             class="flex flex-col gap-8 md:col-span-2 h-fit lg:row-span-2 lg:col-span-2 lg:row-start-1 p-6 bg-neutral-50 rounded-xl shadow hover:bg-gray-200 transition-all">
                             <div class="content-top flex flex-row items-center gap-2">
-                                <h3 class="font-bold text-xl lg:text-2xl inline-block">Daily Usage</h3>
-                                <v-icon icon="mdi-menu-down" />
+                                <h3 class="font-bold text-xl lg:text-2xl inline-block">Today Energy Usage</h3>
                             </div>
                             <div class="main-content flex flex-row gap-4 items-center">
                                 <div class="text-6xl lg:text-8xl">⚡</div>
@@ -92,7 +91,7 @@
                         <div v-ripple
                             class="flex flex-col gap-6 md:col-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-neutral-50 rounded-xl shadow hover:bg-gray-200 transition-all">
                             <div class="content-top flex flex-row justify-between gap-8">
-                                <h3 class="font-bold text-xl inline-block">Device Peak Power</h3>
+                                <h3 class="font-bold text-xl inline-block">Today Peak Power</h3>
                                 <v-tooltip location="top"
                                     text="Device's peak power (watt) within a certain time limit (daily, weekly, etc)">
                                     <template v-slot:activator="{ props }">
@@ -102,7 +101,7 @@
                             </div>
                             <div class="main-content flex flex-row justify-between items-center">
                                 <div class="main-content-left flex flex-col">
-                                    <h3 class="text-2xl lg:text-6xl font-bold">{{ deviceUsages.reduce((acc, curr) => acc.kwh < curr.kwh ? acc : curr).watt }}</h3>
+                                    <h3 class="text-2xl lg:text-6xl font-bold">{{ deviceUsagesToday.watt || 0 }}</h3>
                                     <h1 class="text-xl self-start text-gray-400">Watt</h1>
                                 </div>
                                 <div class="main-content-right text-xl flex flex-col items-end text-gray-400">
@@ -136,7 +135,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div v-if="!deviceUsages[0]">
+                            <div v-if="!deviceUsagesToday[0]">
                                 <GraphLoading/>
                             </div>
                             <div v-else>
@@ -202,7 +201,10 @@ const deviceId = route.params.deviceId;
 
 // Refs + Computed -------
 const device = computed(() => store?.state?.device?.devices.find(item => item.id === Number(deviceId)));
-const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id == Number(deviceId)));
+const deviceUsagesToday = computed(() => store?.state?.deviceUsage?.deviceUsages
+    ?.filter(item => String(item.date) === String(today)
+    ?.filter(item => item.device_id === device.id))
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) ?? 0);
 const editDialog = ref(false);
 const deleteDialog = ref(false);
 const chartCategory = ref('energyUsage');

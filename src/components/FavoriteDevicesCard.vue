@@ -7,7 +7,9 @@
         <v-icon :icon="device.icon_url" size="x-large"
           :class="(props.device.state ? 'text-yellow-200' : ' text-sky-800')"></v-icon>
         <div class="text-content flex flex-col justify-center">
-          <h2 class="font-semibold lg:text-xl">{{ props.device.device_name.length > 12? props.device.device_name.substr(0, 12) + '...' : props.device.device_name}}</h2>
+          <h2 class="font-semibold lg:text-xl">{{ props.device.device_name.length > 12 ?
+            props.device.device_name.substr(0,
+              12) + '...' : props.device.device_name }}</h2>
           <div v-if="device.state">
             <h4 class="font-light text-sm lg:text-base">State: ON</h4>
           </div>
@@ -16,7 +18,11 @@
           </div>
         </div>
       </div>
-      <RouterLink :to="{name: 'Device Details', params: { deviceId } }" class="appearance-none"><v-icon icon="mdi-information-outline" class="text-gray-400"></v-icon></RouterLink>
+      <v-tooltip location="top" text="Click to turn on/off the device">
+        <template v-slot:activator="{ props }">
+          <v-icon v-bind="props" icon="mdi-information-outline" class="text-gray-400"></v-icon>
+        </template>
+      </v-tooltip>
     </div>
   </div>
 </template>
@@ -35,24 +41,24 @@ const backendUrl = 'http://127.0.0.1:8000/api/devices/';
 const deviceId = props.device.id;
 
 const updateDeviceState = async () => {
-    const url = backendUrl + 'update_state/';
-    const body = { state: !props.device.state };
+  const url = backendUrl + 'update_state/';
+  const body = { state: !props.device.state };
 
-    try {
-        const data = await fetch(url + deviceId, {
-            method: 'PATCH',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body)
-        });
-        const json = await data.json();
-        store.commit('_assign_updated_device', json);
-    }
-    catch (error) {
-        alert(error);
-        console.error(error);
-    }
+  try {
+    const data = await fetch(url + deviceId, {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body)
+    });
+    const json = await data.json();
+    store.commit('_assign_updated_device', json);
+  }
+  catch (error) {
+    alert(error);
+    console.error(error);
+  }
 };
 
 </script>

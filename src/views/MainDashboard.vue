@@ -3,7 +3,7 @@
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Main Dashboard</h1>
     </div>
-    <div v-if="!devices[0]">
+    <div v-if="!devices">
       <FavoriteDeviceLoading />
     </div>
     <div v-else>
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!totalUsages[0]">
+    <div v-if="!totalUsages">
       <MainDashboardLoading />
     </div>
     <div v-else>
@@ -32,9 +32,8 @@
                     {{ selectedDate }}
                     <v-menu activator="parent">
                       <v-list>
-                        <v-list-item v-for="(item, index) in dropdownItems.date"
-                          @click="selectDate(item)" :key="index" :title="item.title"
-                          v-model="selectedDate">
+                        <v-list-item v-for="(item, index) in dropdownItems.date" @click="selectDate(item)" :key="index"
+                          :title="item.title" v-model="selectedDate">
                         </v-list-item>
                       </v-list>
                     </v-menu>
@@ -53,17 +52,17 @@
                   </div>
                   <div v-else-if="selectedDate === 'Total Energy Today' && !isLoading">
                     <h3 class="text-4xl lg:text-6xl font-bold">
-                      {{ totalUsagesToday[totalUsagesToday.length - 1]?.kwh ?? 0 }}
+                      {{ totalUsagesToday?.kwh || 0 }}
                     </h3>
                   </div>
                   <div v-else-if="selectedDate === 'Total Energy Weekly' && !isLoading">
                     <h3 class="text-4xl lg:text-6xl font-bold">
-                      {{ totalUsagesCurrentWeek[totalUsagesCurrentWeek.length - 1]?.kwh ?? 0 }}
+                      {{ totalUsagesCurrentWeek?.kwh || 0 }}
                     </h3>
                   </div>
                   <div v-else-if="selectedDate === 'Total Energy Monthly' && !isLoading">
                     <h3 class="text-4xl lg:text-6xl font-bold">
-                      {{ totalUsagesCurrentMonth[totalUsagesCurrentMonth.length - 1]?.kwh ?? 0 }}
+                      {{ totalUsagesCurrentMonth?.kwh || 0 }}
                     </h3>
                   </div>
                   <h1 class="text-xl lg:text-2xl text-gray-600">kilowatt-hour (kWh)</h1>
@@ -105,14 +104,19 @@
                   <h3 class="text-base underline text-gray-400">View All</h3>
                 </RouterLink>
               </div>
-              <div class="main-content flex flex-row justify-between items-start">
-                <div class="main-content-left flex flex-row items-center gap-2">
-                  <v-icon icon="mdi-ceiling-light" class="text-sky-800 text-3xl lg:text-4xl"></v-icon>
-                  <h4 class="lg:text-xl">{{ highestDeviceUsage.device_name }}</h4>
-                </div>
-                <div class="main-content-right flex flex-row items-center">
-                  <v-icon icon="mdi-lightning-bolt" class="text-3xl lg:text-4xl"></v-icon>
-                  <h4 class="lg:text-xl">{{ highestDeviceUsage.last_kwh }} kWH</h4>
+              <div v-if="!highestDeviceUsage">
+                <LineLoading/>
+              </div>
+              <div v-else>
+                <div class="main-content flex flex-row justify-between items-start">
+                  <div class="main-content-left flex flex-row items-center gap-2">
+                    <v-icon icon="mdi-ceiling-light" class="text-sky-800 text-3xl lg:text-4xl"></v-icon>
+                    <h4 class="lg:text-xl">{{ highestDeviceUsage.device_name && highestDeviceUsage.device_name }}</h4>
+                  </div>
+                  <div class="main-content-right flex flex-row items-center">
+                    <v-icon icon="mdi-lightning-bolt" class="text-3xl lg:text-4xl"></v-icon>
+                    <h4 class="lg:text-xl">{{ highestDeviceUsage.last_kwh && highestDeviceUsage.last_kwh }} kWH</h4>
+                  </div>
                 </div>
               </div>
             </div>
@@ -138,13 +142,13 @@
                     :labels="totalUsages?.map(item => item.hour)" />
                 </div>
                 <div v-else-if="selectedDate === 'Total Energy Weekly' && !isLoading">
-                  <EnergyUsageChart chartId="weeklyEnergyChart" 
+                  <EnergyUsageChart chartId="weeklyEnergyChart"
                     :past="totalUsages?.filter(item => String(item.week) === String(pastWeek))?.map(item => chartObjectBuilder(item.date, item.kwh))"
                     :current="totalUsages?.filter(item => String(item.week) === String(currentWeek))?.map(item => chartObjectBuilder(item.date, item.kwh))"
                     :labels="totalUsages?.map(item => item.date)" />
                 </div>
                 <div v-else-if="selectedDate === 'Total Energy Monthly' && !isLoading">
-                  <EnergyUsageChart chartId="monthlyEnergyChart" 
+                  <EnergyUsageChart chartId="monthlyEnergyChart"
                     :past="totalUsages?.filter(item => String(item.month) === String(pastMonth))?.map(item => chartObjectBuilder(item.week, item.kwh))"
                     :current="totalUsages?.filter(item => String(item.month) === String(currentMonth))?.map(item => chartObjectBuilder(item.week, item.kwh))"
                     :labels="totalUsages?.map(item => item.week)" />
@@ -171,7 +175,7 @@ import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 
 const store = useStore();
 
-// Pre-fetch total usage
+// Pre-fetch total usage ----
 const isLoading = ref(false)
 async function fetchTotalUsage(timeRange) {
   try {
@@ -186,29 +190,35 @@ async function fetchTotalUsage(timeRange) {
 };
 fetchTotalUsage('hourly');
 
-// Devices
+// Devices -----
 const devices = computed(() => store?.state?.device?.devices);
 
-// Total Usages
+// Total Usages -----
 const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
-const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.date) === String(today)) ?? 0);
-const totalUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.week) === String(currentWeek)) ?? 0);
-const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages?.filter(item => String(item.month) === String(currentMonth)) ?? 0);
+const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages
+  ?.filter(item => String(item.date) === String(today))
+  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
+const totalUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
+  ?.filter(item => String(item.week) === String(currentWeek))
+  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
+const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
+  ?.filter(item => String(item.month) === String(currentMonth))
+  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
 
-// Energy Goal
+// Energy Goal -----
 const energyGoal = 5
 const energyGoalToday = ref(energyGoal);
 const energyGoalWeekly = ref(energyGoal * 7);
 const energyGoalMonthly = ref(energyGoal * 30);
 
-const goalPercentageToday = computed(() => Math.round((Number(totalUsagesToday.value[totalUsagesToday.value.length - 1]?.kwh) / Number(energyGoalToday.value)) * 100));
-const goalPercentageWeekly = computed(() => Math.round((Number(totalUsagesCurrentWeek.value[totalUsagesCurrentWeek.value.length - 1]?.kwh) / Number(energyGoalWeekly.value)) * 100));
-const goalPercentageMonthly = computed(() => Math.round((Number(totalUsagesCurrentMonth.value[totalUsagesCurrentMonth.value.length - 1]?.kwh) / Number(energyGoalMonthly.value)) * 100));
+const goalPercentageToday = computed(() => Math.round((Number(totalUsagesToday.value?.kwh) / Number(energyGoalToday.value)) * 100) || 0);
+const goalPercentageWeekly = computed(() => Math.round((Number(totalUsagesCurrentWeek.value?.kwh) / Number(energyGoalWeekly.value)) * 100) || 0);
+const goalPercentageMonthly = computed(() => Math.round((Number(totalUsagesCurrentMonth.value?.kwh) / Number(energyGoalMonthly.value)) * 100) || 0);
 
-// Highest Device Usage
+// Highest Device Usage -----
 const highestDeviceUsage = computed(() => devices?.value?.find(item => Number(item.last_kwh) === Math.max.apply(Math, devices?.value?.map(function (item) { return item.last_kwh; }))))
 
-// Dropdown
+// Dropdown -----
 const dropdownItems = ref({
   date: [
     { title: 'Total Energy Today', value: 'hourly' },
@@ -224,6 +234,7 @@ const selectDate = (item) => {
   selectedDate.value = item.title
 }
 
+// Refresh fetch from given time range -----
 const refreshFetch = () => {
   if (selectedDate.value === 'Total Energy Today') {
     fetchTotalUsage('hourly');
@@ -238,7 +249,6 @@ const refreshFetch = () => {
     fetchTotalUsage('hourly');
   }
 }
-
 watch(selectedDate, refreshFetch)
 
 

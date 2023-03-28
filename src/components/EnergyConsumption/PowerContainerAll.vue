@@ -4,17 +4,37 @@
             <div v-ripple
                 class="energy-usage basis-1/2 flex flex-col w-fit gap-6 rounded-xl shadow bg-slate-50 hover:bg-slate-200 transition-all p-6 ">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Peak Power</h3>
-                <div class="energy-usage-main flex gap-2 items-center">
+                <div class="energy-usage-main flex gap-2 items-center ">
                     <div class="text-6xl lg:text-8xl">⚡</div>
                     <div class="content-right">
-                        <div v-if="!totalPower">
+                        <div v-if="isLoading">
                             <div class="w-72">
                                 <BasicLoading />
                             </div>
                         </div>
-                        <div v-else>
-                            <h3 class="text-6xl lg:text-8xl font-bold">{{ totalPowerToday }}</h3>
-                            <p class="text-xl text-gray-600">kilo-watt (kW)</p>
+                        <div v-else-if="selectedDate === 'Today' && !isLoading">
+                            <h3 class="text-4xl lg:text-6xl font-bold">
+                                {{ totalPeakPowerToday?.watt ?? 0 }}
+                            </h3>
+                            <p class="text-xl text-gray-600">watt (w)</p>
+                            <p class="text-lg mt-2 text-gray-400">at <span class="font-bold">{{ totalPeakPowerToday?.hour
+                            }}</span></p>
+                        </div>
+                        <div v-else-if="selectedDate === 'Weekly' && !isLoading">
+                            <h3 class="text-4xl lg:text-6xl font-bold">
+                                {{ totalPeakPowerCurrentWeek?.watt ?? 0 }}
+                            </h3>
+                            <p class="text-xl text-gray-600">watt (w)</p>
+                            <p class="text-lg mt-2 text-gray-400">at <span class="font-bold">{{
+                                totalPeakPowerCurrentWeek?.date }}</span></p>
+                        </div>
+                        <div v-else-if="selectedDate === 'Monthly' && !isLoading">
+                            <h3 class="text-4xl lg:text-6xl font-bold">
+                                {{ totalPeakPowerCurrentMonth?.watt ?? 0 }}
+                            </h3>
+                            <p class="text-xl text-gray-600">watt (w)</p>
+                            <p class="text-lg mt-2 text-gray-400">at <span class="font-bold">{{
+                                totalPeakPowerCurrentMonth?.week }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -22,27 +42,61 @@
             <div v-ripple
                 class="energy-limit basis-1/2 flex flex-col gap-6 rounded-xl w-fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Limit</h3>
-                <div class="energy-usage-main">
-                    <div v-if="!totalPower">
-                        <div class="w-72">
-                            <BasicLoading />
-                        </div>
+                <div class="power-limit-main">
+                    <div v-if="isLoading">
+                        <BasicLoading />
                     </div>
-                    <div v-else>
+                    <div v-else-if="selectedDate === 'Today' && !isLoading">
                         <div class="energy-usage-main flex gap-2 items-center">
                             <div class="mr-4 text-2xl">
-                                <v-progress-circular :rotate="360" :size="150" :width="25" :model-value="percentage"
-                                    color="#0ea5e9">
-                                    {{ percentage }}%
+                                <v-progress-circular :rotate="360" :size="150" :width="25"
+                                    :model-value="powerPercentageToday" color="#0ea5e9">
+                                    {{ powerPercentageToday }}%
                                 </v-progress-circular>
                             </div>
                             <div class="content-right">
-                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalPowerToday }} W</h3>
-                                <p class="text-xl text-gray-600">from limit: {{ limit }} VA</p>
-                                <v-chip size="large" color="green" class="font-semibold">{{ percentageCategory < 90 ? 'Safe'
-                                    : 'Warning' }}</v-chip>
-                                        <p class="text-base mt-4 underline text-gray-400">Set your usage limit here</p>
-                                        <p class="text-base underline text-gray-400">See your electricity cost here</p>
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerToday?.watt ?? 0 }} w</h3>
+                                <p class="text-xl text-gray-600">from goals: {{ powerLimitToday }} VA</p>
+                                <v-chip size="large" :color="Number(powerPercentageToday) < 90 ? 'green' : 'amber'"
+                                    class="font-semibold">{{ Number(powerPercentageToday) < 90 ? 'Safe' : 'Warning'
+                                    }}</v-chip>
+                                        <p class="text-base mt-4 underline text-gray-400">Set your limit here</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else-if="selectedDate === 'Weekly' && !isLoading">
+                        <div class="energy-usage-main flex gap-2 items-center">
+                            <div class="mr-4 text-2xl">
+                                <v-progress-circular :rotate="360" :size="150" :width="25"
+                                    :model-value="powerPercentageWeekly" color="#0ea5e9">
+                                    {{ powerPercentageWeekly }}%
+                                </v-progress-circular>
+                            </div>
+                            <div class="content-right">
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerCurrentWeek?.watt ?? 0 }} w
+                                </h3>
+                                <p class="text-xl text-gray-600">from goals: {{ powerLimitWeekly }} watt</p>
+                                <v-chip size="large" :color="powerPercentageWeekly < 90 ? 'green' : 'amber'"
+                                    class="font-semibold">{{ powerPercentageWeekly < 90 ? 'Safe' : 'Warning' }}</v-chip>
+                                        <p class="text-base mt-4 underline text-gray-400">Set your goals here</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else-if="selectedDate === 'Monthly' && !isLoading">
+                        <div class="energy-usage-main flex gap-2 items-center">
+                            <div class="mr-4 text-2xl">
+                                <v-progress-circular :rotate="360" :size="150" :width="25"
+                                    :model-value="powerPercentageMonthly" color="#0ea5e9">
+                                    {{ powerPercentageMonthly }}%
+                                </v-progress-circular>
+                            </div>
+                            <div class="content-right">
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerCurrentMonth?.watt ?? 0 }} w
+                                </h3>
+                                <p class="text-xl text-gray-600">from goals: {{ powerLimitMonthly }} watt</p>
+                                <v-chip size="large" :color="powerPercentageMonthly < 90 ? 'green' : 'amber'"
+                                    class="font-semibold">{{ powerPercentageMonthly < 90 ? 'Safe' : 'Warning' }}</v-chip>
+                                        <p class="text-base mt-4 underline text-gray-400">Set your goals here</p>
                             </div>
                         </div>
                     </div>
@@ -59,24 +113,75 @@
                 </button>
             </div>
             <div class="chart mt-6">
-                <PeakPowerChart chartId="powerConsumptionChart" :data="totalPower" />
+                <div v-if="isLoading">
+                    <GraphLoading />
+                </div>
+                <div v-else-if="selectedDate === 'Today' && !isLoading">
+                    <PeakPowerChart chartId="todayPowerChart"
+                        :past="totalPower?.filter(item => String(item.date) === String(yesterday))?.map(item => chartObjectBuilder(item.hour, item.watt))"
+                        :current="totalPower?.filter(item => String(item.date) === String(today))?.map(item => chartObjectBuilder(item.hour, item.watt))"
+                        :labels="totalPower?.map(item => item.hour)" />
+                </div>
+                <div v-else-if="selectedDate === 'Weekly' && !isLoading">
+                    <PeakPowerChart chartId="weeklyPowerChart"
+                        :past="totalPower?.filter(item => String(item.week) === String(pastWeek))?.map(item => chartObjectBuilder(item.date, item.watt))"
+                        :current="totalPower?.filter(item => String(item.week) === String(currentWeek))?.map(item => chartObjectBuilder(item.date, item.watt))"
+                        :labels="totalPower?.map(item => item.date)" />
+                </div>
+                <div v-else-if="selectedDate === 'Monthly' && !isLoading">
+                    <PeakPowerChart chartId="monthlyPowerChart"
+                        :past="totalPower?.filter(item => String(item.month) === String(pastMonth))?.map(item => chartObjectBuilder(item.week, item.watt))"
+                        :current="totalPower?.filter(item => String(item.month) === String(currentMonth))?.map(item => chartObjectBuilder(item.week, item.watt))"
+                        :labels="totalPower?.map(item => item.week)" />
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { PeakPowerChart, BasicLoading } from "@/utils/componentLoader.js";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
+import { PeakPowerChart, BasicLoading, GraphLoading } from "@/utils/componentLoader.js";
+import { today, yesterday, currentWeek, pastWeek, currentMonth, pastMonth } from '@/utils/getTime';
+import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
+
 const store = useStore();
+const { selectedDate, isLoading } = defineProps(['selectedDate', 'isLoading'])
 
 const totalPower = computed(() => store?.state.deviceUsage.totalUsages);
-const totalPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages.reduce((prev, current) => (prev.watt > current.watt) ? prev : current).watt);
 
-const limit = ref(900);
-const percentage = computed(() => Math.round((totalPowerToday.value / limit.value) * 100));
-const percentageCategory = ref('');
+const totalUsedPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages
+    ?.filter(item => String(item.date) === String(today))
+    ?.find((item, index, array) => { return index === (array.length - 1) }));
+const totalUsedPowerCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
+    ?.filter(item => String(item.week) === String(currentWeek) ?? 0)
+    ?.find((item, index, array) => { return index === (array.length - 1) }));
+const totalUsedPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
+    ?.filter(item => String(item.month) === String(currentMonth) ?? 0)
+    ?.find((item, index, array) => { return index === (array.length - 1) }));
+
+
+const totalPeakPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages
+    ?.filter(item => String(item.date) === String(today))
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) ?? 0);
+const totalPeakPowerCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
+    ?.filter(item => String(item.week) === String(currentWeek))
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) ?? 0);
+const totalPeakPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
+    ?.filter(item => String(item.month) === String(currentMonth))
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) ?? 0);
+
+
+// Energy Goal
+const powerLimit = 900
+const powerLimitToday = ref(powerLimit);
+const powerLimitWeekly = ref(powerLimit * 7);
+const powerLimitMonthly = ref(powerLimit * 30);
+
+const powerPercentageToday = computed(() => Math.round((Number(totalUsedPowerToday?.value.watt) / Number(powerLimitToday.value)) * 100));
+const powerPercentageWeekly = computed(() => Math.round((Number(totalUsedPowerToday?.value.watt) / Number(powerLimitWeekly.value)) * 100));
+const powerPercentageMonthly = computed(() => Math.round((Number(totalUsedPowerToday?.value.watt) / Number(powerLimitMonthly.value)) * 100));
 
 </script>

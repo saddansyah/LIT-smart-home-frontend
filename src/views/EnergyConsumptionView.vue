@@ -74,10 +74,10 @@
         <div class="devices w-full" v-if="selectedType === 'Power'">
           <v-window direction="vertical" v-model="tab" class="p-1">
             <v-window-item value="all">
-              <PowerContainerAll @refreshChart="refreshFetch()"/>
+              <PowerContainerAll :isLoading="isLoading" :selectedDate="selectedDate" @refreshChart="refreshFetch()"/>
             </v-window-item>
             <v-window-item value="byDevices">
-              <PowerContainerDevice :chartId="device.id" :device="device" v-for="device in filteredDevices"
+              <PowerContainerDevice :isLoading="isLoading" :selectedDate="selectedDate" :chartId="device.id" :device="device" v-for="device in filteredDevices"
                 :key="device.id" />
             </v-window-item>
           </v-window>

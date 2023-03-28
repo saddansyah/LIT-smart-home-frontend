@@ -26,16 +26,6 @@
                     <h4 class="text-base text-gray-400 mt-1">kilowatt-hour (kWH)</h4>
                 </div>
                 <div v-ripple class="inline-block min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow">
-                    <!-- <div v-if="!totalUsages[0]">
-                        <GraphLoading />
-                    </div>
-                    <div v-else>
-                        <div></div>
-                        <EnergyUsageChart :chartId="chartId"
-                            :past="deviceUsages?.filter(item => String(item.date) === String(yesterday))?.map(item => chartObjectBuilder(item.hour, item.kwh))"
-                            :current="deviceUsages?.filter(item => String(item.date) === String(today))?.map(item => chartObjectBuilder(item.hour, item.kwh))"
-                            :labels="deviceUsages?.map(item => item.hour)" />
-                    </div> -->
                     <div v-if="isLoading">
                         <GraphLoading />
                     </div>

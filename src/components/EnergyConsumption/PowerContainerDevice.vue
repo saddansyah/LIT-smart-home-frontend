@@ -26,13 +26,13 @@
                         <GraphLoading />
                     </div>
                     <div v-else-if="selectedDate === 'Today' && !isLoading">
-                        <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ totalPeakPowerToday || 0 }}</h3>
+                        <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ totalPeakPowerToday?.kwh || 0 }}</h3>
                     </div>
                     <div v-else-if="selectedDate === 'Weekly' && !isLoading">
-                        <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ totalPeakPowerCurrentWeek || 0 }}</h3>
+                        <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ totalPeakPowerCurrentWeek?.kwh || 0 }}</h3>
                     </div>
                     <div v-else-if="selectedDate === 'Monthly' && !isLoading">
-                        <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ totalPeakPowerCurrentMonth || 0 }}</h3>
+                        <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ totalPeakPowerCurrentMonth?.kwh || 0 }}</h3>
                     </div>
                     <h4 class="text-base text-gray-400 mt-1">Watt (W)</h4>
                     <div v-if="isLoading">

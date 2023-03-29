@@ -19,7 +19,7 @@
         </div>
       </div>
       <v-tooltip location="top" text="Click to turn on/off the device">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-icon v-bind="props" icon="mdi-information-outline" class="text-gray-400"></v-icon>
         </template>
       </v-tooltip>

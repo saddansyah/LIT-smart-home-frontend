@@ -167,13 +167,13 @@ const totalUsedPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.tot
 // Total Peak Power by time range -----
 const totalPeakPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.date) === String(today))
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) || 0);
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 const totalPeakPowerCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.week) === String(currentWeek))
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) || 0);
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 const totalPeakPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.month) === String(currentMonth))
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current) || 0);
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 
 
 // Power Limit -----

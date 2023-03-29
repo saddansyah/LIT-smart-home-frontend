@@ -65,6 +65,7 @@ onMounted(() => {
                 x: {
                     title: {
                         display: true,
+                        text: 'time'
                     }
                 }
             },

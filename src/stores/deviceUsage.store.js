@@ -9,7 +9,7 @@ const mutations = {
         state.allDeviceUsages = payload
     },
     _assign_data_totalUsages(state, payload) {
-        state.totalUsages = payload
+        state.totalUsages = payload;
     },
     _assign_data_deviceUsages(state, payload) {
         state.deviceUsages = payload

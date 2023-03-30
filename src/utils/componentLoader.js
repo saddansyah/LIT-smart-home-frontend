@@ -25,6 +25,7 @@ import LineLoading from '@/components/Loading/LineLoading.vue';
 
 // Other Components
 import ModalDelete from '@/components/ModalDelete.vue';
+import ModalLogout from '@/components/ModalLogout.vue';
 import NotifySnackbar from '@/components/NotifySnackbar.vue';
 
 export {
@@ -39,6 +40,7 @@ export {
     PeakPowerChart,
     EnergyUsageChart,
     ModalDelete,
+    ModalLogout,
     NotifySnackbar,
     FavoriteDeviceLoading,
     MainDashboardLoading,

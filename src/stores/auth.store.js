@@ -5,6 +5,9 @@ const state = () => ({
 const mutations = {
     _assign_data_user(state, payload) {
         state.user = payload
+    },
+    _remove_data_user(state, payload) {
+        state.user = null
     }
 }
 
@@ -35,15 +38,14 @@ function _login({ commit }, payload) {
             });
             const login = await response.json()
 
-            if(response.ok){
+            if (response.ok) {
                 localStorage.setItem('access_token', login.access_token);
                 commit('SET_TOKEN', login.access_token, { root: true }); // akses commit yg di root (index.js)
                 commit('_assign_data_user', login.data);
-                window.location.replace(window.location.href); // refresh page
                 resolve(login);
             }
 
-            if(!response.ok){
+            if (!response.ok) {
                 const error = new Error(response.statusText);
                 error.code = response.status;
                 throw error;
@@ -66,13 +68,14 @@ function _register({ commit }, payload) {
             });
             const register = await response.json()
 
-            if(register.success){
-                localStorage.setItem('SET_TOKEN', response.access_token);
-                commit('_assign_data_user', response.access_token, { root: true })
+            if (response.ok) {
+                localStorage.setItem('access_token', register.access_token);
+                commit('SET_TOKEN', register.access_token, { root: true }); // akses commit yg di root (index.js)
+                commit('_assign_data_user', register.access_token)
                 resolve(response);
             }
 
-            if(!register.sucess){
+            if (!response.ok) {
                 reject(error);
             }
         }
@@ -83,5 +86,7 @@ function _register({ commit }, payload) {
 }
 
 function _logout({ commit }, payload) {
-
+    localStorage.removeItem('access_token');
+    commit('REMOVE_TOKEN', null, { root: true });
+    window.location.replace(window.location.href); // refresh page
 }

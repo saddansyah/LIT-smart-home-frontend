@@ -135,8 +135,6 @@ const emitNotify = (state, message) => {
   notify.value.message = message;
 }
 
-
-
 // Category Dropdown
 const dropdownItems = ref({
   deviceCategory: [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]

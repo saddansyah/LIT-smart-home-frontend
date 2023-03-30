@@ -64,7 +64,8 @@ const onSubmit = () => {
     const login = async () => {
         try {
             const login = await store.dispatch('_login', body);
-            router.replace({name: 'Login'});
+            // router.replace({name: 'Login'}); 
+            window.location.replace(window.location.href); // refresh page
         }
         catch (error) {
             alert(error);

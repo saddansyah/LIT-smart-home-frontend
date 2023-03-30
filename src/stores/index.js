@@ -11,6 +11,9 @@ export default createStore({
   mutations: {
     SET_TOKEN(state, payload){
       state.access_token = payload;
+    },
+    REMOVE_TOKEN(state, payload){
+      state.access_token = null;
     }
   },
   actions: {

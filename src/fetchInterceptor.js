@@ -1,10 +1,11 @@
 import fetchIntercept from 'fetch-intercept';
 import stores from '@/stores';
 
-const initFetchIntercept = () => { 
+const initFetchIntercept = () => {
     const unregister = fetchIntercept.register({
         request: function (url, config) {
-            config.headers['Authorization'] = `Bearer ${stores.state.access_token}`
+            config.headers['Authorization'] = `Bearer ${stores.state.access_token}`;
+            config.headers['ngrok-skip-browser-warning'] = 69420;
             return [url, config];
         },
 

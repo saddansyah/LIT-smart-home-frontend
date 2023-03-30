@@ -36,7 +36,6 @@ function _fetchDataDeviceUsages({ commit }) {
             const data = await fetch(`${BASE_URL}/device_usages`, {
                 headers: {
                     'Accept': 'application/json',
-                    'ngrok-skip-browser-warning': 69420
                 }
             });
             const json = await data.json();
@@ -56,7 +55,6 @@ function _fetchDataTotalUsages({ commit }, timeRange) {
             const data = await fetch(`${BASE_URL}/total_usages/${timeRange}`, {
                 headers: {
                     'Accept': 'application/json',
-                    'ngrok-skip-browser-warning': 69420
                 }
             });
             const json = await data.json();

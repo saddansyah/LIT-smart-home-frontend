@@ -55,7 +55,6 @@ function _fetchDataDevices({ commit }) {
             const response = await fetch(`${BASE_URL}/devices`, {
                 headers: {
                     'Accept': 'application/json',
-                    // 'ngrok-skip-browser-warning': 69420
                 }
             });
             const json = await response.json();
@@ -76,7 +75,6 @@ function _fetchDataDevice({ commit }, deviceId) {
             const response = await fetch(`${BASE_URL}/devices/${deviceId}`, {
                 headers: {
                     'Accept': 'application/json',
-                    'ngrok-skip-browser-warning': 69420
                 }
             });
             const json = await response.json();
@@ -97,7 +95,6 @@ function _storeDataDevice({ commit }, newDevice) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 69420
                 },
                 body: JSON.stringify(newDevice)
             });
@@ -119,7 +116,6 @@ function _updateDataDevice({ commit }, newDevice) {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 69420
                 },
                 body: JSON.stringify(newDevice.data)
             });
@@ -140,7 +136,9 @@ function _deleteDataDevice({ commit }, deviceId) {
         try {
             const response = await fetch(`${BASE_URL}/devices/${deviceId}`, {
                 method: 'DELETE',
-                'ngrok-skip-browser-warning': 69420
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             });
             const json = await response.json();
             commit('_assign_deleted_device', json.data);

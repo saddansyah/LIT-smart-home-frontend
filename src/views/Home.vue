@@ -27,11 +27,25 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
+import { useStore } from "vuex";
 
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 
 const username = ref("saddansyah");
 
+const store = useStore();
 const route = useRoute();
+
+// Pre-fetch to put on the vuex store
+(async function fetchDataDevices() {
+    try {
+        await store.dispatch('_fetchDataDevices');
+    }
+    catch (error) {
+        alert(error);
+        console.error(error);
+    }
+})();
+
 </script>

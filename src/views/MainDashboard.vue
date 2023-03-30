@@ -194,7 +194,7 @@ fetchTotalUsage('hourly');
 const devices = computed(() => store?.state?.device?.devices);
 
 // Total Usages -----
-const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
+const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages || []);
 const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages
   ?.filter(item => String(item.date) === String(today))
   ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);

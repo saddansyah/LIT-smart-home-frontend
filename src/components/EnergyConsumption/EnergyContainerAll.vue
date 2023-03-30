@@ -153,7 +153,7 @@ const totalUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUs
 const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
   ?.filter(item => String(item.month) === String(currentMonth))
   ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
-
+  
 // Energy Goal -----
 const energyGoal = 1.18 // Soon choosed by user
 const energyGoalToday = ref(energyGoal);

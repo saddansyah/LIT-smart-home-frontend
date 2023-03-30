@@ -1,10 +1,10 @@
 import fetchIntercept from 'fetch-intercept';
+import stores from '@/stores';
 
-const initFetchIntercept = () => {
-
+const initFetchIntercept = () => { 
     const unregister = fetchIntercept.register({
         request: function (url, config) {
-            // config.headers['header-test'] = 62940
+            config.headers['Authorization'] = `Bearer ${stores.state.access_token}`
             return [url, config];
         },
 

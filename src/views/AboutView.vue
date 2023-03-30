@@ -15,17 +15,21 @@ const markdown = ref("");
 onMounted(() => {
   const getData = async () => {
     const response = await fetch(
-      "./README.md"
-      );
-      const data = await response.text();
-      markdown.value = data;
-    };
-    getData();
-  });
-  
-  const markdownToHtml = computed(() => {
-    return marked(markdown.value);
-  });
+      "./README.md", {
+      headers: {
+        'Accept': 'application/text',
+      }
+    }
+    );
+    const data = await response.text();
+    markdown.value = data;
+  };
+  getData();
+});
+
+const markdownToHtml = computed(() => {
+  return marked(markdown.value);
+});
 
 </script>
 

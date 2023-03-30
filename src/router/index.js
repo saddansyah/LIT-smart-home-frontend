@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useStore } from "vuex";
+import { computed } from "vue";
+import stores from "@/stores";
 
 // Plate for logged in view
 import Home from "@/views/Home.vue";
@@ -23,7 +24,8 @@ const router = createRouter({
       name: "Login",
       component: LoginView,
       meta: {
-        title: "Login to Smart Home | Smart Home"
+        title: "Login | Smart Home",
+        meta: { needAuth: true }
       }
     },
     {
@@ -31,13 +33,15 @@ const router = createRouter({
       name: "Register",
       component: RegisterView,
       meta: {
-        title: "Register to Smart Home | Smart Home"
+        title: "Register | Smart Home",
+        meta: { needAuth: true }
       }
     },
     {
       path: "/",
       name: "Home",
       component: Home,
+      meta: { needAuth: true },
       children: [
         {
           path: "main-dashboard",
@@ -48,7 +52,8 @@ const router = createRouter({
           name: "Main Dashboard",
           component: MainDashboard,
           meta: {
-            title: "Main Dashboard | Smart Home"
+            title: "Main Dashboard | Smart Home",
+            meta: { needAuth: true },
           }
         },
         {
@@ -56,7 +61,8 @@ const router = createRouter({
           name: "About",
           component: AboutView,
           meta: {
-            title: "About | Smart Home"
+            title: "About | Smart Home",
+            meta: { needAuth: true },
           }
         },
         {
@@ -64,7 +70,8 @@ const router = createRouter({
           name: "Energy Consumption",
           component: EnergyConsumptionView,
           meta: {
-            title: "Energy Consumption | Smart Home"
+            title: "Energy Consumption | Smart Home",
+            meta: { needAuth: true },
           }
         },
         {
@@ -72,7 +79,8 @@ const router = createRouter({
           name: "Devices",
           component: DevicesView,
           meta: {
-            title: "Devices | Smart Home"
+            title: "Devices | Smart Home",
+            meta: { needAuth: true },
           },
         },
         {
@@ -80,7 +88,8 @@ const router = createRouter({
           name: "Device Details",
           component: DeviceDetailsView,
           meta: {
-            title: "Device | Smart Home"
+            title: "Device | Smart Home",
+            meta: { needAuth: true },
           }
         },
         {
@@ -89,7 +98,8 @@ const router = createRouter({
           component: UserView,
           props: true,
           meta: {
-            title: "User | Smart Home"
+            title: "User | Smart Home",
+            meta: { needAuth: true },
           }
         },
       ]
@@ -105,11 +115,21 @@ const router = createRouter({
   ],
 });
 
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.needAuth)) {
+    let isAuth = stores.getters.isAuth;
+    !isAuth ? next({ name: 'Login' }) : next();
+  }
+  else {
+    next();
+  }
+});
+
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title}`;
   next();
 });
-
 
 
 export default router;

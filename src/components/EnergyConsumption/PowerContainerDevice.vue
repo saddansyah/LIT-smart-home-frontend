@@ -90,20 +90,20 @@ const store = useStore();
 const { chartId, device, selectedDate, isLoading } = defineProps(['chartId', 'device', 'selectedDate', 'isLoading']);
 
 // Device Powers (Chart) -----
-const devicePowers = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id));
+const devicePowers = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.user_device_id === device.id) || []);
 
 // Peak Power by time range -----
 const totalPeakPowerToday = computed(() => store?.state?.deviceUsage?.deviceUsages
     ?.filter(item => String(item.date) === String(today))
-    ?.filter(item => item.device_id === device.id)
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) ?? 0);
+    ?.filter(item => Number(item.user_device_id) === Number(device.id)) // filter instead because it will be reduced 
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 const totalPeakPowerCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.week) === String(currentWeek))
-    ?.filter(item => item.device_id === device.id)
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) ?? 0);
+    ?.filter(item => Number(item.user_device_id) === Number(device.id)) // filter instead because it will be reduced
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 const totalPeakPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.month) === String(currentMonth))
-    ?.filter(item => item.device_id === device.id)
-    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) ?? 0);
+    ?.filter(item => Number(item.user_device_id) === Number(device.id)) // filter instead because it will be reduced
+    ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 
 </script>

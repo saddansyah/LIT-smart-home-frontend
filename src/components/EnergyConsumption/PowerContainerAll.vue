@@ -41,7 +41,7 @@
             </div>
             <div v-ripple
                 class="energy-limit basis-1/2 flex flex-col gap-6 rounded-xl w-fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
-                <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Limit</h3>
+                <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Usage</h3>
                 <div class="power-limit-main">
                     <div v-if="isLoading">
                         <BasicLoading />
@@ -163,6 +163,8 @@ const totalUsedPowerCurrentWeek = computed(() => store?.state?.deviceUsage?.tota
 const totalUsedPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.month) === String(currentMonth) ?? 0)
     ?.find((item, index, array) => { return index === (array.length - 1) }));
+
+    console.log(totalUsedPowerToday)
 
 // Total Peak Power by time range -----
 const totalPeakPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages

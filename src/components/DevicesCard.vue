@@ -76,7 +76,7 @@ const handleDeleteDevice = async (emit) => {
 }
 
 const updateDeviceFavorite = async (emit) => {
-    const url = `${BASE_URL}/devices/update_favorite/${deviceId}`
+    const url = `${BASE_URL}/user_devices/update_favorite/${deviceId}`
     const body = { is_favorite: !props.device.is_favorite };
 
     try {

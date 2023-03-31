@@ -3,19 +3,31 @@
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Main Dashboard</h1>
     </div>
-    <div v-if="!devices">
+    <div v-if="!devices[0]">
       <FavoriteDeviceLoading />
     </div>
     <div v-else>
       <div class="mb-9">
         <h3 class="mb-3 lg:text-xl font-semibold">Your Favorite Devices</h3>
         <div class="overflow-x-auto overflow-y-hidden whitespace-nowrap pb-2">
-          <FavoriteDevicesCard v-for="device in devices.filter(item => item.is_favorite === 1)" :key="device.id"
-            :device="device" />
+          <div v-if="devices.find(item => item.is_favorite)">
+            <FavoriteDevicesCard v-for="device in devices.filter(item => item.is_favorite === 1)" :key="device.id"
+              :device="device" />
+          </div>
+          <div v-else>
+            <div class="button inline-block mt-6 max-w-sm h-20 w-48 lg:h-24 lg:w-64 px-4 mr-5 rounded-xl bg-slate-200">
+              <div class="w-full h-full flex items-center justify-center flex-col text-gray-400">
+                <v-icon icon="mdi-emoticon-sad-outline"></v-icon>
+                <h2 class="text-base mt-2">
+                  No such favorite device(s)
+                </h2>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div v-if="!totalUsages">
+    <div v-if="!totalUsages[0]">
       <MainDashboardLoading />
     </div>
     <div v-else>
@@ -105,7 +117,7 @@
                 </RouterLink>
               </div>
               <div v-if="!highestDeviceUsage">
-                <LineLoading/>
+                <LineLoading />
               </div>
               <div v-else>
                 <div class="main-content flex flex-row justify-between items-start">

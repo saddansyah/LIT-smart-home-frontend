@@ -78,13 +78,13 @@
                             <div class="main-content flex flex-row gap-4 items-center">
                                 <div class="text-6xl lg:text-8xl">⚡</div>
                                 <div>
-                                    <h3 class="text-2xl lg:text-4xl font-bold">{{ deviceUsagesToday.kwh }}</h3>
+                                    <h3 class="text-2xl lg:text-4xl font-bold">{{ deviceUsagesToday.kwh || 0 }}</h3>
                                     <h1 class="text-xl lg:text-2xl text-gray-400">kilowatt-hour (kWh)</h1>
                                 </div>
                             </div>
                             <div class="daily-goal">
                                 <h3 class="font-bold text-xl inline-block">Average Daily Usage:</h3>
-                                <h4 class="text-lg"><span class="font-bold text-2xl">{{ deviceUsagesToday.kwh }}</span> kWH
+                                <h4 class="text-lg"><span class="font-bold text-2xl">{{ deviceUsagesToday.kwh || 0 }}</span> kWH
                                 </h4>
                             </div>
                         </div>
@@ -229,14 +229,15 @@ const deviceId = route.params.deviceId;
 // Refs + Computed -------
 const device = computed(() => store?.state?.device?.devices.find(item => item.id === Number(deviceId)));
 
-const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => Number(item.device_id) === Number(deviceId)) ?? 0);
+const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => Number(item.user_device_id) === Number(device.value.id)) || []);
 const deviceUsagesToday = computed(() => store?.state?.deviceUsage?.deviceUsages
     ?.filter(item => String(item.date) == String(today))
-    ?.find(item => Number(item.device_id) === Number(deviceId)) ?? 0);
+    ?.find(item => Number(item.user_device_id) === Number(deviceId)) || 0);
 
 const devicePowers = deviceUsages;
-const devicePeakPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages
+const devicePeakPowerToday = computed(() => store?.state?.deviceUsage?.deviceUsages
     ?.filter(item => String(item.date) === String(today))
+    ?.filter(item => Number(item.user_device_id) === Number(deviceId))
     ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 
 
@@ -279,7 +280,7 @@ const selectChartCategory = (item) => {
 
 // Async Methods --------
 const updateDeviceState = async () => {
-    const url = `${BASE_URL}/devices/update_state/${deviceId}`
+    const url = `${BASE_URL}/user_devices/update_state/${deviceId}`
     const body = { state: !device.value.state };
 
     try {
@@ -308,7 +309,7 @@ const updateDeviceState = async () => {
 };
 
 const updateDeviceFavorite = async () => {
-    const url = `${BASE_URL}/devices/update_favorite/${deviceId}`
+    const url = `${BASE_URL}/user_devices/update_favorite/${deviceId}`
     const body = { is_favorite: !device.value.is_favorite };
     try {
         const data = await fetch(url, {

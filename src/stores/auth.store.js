@@ -86,7 +86,31 @@ function _register({ commit }, payload) {
 }
 
 function _logout({ commit }, payload) {
-    localStorage.removeItem('access_token');
-    commit('REMOVE_TOKEN', null, { root: true });
-    window.location.replace(window.location.href); // refresh page
+    return new Promise(async (resolve, reject) => {
+        try{
+            const response = await fetch(`${BASE_URL}/auth/logout`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const logout = response.json();
+
+            if (response.ok) {
+                localStorage.removeItem('access_token');
+                commit('REMOVE_TOKEN', null, { root: true });
+                commit('_remove_data_user', null);
+                window.location.replace(window.location.href); // refresh page
+            }
+
+            if (!response.ok) {
+                const error = new Error(response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+        }
+        catch(error){
+            reject(error);
+        }
+    })
+
 }

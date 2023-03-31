@@ -22,7 +22,7 @@
                     class="device-usage flex flex-col items-center basis-[20%]  p-6 bg-slate-50 rounded-xl shadow justify-center">
                     <v-icon icon="mdi-lightning-bolt" class="text-4xl lg:text-6xl text-sky-800 mb-4"></v-icon>
                     <h3 class="font-semibold text-xl mb-1">Energy Usage</h3>
-                    <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ device.last_kwh }}</h3>
+                    <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ lastDeviceUsages.kwh || 0 }}</h3>
                     <h4 class="text-base text-gray-400 mt-1">kilowatt-hour (kWH)</h4>
                 </div>
                 <div v-ripple class="inline-block min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow">
@@ -65,7 +65,9 @@ const store = useStore();
 const { chartId, device, selectedDate, isLoading } = defineProps(['chartId', 'device', 'selectedDate', 'isLoading']);
 
 // Device Usages (Chart) -----
-const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.device_id === device.id));
-
+const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => item.user_device_id === device.id));
+const lastDeviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages
+    ?.filter(item => item.user_device_id === device.id)
+    ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
 
 </script>

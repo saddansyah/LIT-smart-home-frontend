@@ -27,9 +27,19 @@ const store = useStore();
 const logoutDialog = ref(false);
 
 const handleLogout = (emit) => {
-  if(localStorage.getItem('access_token')){
-    store.dispatch('_logout');
-    logoutDialog.value = false
+
+  const logout = async () => {
+    try {
+      await store.dispatch('_logout');
+      logoutDialog.value = false
+    }
+    catch (error) {
+      alert(error);
+    }
+  }
+
+  if (localStorage.getItem('access_token')) {
+    logout();
   }
 }
 

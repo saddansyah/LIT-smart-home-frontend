@@ -76,7 +76,9 @@ function _register({ commit }, payload) {
             }
 
             if (!response.ok) {
-                reject(error);
+                const error = new Error(response.statusText);
+                error.code = response.status;
+                throw error;
             }
         }
         catch (error) {

@@ -32,7 +32,7 @@ import { useStore } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 
-const username = ref("saddansyah");
+const username = JSON.parse(localStorage.getItem('user')).name;
 
 const store = useStore();
 const route = useRoute();
@@ -47,5 +47,6 @@ const route = useRoute();
         console.error(error);
     }
 })();
+
 
 </script>

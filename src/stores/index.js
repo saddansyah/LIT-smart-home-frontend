@@ -14,7 +14,7 @@ export default createStore({
     },
     REMOVE_TOKEN(state, payload){
       state.access_token = null;
-    }
+    },
   },
   actions: {
   },

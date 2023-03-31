@@ -40,8 +40,9 @@ function _login({ commit }, payload) {
 
             if (response.ok) {
                 localStorage.setItem('access_token', login.access_token);
+                localStorage.setItem('user', JSON.stringify({ "name": login.data.name, "email": login.data.email }));
                 commit('SET_TOKEN', login.access_token, { root: true }); // akses commit yg di root (index.js)
-                commit('_assign_data_user', login.data);
+                // commit('_assign_data_user', login.data);
                 resolve(login);
             }
 
@@ -70,8 +71,9 @@ function _register({ commit }, payload) {
 
             if (response.ok) {
                 localStorage.setItem('access_token', register.access_token);
+                localStorage.setItem('user', JSON.stringify({ "name": register.data.name, "email": register.data.email }));
                 commit('SET_TOKEN', register.access_token, { root: true }); // akses commit yg di root (index.js)
-                commit('_assign_data_user', register.access_token)
+                // commit('_assign_data_user', register.access_token)
                 resolve(response);
             }
 
@@ -89,7 +91,7 @@ function _register({ commit }, payload) {
 
 function _logout({ commit }, payload) {
     return new Promise(async (resolve, reject) => {
-        try{
+        try {
             const response = await fetch(`${BASE_URL}/auth/logout`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -99,8 +101,9 @@ function _logout({ commit }, payload) {
 
             if (response.ok) {
                 localStorage.removeItem('access_token');
+                localStorage.removeItem('user');
                 commit('REMOVE_TOKEN', null, { root: true });
-                commit('_remove_data_user', null);
+                // commit('_remove_data_user', null);
                 window.location.replace(window.location.href); // refresh page
             }
 
@@ -110,7 +113,7 @@ function _logout({ commit }, payload) {
                 throw error;
             }
         }
-        catch(error){
+        catch (error) {
             reject(error);
         }
     })

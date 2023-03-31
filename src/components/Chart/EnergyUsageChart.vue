@@ -41,14 +41,16 @@ const initChart = () => {
                 [
                     {
                         label: 'Yesterday',
+                        fill: true,
                         data: past || [],
-                        borderWidth: 1,
+                        borderWidth: 2,
                         backgroundColor: "#d1d5db"
                     },
                     {
                         label: 'Today',
+                        fill: true,
                         data: current || [],
-                        borderWidth: 1,
+                        borderWidth: 2,
                         backgroundColor: '#059669'
                     },
                 ],

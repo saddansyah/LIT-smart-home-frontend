@@ -164,8 +164,6 @@ const totalUsedPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.tot
     ?.filter(item => String(item.month) === String(currentMonth) || 0)
     ?.find((item, index, array) => { return index === (array.length - 1) }));
 
-    console.log(totalUsedPowerToday)
-
 // Total Peak Power by time range -----
 const totalPeakPowerToday = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.date) === String(today))

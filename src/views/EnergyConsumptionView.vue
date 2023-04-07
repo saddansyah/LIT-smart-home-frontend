@@ -74,22 +74,56 @@
         <div class="devices w-full" v-if="selectedType === 'Power'">
           <v-window direction="vertical" v-model="tab" class="p-1">
             <v-window-item value="all">
-              <PowerContainerAll :isLoading="isUsageLoading" :selectedDate="selectedDate" @refreshChart="refreshFetch()"/>
+              <PowerContainerAll :isLoading="isUsageLoading" :selectedDate="selectedDate"
+                @refreshChart="refreshFetch()" />
             </v-window-item>
             <v-window-item value="byDevices">
-              <PowerContainerDevice :isLoading="isUsageLoading" :selectedDate="selectedDate" :chartId="device.id" :device="device" v-for="device in filteredDevices"
-                :key="device.id" />
+              <div v-if="isDeviceLoading">
+                <MainDashboardLoading />
+              </div>
+              <div v-else-if="!devices.length">
+                <div class="w-full h-[80vh] ">
+                  <div
+                    class="flex text-xl p-12 items-center justify-center flex-col text-gray-400 rounded-xl bg-slate-200">
+                    <v-icon icon="mdi-emoticon-sad-outline"></v-icon>
+                    <h2 class="mt-2">
+                      No such device(s)
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              <div v-else>
+                <PowerContainerDevice :isLoading="isUsageLoading" :selectedDate="selectedDate" :chartId="device.id"
+                  :device="device" v-for="device in filteredDevices" :key="device.id" />
+              </div>
             </v-window-item>
           </v-window>
         </div>
         <div class="devices w-full" v-else-if="selectedType === 'Energy'">
           <v-window direction="vertical" v-model="tab" class="p-1">
             <v-window-item value="all">
-              <EnergyContainerAll :isLoading="isUsageLoading" :selectedDate="selectedDate" @refreshChart="refreshFetch()" />
+              <EnergyContainerAll :isLoading="isUsageLoading" :selectedDate="selectedDate"
+                @refreshChart="refreshFetch()" />
             </v-window-item>
             <v-window-item value="byDevices">
-              <EnergyContainerDevice :isLoading="isUsageLoading" :selectedDate="selectedDate" :chartId="device.id" :device="device" v-for="device in filteredDevices"
-                :key="device.id" />
+              <div v-if="isDeviceLoading">
+                <MainDashboardLoading />
+              </div>
+              <div v-else-if="!devices.length">
+                <div class="w-full h-[80vh] ">
+                  <div
+                    class="flex text-xl p-12 items-center justify-center flex-col text-gray-400 rounded-xl bg-slate-200">
+                    <v-icon icon="mdi-emoticon-sad-outline"></v-icon>
+                    <h2 class="mt-2">
+                      No such device(s)
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              <div v-else>
+                <EnergyContainerDevice :isLoading="isUsageLoading" :selectedDate="selectedDate" :chartId="device.id"
+                  :device="device" v-for="device in filteredDevices" :key="device.id" />
+              </div>
             </v-window-item>
           </v-window>
         </div>

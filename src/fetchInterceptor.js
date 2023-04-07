@@ -6,6 +6,7 @@ const initFetchIntercept = () => {
         request: function (url, config) {
             config.headers['Authorization'] = `Bearer ${stores.state.access_token}`;
             config.headers['ngrok-skip-browser-warning'] = 69420;
+            config.headers['credentials'] = 'include';
             return [url, config];
         },
 

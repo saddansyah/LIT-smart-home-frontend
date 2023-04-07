@@ -1,7 +1,7 @@
 <template>
     <main class="container p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
         <NotifySnackbar :state="notify.state" :message="notify.message" @close="$event => notify.state = false" />
-        <div v-if="!device">
+        <div v-if="isDeviceLoading">
             <MainDashboardLoading />
         </div>
         <div v-else>
@@ -136,7 +136,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div v-if="!deviceUsages[0]">
+                            <div v-if="isUsageLoading">
                                 <GraphLoading />
                             </div>
                             <div v-else>
@@ -209,12 +209,13 @@ const route = useRoute();
 const router = useRouter();
 
 // Pre-fetch total usage ----
-const isLoading = ref(false)
+const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const isUsageLoading = ref(false)
 async function fetchTotalUsage(timeRange) {
     try {
-        isLoading.value = true
+        isUsageLoading.value = true
         await store.dispatch('_fetchDataTotalUsages', timeRange);
-        isLoading.value = false
+        isUsageLoading.value = false
     }
     catch (error) {
         alert(error);

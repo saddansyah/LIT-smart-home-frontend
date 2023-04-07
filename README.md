@@ -5,9 +5,9 @@
 ## ❓ About 
 Smart Home - LIT adalah project untuk menampilkan dashboard dan device management di sebuah rumah. Untuk pengembangan, _database_ yang digunakan menggunakan _dummy_ _database_ karena tidak tersambung secara langsung dengan hardware melalui protokol MQTT.
 
-## 💾 Documentation
+## 💾 Documentation and Repositories
 - [UI Wireframe](https://www.figma.com/file/vnzBpOdVkW5COuhIMBC7Kq/UI-Wireframe?node-id=2%3A3&t=rW2Nv1HVIVTVwMqn-0)
-- Postman API Documentation
+- [Backend Repo](https://github.com/mhmd-arif/LIT-smart-home-backend)
 
 <hr/>
 

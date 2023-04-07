@@ -25,7 +25,7 @@ const router = createRouter({
       component: LoginView,
       meta: {
         title: "Login | Smart Home",
-        meta: { needAuth: true }
+        needAuth: false
       }
     },
     {
@@ -34,7 +34,7 @@ const router = createRouter({
       component: RegisterView,
       meta: {
         title: "Register | Smart Home",
-        meta: { needAuth: true }
+        needAuth: false
       }
     },
     {
@@ -53,7 +53,7 @@ const router = createRouter({
           component: MainDashboard,
           meta: {
             title: "Main Dashboard | Smart Home",
-            meta: { needAuth: true },
+            needAuth: true
           }
         },
         {
@@ -62,7 +62,7 @@ const router = createRouter({
           component: AboutView,
           meta: {
             title: "About | Smart Home",
-            meta: { needAuth: true },
+            needAuth: true
           }
         },
         {
@@ -71,7 +71,7 @@ const router = createRouter({
           component: EnergyConsumptionView,
           meta: {
             title: "Energy Consumption | Smart Home",
-            meta: { needAuth: true },
+            needAuth: true
           }
         },
         {
@@ -80,7 +80,7 @@ const router = createRouter({
           component: DevicesView,
           meta: {
             title: "Devices | Smart Home",
-            meta: { needAuth: true },
+            needAuth: true
           },
         },
         {
@@ -89,7 +89,7 @@ const router = createRouter({
           component: DeviceDetailsView,
           meta: {
             title: "Device | Smart Home",
-            meta: { needAuth: true },
+            needAuth: true
           }
         },
         {
@@ -99,7 +99,7 @@ const router = createRouter({
           props: true,
           meta: {
             title: "User | Smart Home",
-            meta: { needAuth: true },
+            needAuth: true
           }
         },
       ]

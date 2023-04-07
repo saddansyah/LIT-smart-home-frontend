@@ -68,17 +68,18 @@ function _register({ commit }, payload) {
                 body: JSON.stringify(payload)
             });
             const register = await response.json()
+            console.log(response)
 
             if (response.ok) {
-                localStorage.setItem('access_token', register.access_token);
-                localStorage.setItem('user', JSON.stringify({ "name": register.data.name, "email": register.data.email }));
-                commit('SET_TOKEN', register.access_token, { root: true }); // akses commit yg di root (index.js)
+                // localStorage.setItem('access_token', register.access_token);
+                // localStorage.setItem('user', JSON.stringify({ "name": register.data.name, "email": register.data.email }));
+                // commit('SET_TOKEN', register.access_token, { root: true }); // akses commit yg di root (index.js)
                 // commit('_assign_data_user', register.access_token)
-                resolve(response);
+                resolve(register);
             }
 
             if (!response.ok) {
-                const error = new Error(response.statusText);
+                const error = new Error(register.message.email[0]);
                 error.code = response.status;
                 throw error;
             }

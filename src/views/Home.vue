@@ -19,7 +19,7 @@
         </template>
     </Navbar>
     
-    <RouterView :username="username" />
+    <RouterView :username="username" :isDeviceLoading="isDeviceLoading" />
 
     <Footer />
 </template>
@@ -37,10 +37,14 @@ const username = JSON.parse(localStorage.getItem('user')).name;
 const store = useStore();
 const route = useRoute();
 
+const isDeviceLoading = ref(false);
+
 // Pre-fetch to put on the vuex store
 (async function fetchDataDevices() {
     try {
+        isDeviceLoading.value = true
         await store.dispatch('_fetchDataDevices');
+        isDeviceLoading.value = false
     }
     catch (error) {
         alert(error);

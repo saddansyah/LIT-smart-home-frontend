@@ -74,10 +74,10 @@
         <div class="devices w-full" v-if="selectedType === 'Power'">
           <v-window direction="vertical" v-model="tab" class="p-1">
             <v-window-item value="all">
-              <PowerContainerAll :isLoading="isLoading" :selectedDate="selectedDate" @refreshChart="refreshFetch()"/>
+              <PowerContainerAll :isLoading="isUsageLoading" :selectedDate="selectedDate" @refreshChart="refreshFetch()"/>
             </v-window-item>
             <v-window-item value="byDevices">
-              <PowerContainerDevice :isLoading="isLoading" :selectedDate="selectedDate" :chartId="device.id" :device="device" v-for="device in filteredDevices"
+              <PowerContainerDevice :isLoading="isUsageLoading" :selectedDate="selectedDate" :chartId="device.id" :device="device" v-for="device in filteredDevices"
                 :key="device.id" />
             </v-window-item>
           </v-window>
@@ -85,10 +85,10 @@
         <div class="devices w-full" v-else-if="selectedType === 'Energy'">
           <v-window direction="vertical" v-model="tab" class="p-1">
             <v-window-item value="all">
-              <EnergyContainerAll :isLoading="isLoading" :selectedDate="selectedDate" @refreshChart="refreshFetch()" />
+              <EnergyContainerAll :isLoading="isUsageLoading" :selectedDate="selectedDate" @refreshChart="refreshFetch()" />
             </v-window-item>
             <v-window-item value="byDevices">
-              <EnergyContainerDevice :isLoading="isLoading" :selectedDate="selectedDate" :chartId="device.id" :device="device" v-for="device in filteredDevices"
+              <EnergyContainerDevice :isLoading="isUsageLoading" :selectedDate="selectedDate" :chartId="device.id" :device="device" v-for="device in filteredDevices"
                 :key="device.id" />
             </v-window-item>
           </v-window>
@@ -105,13 +105,15 @@ import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerCont
 
 const store = useStore();
 
+const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const isUsageLoading = ref(false)
+
 // Pre-fetch total usage
-const isLoading = ref(false)
 async function fetchTotalUsage(timeRange) {
   try {
-    isLoading.value = true
+    isUsageLoading.value = true
     await store.dispatch('_fetchDataTotalUsages', timeRange);
-    isLoading.value = false
+    isUsageLoading.value = false
   }
   catch (error) {
     alert(error);
@@ -124,8 +126,8 @@ const devices = computed(() => store?.state?.device?.devices);
 const searchText = ref('')
 const tab = ref(null);
 const dropdownItems = ref({
-  deviceCategory: [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
-    .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })],
+  deviceCategory: computed(() => [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
+    .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })]),
   sort: [
     { title: 'Name (A-Z)', value: 'nameAscending' },
     { title: 'Name (Z-A)', value: 'nameDescending' },

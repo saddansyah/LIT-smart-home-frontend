@@ -4,7 +4,7 @@
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Devices</h1>
     </div>
-    <div v-if="!devices[0]">
+    <div v-if="isDeviceLoading">
       <MainDashboardLoading />
     </div>
     <div v-else>
@@ -54,8 +54,15 @@
       </div>
       <div class="main-container">
         <h3 class="font-bold">You have {{ devices.length }} device(s)</h3>
-        <div v-if="!devices[0]">
-          <h1 class="text-2xl font-mono mt-6">Loading...</h1>
+        <div v-if="!devices.length">
+          <div class="button inline-block mt-6 max-w-sm h-20 w-48 lg:h-24 lg:w-64 px-4 mr-5 rounded-xl bg-slate-200">
+            <div class="w-full h-full flex items-center justify-center flex-col text-gray-400">
+              <v-icon icon="mdi-emoticon-sad-outline"></v-icon>
+              <h2 class="text-base mt-2">
+                No such device(s)
+              </h2>
+            </div>
+          </div>
         </div>
         <div v-else>
           <div class="mt-6">
@@ -64,20 +71,24 @@
         </div>
       </div>
     </div>
-    <br/><br/>
   </main>
 </template>
 
 <script setup>
-import { ref, computed, watch, watchEffect } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { RouterView, RouterLink } from 'vue-router';
 
-import { DevicesCard, AddDevice, NotifySnackbar, MainDashboardLoading } from '@/utils/componentLoader';
+import { DevicesCard, AddDevice, NotifySnackbar, MainDashboardLoading, LineLoading } from '@/utils/componentLoader';
 
 const store = useStore();
+
 const devices = computed(() => store?.state?.device?.devices);
+
+const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const isUsageLoading = ref(false)
 const addDialog = ref(false);
+
 const searchText = ref('')
 const filteredDevices = computed(() => {
 
@@ -85,7 +96,7 @@ const filteredDevices = computed(() => {
     return item.device_name.toLowerCase().includes(searchText.value.toLowerCase())
   });
 
-  if(selectedDeviceCategory) {
+  if (selectedDeviceCategory) {
     filtered = categoryFilterDevices(selectedDeviceCategory, filtered);
   }
 
@@ -137,8 +148,8 @@ const emitNotify = (state, message) => {
 
 // Category Dropdown
 const dropdownItems = ref({
-  deviceCategory: [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
-    .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })],
+  deviceCategory: computed(() => [{ 'title': 'All Devices', 'value': 'AllDevices' }, ...[...new Set(devices.value.map(device => device.category))]
+    .map(item => { return { 'title': item, 'value': item.split(' ').join('') } })]),
   sort: [
     { title: 'Name (A-Z)', value: 'nameAscending' },
     { title: 'Name (Z-A)', value: 'nameDescending' },

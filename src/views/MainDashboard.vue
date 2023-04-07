@@ -3,7 +3,7 @@
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Main Dashboard</h1>
     </div>
-    <div v-if="!devices[0]">
+    <div v-if="isDeviceLoading">
       <FavoriteDeviceLoading />
     </div>
     <div v-else>
@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!totalUsages[0]">
+    <div v-if="isUsageLoading">
       <MainDashboardLoading />
     </div>
     <div v-else>
@@ -59,20 +59,20 @@
               <div class="main-content flex flex-row gap-4 items-center">
                 <div class="text-6xl lg:text-8xl">⚡</div>
                 <div>
-                  <div v-if="isLoading">
+                  <div v-if="isUsageLoading">
                     <BasicLoading />
                   </div>
-                  <div v-else-if="selectedDate === 'Total Energy Today' && !isLoading">
+                  <div v-else-if="selectedDate === 'Total Energy Today' && !isUsageLoading">
                     <h3 class="text-4xl lg:text-6xl font-bold">
                       {{ totalUsagesToday?.kwh || 0 }}
                     </h3>
                   </div>
-                  <div v-else-if="selectedDate === 'Total Energy Weekly' && !isLoading">
+                  <div v-else-if="selectedDate === 'Total Energy Weekly' && !isUsageLoading">
                     <h3 class="text-4xl lg:text-6xl font-bold">
                       {{ totalUsagesCurrentWeek?.kwh || 0 }}
                     </h3>
                   </div>
-                  <div v-else-if="selectedDate === 'Total Energy Monthly' && !isLoading">
+                  <div v-else-if="selectedDate === 'Total Energy Monthly' && !isUsageLoading">
                     <h3 class="text-4xl lg:text-6xl font-bold">
                       {{ totalUsagesCurrentMonth?.kwh || 0 }}
                     </h3>
@@ -87,18 +87,18 @@
                     class="mb-3"></v-progress-linear>
                 </div>
                 <div class="text-bottom flex justify-between w-full">
-                  <div v-if="isLoading">
+                  <div v-if="isUsageLoading">
                     <LineLoading />
                   </div>
-                  <div v-else-if="selectedDate === 'Total Energy Today' && !isLoading">
+                  <div v-else-if="selectedDate === 'Total Energy Today' && !isUsageLoading">
                     <p class="text-base">{{ goalPercentageToday }}% from <span class="font-bold">{{ energyGoalToday }}
                         kWh</span></p>
                   </div>
-                  <div v-else-if="selectedDate === 'Total Energy Weekly' && !isLoading">
+                  <div v-else-if="selectedDate === 'Total Energy Weekly' && !isUsageLoading">
                     <p class="text-base">{{ goalPercentageWeekly }}% from <span class="font-bold">{{ energyGoalWeekly }}
                         kWh</span></p>
                   </div>
-                  <div v-else-if="selectedDate === 'Total Energy Monthly' && !isLoading">
+                  <div v-else-if="selectedDate === 'Total Energy Monthly' && !isUsageLoading">
                     <p class="text-base">{{ goalPercentageMonthly }}% from <span class="font-bold">{{ energyGoalMonthly }}
                         kWh</span></p>
                   </div>
@@ -116,18 +116,18 @@
                   <h3 class="text-base underline text-gray-400">View All</h3>
                 </RouterLink>
               </div>
-              <div v-if="!highestDeviceUsage">
+              <div v-if="isUsageLoading">
                 <LineLoading />
               </div>
               <div v-else>
                 <div class="main-content flex flex-row justify-between items-start">
                   <div class="main-content-left flex flex-row items-center gap-2">
                     <v-icon icon="mdi-ceiling-light" class="text-sky-800 text-3xl lg:text-4xl"></v-icon>
-                    <h4 class="lg:text-xl">{{ highestDeviceUsage.device_name && highestDeviceUsage.device_name }}</h4>
+                    <h4 class="lg:text-xl">{{ highestDeviceUsage.device_name || '-' }}</h4>
                   </div>
                   <div class="main-content-right flex flex-row items-center">
                     <v-icon icon="mdi-lightning-bolt" class="text-3xl lg:text-4xl"></v-icon>
-                    <h4 class="lg:text-xl">{{ highestDeviceUsage.last_kwh && highestDeviceUsage.last_kwh }} kWH</h4>
+                    <h4 class="lg:text-xl">{{ highestDeviceUsage.last_kwh || 0 }} kWH</h4>
                   </div>
                 </div>
               </div>
@@ -144,22 +144,22 @@
                 </button>
               </div>
               <div class="main-content graph">
-                <div v-if="isLoading">
+                <div v-if="isUsageLoading">
                   <GraphLoading />
                 </div>
-                <div v-else-if="selectedDate === 'Total Energy Today' && !isLoading">
+                <div v-else-if="selectedDate === 'Total Energy Today' && !isUsageLoading">
                   <EnergyUsageChart chartId="todayEnergyChart"
                     :past="totalUsages?.filter(item => String(item.date) === String(yesterday))?.map(item => chartObjectBuilder(item.hour, item.kwh))"
                     :current="totalUsages?.filter(item => String(item.date) === String(today))?.map(item => chartObjectBuilder(item.hour, item.kwh))"
                     :labels="totalUsages?.map(item => item.hour)" />
                 </div>
-                <div v-else-if="selectedDate === 'Total Energy Weekly' && !isLoading">
+                <div v-else-if="selectedDate === 'Total Energy Weekly' && !isUsageLoading">
                   <EnergyUsageChart chartId="weeklyEnergyChart"
                     :past="totalUsages?.filter(item => String(item.week) === String(pastWeek))?.map(item => chartObjectBuilder(item.date, item.kwh))"
                     :current="totalUsages?.filter(item => String(item.week) === String(currentWeek))?.map(item => chartObjectBuilder(item.date, item.kwh))"
                     :labels="totalUsages?.map(item => item.date)" />
                 </div>
-                <div v-else-if="selectedDate === 'Total Energy Monthly' && !isLoading">
+                <div v-else-if="selectedDate === 'Total Energy Monthly' && !isUsageLoading">
                   <EnergyUsageChart chartId="monthlyEnergyChart"
                     :past="totalUsages?.filter(item => String(item.month) === String(pastMonth))?.map(item => chartObjectBuilder(item.week, item.kwh))"
                     :current="totalUsages?.filter(item => String(item.month) === String(currentMonth))?.map(item => chartObjectBuilder(item.week, item.kwh))"
@@ -186,14 +186,15 @@ import { today, yesterday, currentWeek, pastWeek, currentMonth, pastMonth } from
 import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 
 const store = useStore();
+const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const isUsageLoading = ref(false)
 
 // Pre-fetch total usage ----
-const isLoading = ref(false)
 async function fetchTotalUsage(timeRange) {
   try {
-    isLoading.value = true
+    isUsageLoading.value = true
     await store.dispatch('_fetchDataTotalUsages', timeRange);
-    isLoading.value = false
+    isUsageLoading.value = false
   }
   catch (error) {
     alert(error);
@@ -203,7 +204,7 @@ async function fetchTotalUsage(timeRange) {
 fetchTotalUsage('hourly');
 
 // Devices -----
-const devices = computed(() => store?.state?.device?.devices);
+const devices = computed(() => store?.state?.device?.devices || []);
 
 // Total Usages -----
 const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages || []);
@@ -217,6 +218,7 @@ const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalU
   ?.filter(item => String(item.month) === String(currentMonth))
   ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
 
+
 // Energy Goal -----
 const energyGoal = 5
 const energyGoalToday = ref(energyGoal);
@@ -228,7 +230,9 @@ const goalPercentageWeekly = computed(() => Math.round((Number(totalUsagesCurren
 const goalPercentageMonthly = computed(() => Math.round((Number(totalUsagesCurrentMonth.value?.kwh) / Number(energyGoalMonthly.value)) * 100) || 0);
 
 // Highest Device Usage -----
-const highestDeviceUsage = computed(() => devices?.value?.find(item => Number(item.last_kwh) === Math.max.apply(Math, devices?.value?.map(function (item) { return item.last_kwh; }))))
+const highestDeviceUsage = computed(() => devices?.value?.find(item => Number(item.last_kwh) === Math.max.apply(Math, devices?.value?.map(function (item) { return item.last_kwh; }))) || [])
+
+console.log(devices, highestDeviceUsage.value)
 
 // Dropdown -----
 const dropdownItems = ref({

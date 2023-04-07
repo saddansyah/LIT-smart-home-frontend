@@ -14,7 +14,7 @@
                         </div>
                         <div v-else-if="selectedDate === 'Today' && !isLoading">
                             <h3 class="text-4xl lg:text-6xl font-bold">
-                                {{ totalPeakPowerToday?.watt ?? 0 }}
+                                {{ totalPeakPowerToday?.watt || 0 }}
                             </h3>
                             <p class="text-xl text-gray-600">watt (w)</p>
                             <p class="text-lg mt-2 text-gray-400">at <span class="font-bold">{{ totalPeakPowerToday?.hour
@@ -22,7 +22,7 @@
                         </div>
                         <div v-else-if="selectedDate === 'Weekly' && !isLoading">
                             <h3 class="text-4xl lg:text-6xl font-bold">
-                                {{ totalPeakPowerCurrentWeek?.watt ?? 0 }}
+                                {{ totalPeakPowerCurrentWeek?.watt || 0 }}
                             </h3>
                             <p class="text-xl text-gray-600">watt (w)</p>
                             <p class="text-lg mt-2 text-gray-400">at <span class="font-bold">{{
@@ -30,7 +30,7 @@
                         </div>
                         <div v-else-if="selectedDate === 'Monthly' && !isLoading">
                             <h3 class="text-4xl lg:text-6xl font-bold">
-                                {{ totalPeakPowerCurrentMonth?.watt ?? 0 }}
+                                {{ totalPeakPowerCurrentMonth?.watt || 0 }}
                             </h3>
                             <p class="text-xl text-gray-600">watt (w)</p>
                             <p class="text-lg mt-2 text-gray-400">at <span class="font-bold">{{
@@ -55,7 +55,7 @@
                                 </v-progress-circular>
                             </div>
                             <div class="content-right">
-                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerToday?.watt ?? 0 }} w</h3>
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerToday?.watt || 0 }} w</h3>
                                 <p class="text-xl text-gray-600">from goals: {{ powerLimitToday }} VA</p>
                                 <v-chip size="large" :color="Number(powerPercentageToday) < 90 ? 'green' : 'amber'"
                                     class="font-semibold">{{ Number(powerPercentageToday) < 90 ? 'Safe' : 'Warning'
@@ -73,7 +73,7 @@
                                 </v-progress-circular>
                             </div>
                             <div class="content-right">
-                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerCurrentWeek?.watt ?? 0 }} w
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerCurrentWeek?.watt || 0 }} w
                                 </h3>
                                 <p class="text-xl text-gray-600">from goals: {{ powerLimitWeekly }} watt</p>
                                 <v-chip size="large" :color="powerPercentageWeekly < 90 ? 'green' : 'amber'"
@@ -91,7 +91,7 @@
                                 </v-progress-circular>
                             </div>
                             <div class="content-right">
-                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerCurrentMonth?.watt ?? 0 }} w
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsedPowerCurrentMonth?.watt || 0 }} w
                                 </h3>
                                 <p class="text-xl text-gray-600">from goals: {{ powerLimitMonthly }} watt</p>
                                 <v-chip size="large" :color="powerPercentageMonthly < 90 ? 'green' : 'amber'"
@@ -158,10 +158,10 @@ const totalUsedPowerToday = computed(() => store?.state?.deviceUsage?.totalUsage
     ?.filter(item => String(item.date) === String(today))
     ?.find((item, index, array) => { return index === (array.length - 1) }));
 const totalUsedPowerCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
-    ?.filter(item => String(item.week) === String(currentWeek) ?? 0)
+    ?.filter(item => String(item.week) === String(currentWeek) || 0)
     ?.find((item, index, array) => { return index === (array.length - 1) }));
 const totalUsedPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
-    ?.filter(item => String(item.month) === String(currentMonth) ?? 0)
+    ?.filter(item => String(item.month) === String(currentMonth) || 0)
     ?.find((item, index, array) => { return index === (array.length - 1) }));
 
     console.log(totalUsedPowerToday)
@@ -184,8 +184,8 @@ const powerLimitToday = ref(powerLimit);
 const powerLimitWeekly = ref(powerLimit * 7);
 const powerLimitMonthly = ref(powerLimit * 30);
 
-const powerPercentageToday = computed(() => Math.round((Number(totalUsedPowerToday?.value.watt) / Number(powerLimitToday.value)) * 100) || 0);
-const powerPercentageWeekly = computed(() => Math.round((Number(totalUsedPowerCurrentWeek?.value.watt) / Number(powerLimitWeekly.value)) * 100) || 0);
-const powerPercentageMonthly = computed(() => Math.round((Number(totalUsedPowerCurrentMonth?.value.watt) / Number(powerLimitMonthly.value)) * 100) || 0);
+const powerPercentageToday = computed(() => Math.round((Number(totalUsedPowerToday?.value?.watt) / Number(powerLimitToday.value)) * 100) || 0);
+const powerPercentageWeekly = computed(() => Math.round((Number(totalUsedPowerCurrentWeek?.value?.watt) / Number(powerLimitWeekly.value)) * 100) || 0);
+const powerPercentageMonthly = computed(() => Math.round((Number(totalUsedPowerCurrentMonth?.value?.watt) / Number(powerLimitMonthly.value)) * 100) || 0);
 
 </script>

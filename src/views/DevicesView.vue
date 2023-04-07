@@ -1,6 +1,6 @@
 <template>
   <main class="container w-full p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
-    <NotifySnackbar :state="notify.state" :message="notify.message" @close="$event => notify.state = false" />
+    <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Devices</h1>
     </div>

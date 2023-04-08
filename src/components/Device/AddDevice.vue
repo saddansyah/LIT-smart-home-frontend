@@ -23,13 +23,14 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
+const emit = defineEmits(['notify', 'close'])
 
 const getProductDevice = async () => {
     try{
         await store.dispatch('_getProductDevice')
     }
     catch(error){
-        emit('notify', true, false, error);
+        emitNotify(true, false, error);
         console.error(error);
     }
 }
@@ -46,11 +47,11 @@ const handleAddDevice = (emit) => {
     const storeDataDevice = async () => {
         try {
             await store.dispatch('_storeDataDevice', newDevice);
-            emit('notify', true, true, `${newDevice.device_name} is added`);
+            emitNotify(true, true, `${newDevice.device_name} is added`);
             emit('close');
         }
         catch (error) {
-            emit('notify', true, false, error);
+            emitNotify(true, false, error);
             console.error(error);
         }
     }
@@ -73,5 +74,10 @@ const rules = ref(
 )
 const deviceName = ref('');
 const deviceCategory = ref('')
+
+// Snackbar
+const emitNotify = (state, success, message) => {
+    emit('notify', state, success, message)
+}
 </script>
 

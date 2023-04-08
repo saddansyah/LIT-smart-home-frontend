@@ -12,7 +12,7 @@
         <div class="overflow-x-auto overflow-y-hidden whitespace-nowrap pb-2">
           <div v-if="devices.find(item => item.is_favorite)">
             <FavoriteDevicesCard v-for="device in devices.filter(item => item.is_favorite === 1)" :key="device.id"
-              :device="device" />
+              :device="device" @notify="emitNotify"/>
           </div>
           <div v-else>
             <div class="button inline-block mt-6 max-w-sm h-20 w-48 lg:h-24 lg:w-64 px-4 mr-5 rounded-xl bg-slate-200">

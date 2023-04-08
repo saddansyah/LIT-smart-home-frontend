@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper flex justify-center">
         <div class="form w-72 lg:w-[90vh] z-30 p-9 bg-slate-50 rounded-lg">
-            <v-form v-model="form" @submit.prevent="$event => handleUpdateDevice($emit)">
+            <v-form v-model="form" @submit.prevent="$event => handleUpdateDevice()">
                 <div class="content-top flex flex-row justify-between">
                     <h1 class="font-bold text-xl lg:text-2xl mb-9">Edit Device {{ props.device.device_name }}</h1>
                     <button @click.prevent="$emit('close')" class="h-fit"><v-icon icon="mdi-close"></v-icon></button>
@@ -26,21 +26,22 @@ const route = useRoute();
 const props = defineProps({
     device: Object
 })
+const emit = defineEmits(['notify', 'close'])
 
 const getProductDevice = async () => {
     try {
         await store.dispatch('_getProductDevice')
     }
     catch (error) {
-        alert(error);
+        emitNotify(true, false, `${error}`);
         console.error(error);
     }
 }
 getProductDevice();
 
-const handleUpdateDevice = (emit) => {
+const handleUpdateDevice = () => {
     if (!deviceName.value) {
-        alert('Text field cant be empty.');
+        emitNotify(true, false, `Text field cant be empty`);
         return;
     }
 
@@ -48,11 +49,11 @@ const handleUpdateDevice = (emit) => {
     const updateDataDevice = async () => {
         try {
             await store.dispatch('_updateDataDevice', { body, deviceId });
-            emit('notify', true, `${deviceName.value} is edited`);
+            emitNotify(true, true,`${deviceName.value} is edited`);
             emit('close');
         }
         catch (error) {
-            emit('notify', true, `${error}`);
+            emitNotify(true, false, `${error}`);
         }
     }
 
@@ -69,4 +70,9 @@ const rules = ref(
 )
 const deviceId = route.params.deviceId;
 const deviceName = ref(props.device?.device_name);
+
+// Snackbar
+const emitNotify = (state, success, message) => {
+    emit('notify', state, success, message)
+}
 </script>

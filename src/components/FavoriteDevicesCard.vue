@@ -36,6 +36,7 @@ const props = defineProps({
   device: Object
 });
 const store = useStore();
+const emit = defineEmits(['notify'])
 
 const backendUrl = 'http://127.0.0.1:8000/api/devices/';
 const deviceId = props.device.id;
@@ -56,9 +57,14 @@ const updateDeviceState = async () => {
     store.commit('_assign_updated_device', json);
   }
   catch (error) {
-    alert(error);
+    emitNotify(true, true, error);
     console.error(error);
   }
 };
+
+// Snackbar
+const emitNotify = (state, success, message) => {
+    emit('notify', state, success, message)
+}
 
 </script>

@@ -225,10 +225,9 @@ async function fetchTotalUsage(timeRange) {
 };
 fetchTotalUsage('hourly');
 
-const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
-const deviceId = route.params.deviceId;
 
 // Refs + Computed -------
+const deviceId = route.params.deviceId;
 const device = computed(() => store?.state?.device?.devices.find(item => item.id === Number(deviceId)));
 
 const deviceUsages = computed(() => store?.state?.deviceUsage?.deviceUsages?.filter(item => Number(item.user_device_id) === Number(device.value.id)) || []);

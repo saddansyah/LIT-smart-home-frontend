@@ -187,6 +187,7 @@ import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 
 const store = useStore();
 const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const emit = defineEmits(['notify'])
 const isUsageLoading = ref(false)
 
 // Pre-fetch total usage ----
@@ -197,7 +198,7 @@ async function fetchTotalUsage(timeRange) {
     isUsageLoading.value = false
   }
   catch (error) {
-    alert(error);
+    emitNotify(true, false, error)
     console.error(error);
   }
 };
@@ -232,8 +233,6 @@ const goalPercentageMonthly = computed(() => Math.round((Number(totalUsagesCurre
 // Highest Device Usage -----
 const highestDeviceUsage = computed(() => devices?.value?.find(item => Number(item.last_kwh) === Math.max.apply(Math, devices?.value?.map(function (item) { return item.last_kwh; }))) || [])
 
-console.log(devices, highestDeviceUsage.value)
-
 // Dropdown -----
 const dropdownItems = ref({
   date: [
@@ -267,5 +266,9 @@ const refreshFetch = () => {
 }
 watch(selectedDate, refreshFetch)
 
+// Snackbar
+const emitNotify = (state, success, message) => {
+    emit('notify', state, success, message)
+}
 
 </script>

@@ -67,11 +67,11 @@ const deleteDialog = ref(false);
 
 const handleDeleteDevice = async (emit) => {
     try {
-        emit('notify', true, `${props.device.device_name} is deleted`);
+        emit('notify', true, true, `${props.device.device_name} is deleted`);
         await store.dispatch('_deleteDataDevice', deviceId);
     }
     catch (error) {
-        emit('notify', true, `${error}`);
+        emit('notify', true, false, error);
     }
 }
 
@@ -89,15 +89,15 @@ const updateDeviceFavorite = async (emit) => {
         });
         const json = await data.json();
         if (json.is_favorite) {
-            emit('notify', true, `${props.device.device_name} is your favorite(s)`);
+            emit('notify', true, true, `${props.device.device_name} is your favorite(s)`);
         }
         else {
-            emit('notify', true, `${props.device.device_name} is removed from your favorite(s)`);
+            emit('notify', true, true, `${props.device.device_name} is removed from your favorite(s)`);
         }
         store.commit('_assign_updated_device', json);
     }
     catch (error) {
-        emit('notify', true, `${error}`);
+        emit('notify', true, false, error);
     }
 };
 

@@ -21,6 +21,7 @@ import { useStore } from "vuex";
 defineProps({
   username: String
 });
+const emit = defineEmits(['notify'])
 
 const store = useStore();
 
@@ -34,7 +35,8 @@ const handleLogout = (emit) => {
       logoutDialog.value = false
     }
     catch (error) {
-      alert(error);
+      emit('notify', true, false, error);
+      console.error(error)
     }
   }
 

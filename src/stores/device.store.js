@@ -63,8 +63,17 @@ function _fetchDataDevices({ commit }) {
             });
             const json = await response.json();
 
-            commit('_assign_data_devices', json.data);
-            resolve(json);
+            if(response.ok){
+                commit('_assign_data_devices', json.data);
+                resolve(json);
+            }
+
+            if(!response.ok){
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+
         }
         catch (error) {
             console.error(error);
@@ -82,8 +91,17 @@ function _fetchDataDevice({ commit }, deviceId) {
                 }
             });
             const json = await response.json();
-            commit('_assign_data_device', json.data);
-            resolve(json);
+
+            if(response.ok){
+                commit('_assign_data_device', json.data);
+                resolve(json);
+            }
+
+            if(!response.ok){
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
         }
         catch (error) {
             console.error(error);
@@ -103,8 +121,18 @@ function _storeDataDevice({ commit }, newDevice) {
                 body: JSON.stringify(newDevice)
             });
             const json = await response.json();
-            commit('_assign_new_data_device', json.data);
-            resolve(json);
+
+            if(response.ok){
+                commit('_assign_new_data_device', json.data);
+                resolve(json);
+            }
+
+            if(!response.ok){
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+            
         }
         catch (error) {
             console.log(error);
@@ -124,8 +152,18 @@ function _updateDataDevice({ commit }, newDevice) {
                 body: JSON.stringify(newDevice.data)
             });
             const json = await response.json();
-            commit('_assign_updated_device', json.data);
-            resolve(json);
+
+            if(response.ok){
+                commit('_assign_updated_device', json.data);
+                resolve(json);
+            }
+
+            if(!response.ok){
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+            
         }
         catch (error) {
             console.log(error);
@@ -144,11 +182,20 @@ function _deleteDataDevice({ commit }, deviceId) {
                 }
             });
             const json = await response.json();
-            commit('_assign_deleted_device', json.data);
-            resolve(json);
+
+            if(response.ok){
+                commit('_assign_deleted_device', json.data);
+                resolve(json);
+            }
+
+            if(!response.ok){
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+            
         }
         catch (error) {
-            console.log(error);
             reject(error);
         }
     })
@@ -164,8 +211,17 @@ function _getProductDevice({ commit }) {
             });
             const json = await response.json();
 
-            commit('_assign_product_devices', json.data);
-            resolve(json);
+            if(response.ok){
+                commit('_assign_product_devices', json.data);
+                resolve(json);
+            }
+
+            if(!response.ok){
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+
         }
         catch (error) {
             console.error(error);

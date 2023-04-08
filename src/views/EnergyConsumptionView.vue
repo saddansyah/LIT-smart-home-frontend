@@ -140,6 +140,7 @@ import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerCont
 const store = useStore();
 
 const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const emit = defineEmits(['notify']);
 const isUsageLoading = ref(false)
 
 // Pre-fetch total usage
@@ -150,7 +151,7 @@ async function fetchTotalUsage(timeRange) {
     isUsageLoading.value = false
   }
   catch (error) {
-    alert(error);
+    emitNotify(true, false, error)
     console.error(error);
   }
 };
@@ -261,5 +262,9 @@ const refreshFetch = () => {
 
 watch(selectedDate, refreshFetch)
 
+// Snackbar
+const emitNotify = (state, success, message) => {
+    emit('notify', state, success, message)
+}
 
 </script>

@@ -1,6 +1,5 @@
 <template>
     <main class="container p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
-        <NotifySnackbar :state="notify.state" :message="notify.message" @close="$event => notify.state = false" />
         <div v-if="isDeviceLoading">
             <MainDashboardLoading />
         </div>
@@ -207,6 +206,7 @@ import dynamicTitle from "@/utils/dynamicTitle";
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
+const emit = defineEmits(['notify'])
 
 // Pre-fetch total usage ----
 const { isDeviceLoading } = defineProps(['isDeviceLoading']);
@@ -218,7 +218,7 @@ async function fetchTotalUsage(timeRange) {
         isUsageLoading.value = false
     }
     catch (error) {
-        alert(error);
+        emit('notify', true, false, error);
         console.error(error);
     }
 };
@@ -253,15 +253,10 @@ const dropdownItems = ref({
 }
 );
 const selectedChartCategory = ref("Energy Usage");
-const notify = ref({
-    state: false,
-    message: ''
-});
 
 // Methods
-const emitNotify = (state, message) => {
-    notify.value.state = state;
-    notify.value.message = message;
+const emitNotify = (state, success, message) => {
+    emit('notify', state, success, message)
 }
 
 const selectChartCategory = (item) => {
@@ -296,16 +291,15 @@ const updateDeviceState = async () => {
         store.commit('_assign_updated_device', json);
 
         if (json.state) {
-            emitNotify(true, `${json.device_name} is on`)
+            emitNotify(true, true, `${json.device_name} is on`)
         }
         else {
-            emitNotify(true, `${json.device_name} is off`)
+            emitNotify(true, true, `${json.device_name} is off`)
         }
 
     }
     catch (error) {
-        alert(error);
-        console.error(error);
+        emitNotify(true, false, error);
     }
 };
 
@@ -324,26 +318,28 @@ const updateDeviceFavorite = async () => {
         store.commit('_assign_updated_device', json);
 
         if (json.is_favorite) {
-            emitNotify(true, `${json.device_name} is your favorite(s)`)
+            emitNotify(true, true, `${json.device_name} is your favorite(s)`)
         }
         else {
-            emitNotify(true, `${json.device_name} is removed from your favorite(s)`)
+            emitNotify(true, true, `${json.device_name} is removed from your favorite(s)`)
         }
     }
     catch (error) {
-        alert(error);
-        console.error(error);
+        emitNotify(true, false, error);
     }
 };
 
 const handleDeleteDevice = () => {
     const deleteDataDevice = async () => {
         try {
-            await store.dispatch('_deleteDataDevice', deviceId);
+            const device = await store.dispatch('_deleteDataDevice', deviceId);
+            console.log(device)
+            emitNotify(true, false, `${device.data.device_name} is deleted`);
             router.replace({ name: 'Devices' })
         }
         catch (error) {
-            alert(error);
+            emitNotify(true, false, error);
+            console.error(error);
         }
     }
     deleteDataDevice();

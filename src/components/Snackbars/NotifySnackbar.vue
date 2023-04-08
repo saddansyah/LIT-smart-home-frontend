@@ -1,5 +1,5 @@
 <template>
-    <v-snackbar timeout="2000" color="#3b82f6" location="bottom center" v-model="state">
+    <v-snackbar timeout="2000" color="#3b82f6" location="top right" v-model="state">
         <v-icon icon="mdi-information text-xl mb-2"></v-icon>
         <p>{{ message }}</p>
         <template v-slot:actions>

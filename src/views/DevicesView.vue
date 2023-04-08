@@ -1,6 +1,11 @@
 <template>
+  <!-- <div v-if="notify.success">
+      <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+  </div>
+  <div v-else>
+      <WarningSnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+  </div> -->
   <main class="container w-full p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
-    <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Devices</h1>
     </div>
@@ -86,6 +91,8 @@ const store = useStore();
 const devices = computed(() => store?.state?.device?.devices);
 
 const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const emit = defineEmits(['notify'])
+
 const isUsageLoading = ref(false)
 const addDialog = ref(false);
 
@@ -134,16 +141,9 @@ const sortDevices = (key, data) => {
   }
 }
 
-
-// Notify Snackbar
-const notify = ref({
-  state: false,
-  message: ''
-});
-
-const emitNotify = (state, message) => {
-  notify.value.state = state;
-  notify.value.message = message;
+// Snackbar
+const emitNotify = (state, success, message) => {
+    emit('notify', state, success, message)
 }
 
 // Category Dropdown

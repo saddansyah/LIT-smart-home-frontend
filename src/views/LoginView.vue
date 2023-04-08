@@ -1,4 +1,10 @@
 <template>
+    <div v-if="notify.success">
+        <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+    </div>
+    <div v-else>
+        <WarningSnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+    </div>
     <div>
         <h1 class="font-bold text-4xl">Login</h1>
         <div class="login-form w-[30vw] h-fit mx-auto">
@@ -14,8 +20,8 @@
                     @click:append="showPassword = !showPassword">
                 </v-text-field>
 
-                <v-btn v-ripple :disabled="!form" :loading="loading" block color="#0ea5e9" class="text-white mt-6" size="large" type="submit"
-                    variant="elevated">
+                <v-btn v-ripple :disabled="!form" :loading="loading" block color="#0ea5e9" class="text-white mt-6"
+                    size="large" type="submit" variant="elevated">
                     Login
                 </v-btn>
             </v-form>
@@ -24,18 +30,18 @@
 </template>
 
 <script setup>
-import { comment } from "postcss";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { NotifySnackbar, WarningSnackbar } from "@/utils/componentLoader";
 
 const store = useStore();
 const router = useRouter();
 
 const isAuth = computed(() => store.getters?.isAuth);
 
-if(isAuth.value){
-    router.replace({name: 'Main Dashboard'});
+if (isAuth.value) {
+    router.replace({ name: 'Main Dashboard' });
 }
 
 const form = ref(false);
@@ -64,17 +70,29 @@ const onSubmit = () => {
     const login = async () => {
         try {
             const login = await store.dispatch('_login', body);
+            emitNotify(true, true, login.message);
             window.location.replace(window.location.href); // refresh page
         }
         catch (error) {
-            alert(error);
-            console.error(error);
+            emitNotify(true, false, error);
         }
     }
     login();
 
 }
 
+// Snackbars
+const notify = ref({
+    state: false,
+    success: false,
+    message: ''
+});
+
+const emitNotify = (state, success, message) => {
+    notify.value.state = state;
+    notify.value.success = success;
+    notify.value.message = message;
+}
 
 
 </script>

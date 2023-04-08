@@ -30,6 +30,8 @@ import WarningSnackbar from '@/components/Snackbars/WarningSnackbar.vue';
 // Other Components
 import ModalDelete from '@/components/ModalDelete.vue';
 import ModalLogout from '@/components/ModalLogout.vue';
+import Navbar from '@/components/Navbar.vue';
+import Footer from '@/components/Footer.vue';
 
 
 export {
@@ -51,5 +53,7 @@ export {
     MainDashboardLoading,
     BasicLoading,
     GraphLoading,
-    LineLoading
+    LineLoading,
+    Navbar,
+    Footer
 }

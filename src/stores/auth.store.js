@@ -47,7 +47,7 @@ function _login({ commit }, payload) {
             }
 
             if (!response.ok) {
-                const error = new Error(response.statusText);
+                const error = new Error(login.message || response.statusText);
                 error.code = response.status;
                 throw error;
             }
@@ -79,7 +79,7 @@ function _register({ commit }, payload) {
             }
 
             if (!response.ok) {
-                const error = new Error(register.message.email[0]);
+                const error = new Error(register.message.email[0] || response.statusText);
                 error.code = response.status;
                 throw error;
             }
@@ -109,7 +109,7 @@ function _logout({ commit }, payload) {
             }
 
             if (!response.ok) {
-                const error = new Error(response.statusText);
+                const error = new Error(logout.message || response.statusText);
                 error.code = response.status;
                 throw error;
             }

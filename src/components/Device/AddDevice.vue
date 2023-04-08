@@ -15,7 +15,6 @@
                     class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Add <v-icon icon="mdi-plus"></v-icon></v-btn>
             </v-form>
         </div>
-        {{ store.state.auth.user }}
     </div>
 </template>
 
@@ -30,7 +29,7 @@ const getProductDevice = async () => {
         await store.dispatch('_getProductDevice')
     }
     catch(error){
-        alert(error);
+        emit('notify', true, false, error);
         console.error(error);
     }
 }
@@ -47,12 +46,12 @@ const handleAddDevice = (emit) => {
     const storeDataDevice = async () => {
         try {
             await store.dispatch('_storeDataDevice', newDevice);
-            emit('notify', true, `${newDevice.device_name} is added`);
+            emit('notify', true, true, `${newDevice.device_name} is added`);
             emit('close');
         }
         catch (error) {
-            alert(error);
-            emit('notify', true, `${error}`);
+            emit('notify', true, false, error);
+            console.error(error);
         }
     }
 

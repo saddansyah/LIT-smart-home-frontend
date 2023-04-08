@@ -39,8 +39,18 @@ function _fetchDataDeviceUsages({ commit }) {
                 }
             });
             const json = await data.json();
-            commit('_assign_data_allDeviceUsages', json.data);
-            resolve(json);
+
+            if (response.ok) {
+                commit('_assign_data_allDeviceUsages', json.data);
+                resolve(json);
+            }
+
+            if (!response.ok) {
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+
         }
         catch (error) {
             console.error(error);
@@ -58,9 +68,18 @@ function _fetchDataTotalUsages({ commit }, timeRange) {
                 }
             });
             const json = await data.json();
-            commit('_assign_data_totalUsages', json.data.total_usages);
-            commit('_assign_data_deviceUsages', json.data.device_usages);
-            resolve(json.data);
+
+            if (response.ok) {
+                commit('_assign_data_totalUsages', json.data.total_usages);
+                commit('_assign_data_deviceUsages', json.data.device_usages);
+                resolve(json.data);
+            }
+
+            if (!response.ok) {
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
         }
         catch (error) {
             console.error(error);

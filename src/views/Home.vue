@@ -18,8 +18,15 @@
                     icon="mdi-account-outline"></v-icon></RouterLink>
         </template>
     </Navbar>
+
+    <div v-if="notify.success">
+        <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+    </div>
+    <div v-else>
+        <WarningSnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+    </div>
     
-    <RouterView :username="username" :isDeviceLoading="isDeviceLoading" />
+    <RouterView :username="username" :isDeviceLoading="isDeviceLoading" @notify="emitNotify"/>
 
     <Footer />
 </template>
@@ -28,9 +35,7 @@
 import { ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import { useStore } from "vuex";
-
-import Navbar from "@/components/Navbar.vue";
-import Footer from "@/components/Footer.vue";
+import { Navbar, Footer, NotifySnackbar, WarningSnackbar } from "@/utils/componentLoader";
 
 const username = JSON.parse(localStorage.getItem('user')).name;
 
@@ -47,10 +52,24 @@ const isDeviceLoading = ref(false);
         isDeviceLoading.value = false
     }
     catch (error) {
-        alert(error);
+        emitNotify(true, false, error);
         console.error(error);
     }
 })();
+
+// Snackbars
+const notify = ref({
+    state: false,
+    success: false,
+    message: ''
+});
+
+const emitNotify = (state, success, message) => {
+    notify.value.state = state;
+    notify.value.success = success;
+    notify.value.message = message;
+}
+
 
 
 </script>

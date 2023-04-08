@@ -1,4 +1,10 @@
 <template>
+    <div v-if="notify.success">
+        <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+    </div>
+    <div v-else>
+        <WarningSnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+    </div>
     <div>
         <h1 class="font-bold text-4xl">Register</h1>
         <div class="login-form w-[40vw] h-fit mx-auto">
@@ -39,9 +45,11 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { NotifySnackbar, WarningSnackbar } from "@/utils/componentLoader";
 
 const store = useStore();
 const router = useRouter();
+const emit = defineEmits('notify');
 
 const isAuth = computed(() => store.getters?.isAuth);
 
@@ -83,18 +91,29 @@ const onSubmit = () => {
     const register = async () => {
         try {
             const register = await store.dispatch('_register', body);
-            alert(register.message);
+            emitNotify(true, true, register.message);
             // router.replace({name: 'Login'}); 
-            router.replace({name: "Login"})
+            router.replace({ name: "Login" })
         }
         catch (error) {
-            alert(error);
-            console.error(error);
+            emitNotify(true, false, error);
         }
     }
     register();
 }
 
+// Snackbars
+const notify = ref({
+    state: false,
+    success: false,
+    message: ''
+});
+
+const emitNotify = (state, success, message) => {
+    notify.value.state = state;
+    notify.value.success = success;
+    notify.value.message = message;
+}
 
 
 </script>

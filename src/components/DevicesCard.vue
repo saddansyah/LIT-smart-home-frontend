@@ -18,7 +18,8 @@
                                     class="ml-3 font-semibold animate-state-pulse">ON</v-chip>
                             </div>
                         </div>
-                        <h4 class="text-base mt-1 text-gray-500">Device Power <span class="text-black">{{ device.watt }} W</span></h4>
+                        <h4 class="text-base mt-1 text-gray-500">Device Power <span class="text-black">{{ device.watt }}
+                                W</span></h4>
                     </div>
                     <div class="content-center-bottom">
                         <h4>Today usage: <span class="font-semibold text-lg">{{ device.last_kwh }} kWH</span></h4>
@@ -26,7 +27,7 @@
                 </div>
                 <div class="content-right flex flex-col justify-start">
                     <div class="content-right-top text-gray-500">
-                        <button @click.stop.prevent="updateDeviceFavorite($emit)" class="mr-2 text-yellow-500">
+                        <button @click.stop.prevent="updateDeviceFavorite()" class="mr-2 text-yellow-500">
                             <div v-if="device.is_favorite">
                                 <v-icon icon="mdi-star" size="large"></v-icon>
                             </div>
@@ -40,7 +41,7 @@
                                     <v-icon icon="mdi-delete" size="large"></v-icon></button>
                             </template>
                             <ModalDelete @close="$event => deleteDialog = false"
-                                @delete="$event => handleDeleteDevice($emit)" />
+                                @delete="$event => handleDeleteDevice()" :isLoading="isLoading"/>
                         </v-dialog>
                     </div>
                 </div>
@@ -59,46 +60,47 @@ import { ModalDelete, NotifySnackbar } from "@/utils/componentLoader";
 const props = defineProps({
     device: Object
 });
+const emit = defineEmits(['notify']);
 const store = useStore();
 
-const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 const deviceId = props.device.id;
 const deleteDialog = ref(false);
+const isLoading = ref(false);
 
-const handleDeleteDevice = async (emit) => {
+const handleDeleteDevice = async () => {
+    isLoading.value = true
     try {
-        emit('notify', true, true, `${props.device.device_name} is deleted`);
         await store.dispatch('_deleteDataDevice', deviceId);
+        emitNotify(true, true, `${props.device.device_name} is deleted`);
+        isLoading.value = false;
     }
     catch (error) {
-        emit('notify', true, false, error);
+        emitNotify(true, false, error);
+        isLoading.value = false;
     }
 }
 
-const updateDeviceFavorite = async (emit) => {
-    const url = `${BASE_URL}/user_devices/update_favorite/${deviceId}`
+const updateDeviceFavorite = async () => {
     const body = { is_favorite: !props.device.is_favorite };
-
+    console.log(body);
     try {
-        const data = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body)
-        });
-        const json = await data.json();
-        if (json.is_favorite) {
-            emit('notify', true, true, `${props.device.device_name} is your favorite(s)`);
+        const device = await store.dispatch('_updateDeviceFavorite', { body, deviceId });
+        if (device.is_favorite) {
+            emitNotify(true, true, `${props.device.device_name} is your favorite(s)`)
         }
         else {
-            emit('notify', true, true, `${props.device.device_name} is removed from your favorite(s)`);
+            emitNotify(true, true, `${props.device.device_name} is removed from your favorite(s)`)
         }
-        store.commit('_assign_updated_device', json);
     }
     catch (error) {
-        emit('notify', true, false, error);
+        emitNotify(true, false, error);
+        console.error(error);
     }
 };
+
+// Snackbar
+const emitNotify = (state, success, message) => {
+    emit('notify', state, success, message)
+}
 
 </script>

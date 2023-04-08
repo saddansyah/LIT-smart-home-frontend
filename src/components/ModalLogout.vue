@@ -6,7 +6,12 @@
             <div class="button flex flex-row space-x-3 w-full  mt-3">
                 <button v-ripple @click.prevent="$event => $emit('logout')"
                     class="inline-block w-full px-4 py-2 rounded-lg font-semibold text-white bg-red-400 hover:bg-red-500 shadow-lg">
-                    Log Out
+                    <div v-if="isLoading">
+                        <ButtonLoading/>
+                    </div>
+                    <div v-else>
+                        Log Out
+                    </div>
                 </button>
                 <button v-ripple @click.prevent="$event => $emit('close')"
                     class="inline-block w-full px-4 py-2 rounded-lg font-semibold outline outline-2 outline-slate-300 text-black hover:bg-slate-400 shadow-lg">
@@ -18,7 +23,8 @@
 </template>
 
 <script setup>
+import { ButtonLoading } from '@/utils/componentLoader';
 
-const { username } = defineProps(['username']);
+const { username, isLoading } = defineProps(['username', 'isLoading']);
 
 </script>

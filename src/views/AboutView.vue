@@ -15,7 +15,7 @@ const markdown = ref("");
 onMounted(() => {
   const getData = async () => {
     const response = await fetch(
-      "./README.md", {
+      "./src/components/About/About.md", {
       headers: {
         'Accept': 'application/text',
       }

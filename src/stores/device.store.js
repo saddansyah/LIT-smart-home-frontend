@@ -20,7 +20,7 @@ const mutations = {
         state.devices = [payload, ...state.devices]
     },
     _assign_updated_device(state, payload) {
-        state.devices = state.devices.map(item => item.id !== payload.id ? item : payload);
+        state.devices = state.devices.map(item => item.id !== payload.id ? item : payload).sort((a, b) => { return Number(b.is_favorite) - Number(a.is_favorite) })
     },
     _assign_deleted_device(state, payload) {
         state.devices = state.devices.filter(item => item.id !== payload.id)
@@ -143,7 +143,7 @@ function _storeDataDevice({ commit }, newDevice) {
     })
 }
 
-function _updateDataDevice({ commit }, {body, deviceId}) {
+function _updateDataDevice({ commit }, { body, deviceId }) {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(`${BASE_URL}/user_devices/${deviceId}`, {
@@ -203,7 +203,7 @@ function _deleteDataDevice({ commit }, deviceId) {
     })
 }
 
-function _updateDeviceState({ commit }, {body, deviceId}) {
+function _updateDeviceState({ commit }, { body, deviceId }) {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(`${BASE_URL}/user_devices/update_state/${deviceId}`, {
@@ -233,7 +233,7 @@ function _updateDeviceState({ commit }, {body, deviceId}) {
     });
 }
 
-function _updateDeviceFavorite({ commit }, {body, deviceId}) {
+function _updateDeviceFavorite({ commit }, { body, deviceId }) {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(`${BASE_URL}/user_devices/update_favorite/${deviceId}`, {

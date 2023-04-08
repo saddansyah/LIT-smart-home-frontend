@@ -107,9 +107,14 @@
             class="energy-chart mt-6 rounded-xl w-full h-fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
             <div class="content-top flex justify-between items-start">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Power Chart</h3>
-                <button v-ripple
+                <button v-ripple @click="$event => $emit('refreshChart')"
                     class="inline-block px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
-                    Refresh <v-icon icon="mdi-refresh"></v-icon>
+                    <div v-if="isLoading">
+                        <ButtonLoading />
+                    </div>
+                    <div v-else>
+                        Refresh <v-icon icon="mdi-refresh"></v-icon>
+                    </div>
                 </button>
             </div>
             <div class="chart mt-6">
@@ -143,7 +148,7 @@
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
-import { PeakPowerChart, BasicLoading, GraphLoading } from "@/utils/componentLoader.js";
+import { PeakPowerChart, BasicLoading, GraphLoading, ButtonLoading } from "@/utils/componentLoader.js";
 import { today, yesterday, currentWeek, pastWeek, currentMonth, pastMonth } from '@/utils/getTime';
 import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 

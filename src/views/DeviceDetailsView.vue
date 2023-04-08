@@ -63,7 +63,7 @@
                                 class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-red-400 shadow-lg">Delete
                                 <v-icon icon="mdi-delete"></v-icon></button>
                         </template>
-                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()" />
+                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()" :isLoading="isUsageLoading"/>
                     </v-dialog>
 
                 </div>
@@ -207,7 +207,7 @@ import dynamicTitle from "@/utils/dynamicTitle";
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
-const emit = defineEmits(['notify'])
+const emit = defineEmits(['notify']);
 
 // Pre-fetch total usage ----
 const { isDeviceLoading } = defineProps(['isDeviceLoading']);

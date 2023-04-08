@@ -58,8 +58,8 @@
         </div>
       </div>
       <div class="main-container">
-        <h3 class="font-bold">You have {{ devices.length }} device(s)</h3>
-        <div v-if="!devices.length">
+        <h3 class="font-bold">You have {{ filteredDevices.length }} device(s)</h3>
+        <div v-if="!filteredDevices.length">
           <div class="button inline-block mt-6 max-w-sm h-20 w-48 lg:h-24 lg:w-64 px-4 mr-5 rounded-xl bg-slate-200">
             <div class="w-full h-full flex items-center justify-center flex-col text-gray-400">
               <v-icon icon="mdi-emoticon-sad-outline"></v-icon>

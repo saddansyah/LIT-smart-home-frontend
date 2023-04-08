@@ -72,7 +72,7 @@
           </v-tabs>
         </div>
         <div class="devices w-full" v-if="selectedType === 'Power'">
-          <v-window direction="vertical" v-model="tab" class="p-1">
+          <v-window direction="horizontal" v-model="tab" class="p-1">
             <v-window-item value="all">
               <PowerContainerAll :isLoading="isUsageLoading" :selectedDate="selectedDate"
                 @refreshChart="refreshFetch()" />
@@ -81,7 +81,7 @@
               <div v-if="isDeviceLoading">
                 <MainDashboardLoading />
               </div>
-              <div v-else-if="!devices.length">
+              <div v-else-if="!filteredDevices.length">
                 <div class="w-full h-[80vh] ">
                   <div
                     class="flex text-xl p-12 items-center justify-center flex-col text-gray-400 rounded-xl bg-slate-200">
@@ -100,7 +100,7 @@
           </v-window>
         </div>
         <div class="devices w-full" v-else-if="selectedType === 'Energy'">
-          <v-window direction="vertical" v-model="tab" class="p-1">
+          <v-window direction="horizontal" v-model="tab" class="p-1">
             <v-window-item value="all">
               <EnergyContainerAll :isLoading="isUsageLoading" :selectedDate="selectedDate"
                 @refreshChart="refreshFetch()" />
@@ -109,7 +109,7 @@
               <div v-if="isDeviceLoading">
                 <MainDashboardLoading />
               </div>
-              <div v-else-if="!devices.length">
+              <div v-else-if="!filteredDevices.length">
                 <div class="w-full h-[80vh] ">
                   <div
                     class="flex text-xl p-12 items-center justify-center flex-col text-gray-400 rounded-xl bg-slate-200">

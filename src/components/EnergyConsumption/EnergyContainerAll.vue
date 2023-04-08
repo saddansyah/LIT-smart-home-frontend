@@ -51,7 +51,8 @@
                                     1]?.kwh ?? 0 }} kWH</h3>
                                 <p class="text-xl text-gray-600">from goals: {{ energyGoalToday }} kWH</p>
                                 <v-chip size="large" :color="Number(goalPercentageToday) < 90 ? 'green' : 'amber'"
-                                    class="font-semibold">{{ Number(goalPercentageToday) < 90 ? 'Safe' : 'Warning' }}</v-chip>
+                                    class="font-semibold">{{ Number(goalPercentageToday) < 90 ? 'Safe' : 'Warning'
+                                    }}</v-chip>
                                         <p class="text-base mt-4 underline text-gray-400">Set your goals here</p>
                             </div>
                         </div>
@@ -65,7 +66,8 @@
                                 </v-progress-circular>
                             </div>
                             <div class="content-right">
-                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsagesCurrentWeek[totalUsagesCurrentWeek.length - 1]?.kwh ?? 0 }} kWH</h3>
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{
+                                    totalUsagesCurrentWeek[totalUsagesCurrentWeek.length - 1]?.kwh ?? 0 }} kWH</h3>
                                 <p class="text-xl text-gray-600">from goals: {{ energyGoalWeekly }} kWH</p>
                                 <v-chip size="large" :color="goalPercentageWeekly < 90 ? 'green' : 'amber'"
                                     class="font-semibold">{{ goalPercentageWeekly < 90 ? 'Safe' : 'Warning' }}</v-chip>
@@ -82,7 +84,8 @@
                                 </v-progress-circular>
                             </div>
                             <div class="content-right">
-                                <h3 class="text-2xl lg:text-4xl font-bold">{{ totalUsagesCurrentMonth[totalUsagesCurrentMonth.length - 1]?.kwh ?? 0 }} kWH</h3>
+                                <h3 class="text-2xl lg:text-4xl font-bold">{{
+                                    totalUsagesCurrentMonth[totalUsagesCurrentMonth.length - 1]?.kwh ?? 0 }} kWH</h3>
                                 <p class="text-xl text-gray-600">from goals: {{ energyGoalMonthly }} kWH</p>
                                 <v-chip size="large" :color="goalPercentageMonthly < 90 ? 'green' : 'amber'"
                                     class="font-semibold">{{ goalPercentageMonthly < 90 ? 'Safe' : 'Warning' }}</v-chip>
@@ -99,7 +102,12 @@
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Energy Chart</h3>
                 <button v-ripple @click="$event => $emit('refreshChart')"
                     class="inline-block px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
-                    Refresh <v-icon icon="mdi-refresh"></v-icon>
+                    <div v-if="isLoading">
+                        <ButtonLoading />
+                    </div>
+                    <div v-else>
+                        Refresh <v-icon icon="mdi-refresh"></v-icon>
+                    </div>
                 </button>
             </div>
             <div class="chart mt-6">
@@ -133,7 +141,7 @@
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
-import { EnergyUsageChart, BasicLoading, GraphLoading } from "@/utils/componentLoader.js";
+import { EnergyUsageChart, BasicLoading, GraphLoading, ButtonLoading } from "@/utils/componentLoader.js";
 import { today, yesterday, currentWeek, pastWeek, currentMonth, pastMonth } from '@/utils/getTime';
 import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 
@@ -145,15 +153,15 @@ const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
 
 // Total Usages by time range -----
 const totalUsagesToday = computed(() => store?.state?.deviceUsage?.totalUsages
-  ?.filter(item => String(item.date) === String(today))
-  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
+    ?.filter(item => String(item.date) === String(today))
+    ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
 const totalUsagesCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
-  ?.filter(item => String(item.week) === String(currentWeek))
-  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
+    ?.filter(item => String(item.week) === String(currentWeek))
+    ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
 const totalUsagesCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
-  ?.filter(item => String(item.month) === String(currentMonth))
-  ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
-  
+    ?.filter(item => String(item.month) === String(currentMonth))
+    ?.find((item, index, array) => { return index === (array.length - 1) }) || 0);
+
 // Energy Goal -----
 const energyGoal = 1.18 // Soon choosed by user
 const energyGoalToday = ref(energyGoal);

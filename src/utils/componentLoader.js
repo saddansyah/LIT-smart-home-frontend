@@ -22,6 +22,7 @@ import MainDashboardLoading from '@/components/Loading/MainDashboardLoading.vue'
 import BasicLoading from '@/components/Loading/BasicLoading.vue';
 import GraphLoading from '@/components/Loading/GraphLoading.vue';
 import LineLoading from '@/components/Loading/LineLoading.vue';
+import ButtonLoading from '@/components/Loading/ButtonLoading.vue';
 
 import NotifySnackbar from '@/components/Snackbars/NotifySnackbar.vue';
 import WarningSnackbar from '@/components/Snackbars/WarningSnackbar.vue';
@@ -32,7 +33,6 @@ import ModalDelete from '@/components/ModalDelete.vue';
 import ModalLogout from '@/components/ModalLogout.vue';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
-
 
 export {
     FavoriteDevicesCard,
@@ -54,6 +54,7 @@ export {
     BasicLoading,
     GraphLoading,
     LineLoading,
+    ButtonLoading,
     Navbar,
     Footer
 }

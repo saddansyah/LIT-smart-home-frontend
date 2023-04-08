@@ -8,7 +8,7 @@
           Log Out <v-icon size="small" icon="mdi-logout"></v-icon>
         </button>
       </template>
-      <ModalLogout :username="username" @close="$event => logoutDialog = false" @logout="$event => handleLogout($emit)" />
+      <ModalLogout :username="username" :isLoading="isLoading" @close="$event => logoutDialog = false" @logout="$event => handleLogout($emit)" />
     </v-dialog>
   </main>
 </template>
@@ -18,7 +18,7 @@ import { ref } from "vue";
 import { ModalLogout } from '@/utils/componentLoader';
 import { useStore } from "vuex";
 
-defineProps({
+const { username } = defineProps({
   username: String
 });
 const emit = defineEmits(['notify'])
@@ -26,17 +26,21 @@ const emit = defineEmits(['notify'])
 const store = useStore();
 
 const logoutDialog = ref(false);
+const isLoading = ref(false);
 
 const handleLogout = (emit) => {
 
+  isLoading.value = true;
   const logout = async () => {
     try {
       await store.dispatch('_logout');
-      logoutDialog.value = false
+      isLoading.value = false;
+      logoutDialog.value = false;
     }
     catch (error) {
       emit('notify', true, false, error);
-      console.error(error)
+      isLoading.value = false;
+      logoutDialog.value = false;
     }
   }
 

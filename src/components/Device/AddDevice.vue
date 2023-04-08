@@ -11,8 +11,16 @@
                 <v-combobox required v-model="deviceCategory" :rules="[rules.required]"
                     :items="deviceCategoryList.map(item => item.category)" label="Device Category" chips
                     clearable></v-combobox>
-                <v-btn type="button" @click.prevent="$event => handleAddDevice($emit)" v-ripple :disabled="!form" size="x-large"
-                    class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Add <v-icon icon="mdi-plus"></v-icon></v-btn>
+                <v-btn type="button" @click.prevent="$event => handleAddDevice($emit)" v-ripple :disabled="!form"
+                    size="x-large"
+                    class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">
+                    <div v-if="isLoading">
+                        <ButtonLoading />
+                    </div>
+                    <div v-else>
+                        Add <v-icon icon="mdi-plus"></v-icon>
+                    </div>
+                </v-btn>
             </v-form>
         </div>
     </div>
@@ -21,15 +29,16 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
+import { ButtonLoading } from "@/utils/componentLoader";
 
 const store = useStore();
 const emit = defineEmits(['notify', 'close'])
 
 const getProductDevice = async () => {
-    try{
+    try {
         await store.dispatch('_getProductDevice')
     }
-    catch(error){
+    catch (error) {
         emitNotify(true, false, error);
         console.error(error);
     }
@@ -39,6 +48,9 @@ getProductDevice();
 const deviceCategoryList = computed(() => store?.state?.device?.productDevices?.map(item => { return { 'id': item.id, 'category': item.category } }));
 
 const handleAddDevice = (emit) => {
+    isLoading.value = true;
+    form.value = false
+    
     const newDevice = {
         device_name: deviceName.value,
         device_id: deviceCategoryList.value.find(item => item.category === deviceCategory.value)?.id,
@@ -48,10 +60,14 @@ const handleAddDevice = (emit) => {
         try {
             await store.dispatch('_storeDataDevice', newDevice);
             emitNotify(true, true, `${newDevice.device_name} is added`);
+            isLoading.value = false;
+            form.value = true;
             emit('close');
         }
         catch (error) {
             emitNotify(true, false, error);
+            isLoading.value = false;
+            form.value = true;
             console.error(error);
         }
     }
@@ -62,6 +78,7 @@ const handleAddDevice = (emit) => {
 
 // Add New Device
 const form = ref(false);
+const isLoading = ref(false);
 const rules = ref(
     {
         numberOnly: value => {

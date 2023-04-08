@@ -9,8 +9,14 @@
                 <v-text-field required v-model="deviceName" :rules="[rules.required]" label="Device Name" clearable
                     placeholder="Example: LIT-Smart-Lamp3"></v-text-field>
                 <v-btn type="submit" v-ripple size="x-large" :disabled="!form"
-                    class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Edit
-                    <v-icon icon="mdi-pencil"></v-icon></v-btn>
+                    class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">
+                    <div v-if="isLoading">
+                        <ButtonLoading />
+                    </div>
+                    <div v-else>
+                        Edit <v-icon icon="mdi-pencil"></v-icon>
+                    </div>
+                </v-btn>
             </v-form>
         </div>
     </div>
@@ -20,6 +26,7 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { ButtonLoading } from "@/utils/componentLoader";
 
 const store = useStore();
 const route = useRoute();
@@ -40,6 +47,9 @@ const getProductDevice = async () => {
 getProductDevice();
 
 const handleUpdateDevice = () => {
+    isLoading.value = true;
+    form.value = false;
+
     if (!deviceName.value) {
         emitNotify(true, false, `Text field cant be empty`);
         return;
@@ -49,11 +59,15 @@ const handleUpdateDevice = () => {
     const updateDataDevice = async () => {
         try {
             await store.dispatch('_updateDataDevice', { body, deviceId });
-            emitNotify(true, true,`${deviceName.value} is edited`);
+            emitNotify(true, true, `${deviceName.value} is edited`);
+            isLoading.value = false;
+            form.value = true;
             emit('close');
         }
         catch (error) {
             emitNotify(true, false, `${error}`);
+            isLoading.value = false;
+            form.value = true;
         }
     }
 
@@ -63,6 +77,7 @@ const handleUpdateDevice = () => {
 
 // Edit this device
 const form = ref(true);
+const isLoading = ref(false);
 const rules = ref(
     {
         required: value => !!value || 'Required.'

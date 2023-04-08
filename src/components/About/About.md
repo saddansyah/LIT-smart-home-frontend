@@ -13,6 +13,7 @@ Smart Home - LIT adalah project untuk menampilkan dashboard dan device managemen
 
 ### Coming Soon Features
 - OAuth, Reset Password, Remember Me
+- Dark Mode
 - kWH calculator
 - kWH and VA user goals 
 

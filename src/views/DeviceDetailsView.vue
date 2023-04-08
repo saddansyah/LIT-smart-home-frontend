@@ -44,7 +44,7 @@
                     <div class="specification">
                         <h3 class="text-xl font-bold">Specification</h3>
                         <p>Name: {{ device.device_name }}</p>
-                        <p>Type: Panasonic 12W</p>
+                        <p>Type: LIT - {{ device.category }}</p>
                         <p>Watt: {{ device.watt }} W</p>
                         <p>Voltage: {{ device.volt }} V</p>
                         <p>Ampere: {{ device.ampere }} A</p>

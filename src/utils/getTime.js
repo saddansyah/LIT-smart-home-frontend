@@ -11,7 +11,7 @@ const yesterday = `${_yesterday.getFullYear()}-${String(_yesterday.getMonth() + 
 const date = new Date();
 const currentYear = date.getFullYear();
 const _currentWeek = Math.ceil((date - new Date(currentYear, 0, 1)) / (604800000));
-const _pastWeek = Math.ceil((date - new Date(currentYear, 0, 1)) / (604800000+(86400000/2)));
+const _pastWeek = Math.ceil((date - new Date(currentYear, 0, 1)) / (604800000+(86400000)));
 const currentWeek = `${currentYear}${_currentWeek}`;
 const pastWeek = `${currentYear}${_pastWeek}`;
 

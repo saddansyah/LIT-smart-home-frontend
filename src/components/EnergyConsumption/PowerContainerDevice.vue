@@ -33,6 +33,7 @@
                 <div v-else-if="selectedDate === 'Monthly' && !isLoading">
                     <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ totalPeakPowerCurrentMonth?.kwh || 0 }}</h3>
                 </div>
+
                 <h4 class="text-base text-gray-400 mt-1">Watt (W)</h4>
                 <div v-if="isLoading">
                     <GraphLoading />
@@ -47,9 +48,8 @@
                 </div>
                 <div v-else-if="selectedDate === 'Monthly' && !isLoading">
                     <p class="text-lg mt-2 text-gray-400">at <span class="font-bold">{{
-                        totalPeakPowerCurrentMonth?.weekly || '00:00:00' }}</span></p>
+                        totalPeakPowerCurrentMonth?.week || '00:00:00' }}</span></p>
                 </div>
-
             </div>
             <div v-ripple
                 class="inline-block w-full h-full min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow justify-center">
@@ -103,11 +103,9 @@ const totalPeakPowerToday = computed(() => store?.state?.deviceUsage?.deviceUsag
     ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 const totalPeakPowerCurrentWeek = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.week) === String(currentWeek))
-    ?.filter(item => Number(item.user_device_id) === Number(device.id)) // filter instead because it will be reduced
     ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 const totalPeakPowerCurrentMonth = computed(() => store?.state?.deviceUsage?.totalUsages
     ?.filter(item => String(item.month) === String(currentMonth))
-    ?.filter(item => Number(item.user_device_id) === Number(device.id)) // filter instead because it will be reduced
     ?.reduce((prev, current) => (prev.watt > current.watt) ? prev : current, 0) || 0);
 
 </script>

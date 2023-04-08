@@ -33,12 +33,12 @@ const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 function _fetchDataDeviceUsages({ commit }) {
     return new Promise(async (resolve, reject) => {
         try {
-            const data = await fetch(`${BASE_URL}/device_usages`, {
+            const response = await fetch(`${BASE_URL}/device_usages`, {
                 headers: {
                     'Accept': 'application/json',
                 }
             });
-            const json = await data.json();
+            const json = await response.json();
 
             if (response.ok) {
                 commit('_assign_data_allDeviceUsages', json.data);
@@ -62,12 +62,12 @@ function _fetchDataDeviceUsages({ commit }) {
 function _fetchDataTotalUsages({ commit }, timeRange) {
     return new Promise(async (resolve, reject) => {
         try {
-            const data = await fetch(`${BASE_URL}/total_usages/${timeRange}`, {
+            const response = await fetch(`${BASE_URL}/total_usages/${timeRange}`, {
                 headers: {
                     'Accept': 'application/json',
                 }
             });
-            const json = await data.json();
+            const json = await response.json();
 
             if (response.ok) {
                 commit('_assign_data_totalUsages', json.data.total_usages);

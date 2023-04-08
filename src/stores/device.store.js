@@ -35,6 +35,8 @@ const actions = {
     _fetchDataDevice,
     _storeDataDevice,
     _updateDataDevice,
+    _updateDeviceState,
+    _updateDeviceFavorite,
     _deleteDataDevice,
     _getProductDevice
 }
@@ -63,12 +65,12 @@ function _fetchDataDevices({ commit }) {
             });
             const json = await response.json();
 
-            if(response.ok){
+            if (response.ok) {
                 commit('_assign_data_devices', json.data);
                 resolve(json);
             }
 
-            if(!response.ok){
+            if (!response.ok) {
                 const error = new Error(json.message || response.statusText);
                 error.code = response.status;
                 throw error;
@@ -92,12 +94,12 @@ function _fetchDataDevice({ commit }, deviceId) {
             });
             const json = await response.json();
 
-            if(response.ok){
+            if (response.ok) {
                 commit('_assign_data_device', json.data);
                 resolve(json);
             }
 
-            if(!response.ok){
+            if (!response.ok) {
                 const error = new Error(json.message || response.statusText);
                 error.code = response.status;
                 throw error;
@@ -122,17 +124,17 @@ function _storeDataDevice({ commit }, newDevice) {
             });
             const json = await response.json();
 
-            if(response.ok){
+            if (response.ok) {
                 commit('_assign_new_data_device', json.data);
                 resolve(json);
             }
 
-            if(!response.ok){
+            if (!response.ok) {
                 const error = new Error(json.message || response.statusText);
                 error.code = response.status;
                 throw error;
             }
-            
+
         }
         catch (error) {
             console.log(error);
@@ -141,29 +143,29 @@ function _storeDataDevice({ commit }, newDevice) {
     })
 }
 
-function _updateDataDevice({ commit }, newDevice) {
+function _updateDataDevice({ commit }, {body, deviceId}) {
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await fetch(`${BASE_URL}/user_devices/${newDevice.deviceId.value}`, {
+            const response = await fetch(`${BASE_URL}/user_devices/${deviceId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(newDevice.data)
+                body: JSON.stringify(body)
             });
             const json = await response.json();
 
-            if(response.ok){
+            if (response.ok) {
                 commit('_assign_updated_device', json.data);
                 resolve(json);
             }
 
-            if(!response.ok){
+            if (!response.ok) {
                 const error = new Error(json.message || response.statusText);
                 error.code = response.status;
                 throw error;
             }
-            
+
         }
         catch (error) {
             console.log(error);
@@ -183,22 +185,81 @@ function _deleteDataDevice({ commit }, deviceId) {
             });
             const json = await response.json();
 
-            if(response.ok){
+            if (response.ok) {
                 commit('_assign_deleted_device', json.data);
                 resolve(json);
             }
 
-            if(!response.ok){
+            if (!response.ok) {
                 const error = new Error(json.message || response.statusText);
                 error.code = response.status;
                 throw error;
             }
-            
+
         }
         catch (error) {
             reject(error);
         }
     })
+}
+
+function _updateDeviceState({ commit }, {body, deviceId}) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(`${BASE_URL}/user_devices/update_state/${deviceId}`, {
+                method: 'PATCH',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body)
+            });
+            const json = await response.json();
+            console.log(json)
+
+            if (response.ok) {
+                commit('_assign_updated_device', json);
+                resolve(json);
+            }
+
+            if (!response.ok) {
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
+}
+
+function _updateDeviceFavorite({ commit }, {body, deviceId}) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(`${BASE_URL}/user_devices/update_favorite/${deviceId}`, {
+                method: 'PATCH',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body)
+            });
+            const json = await response.json();
+
+            if (response.ok) {
+                commit('_assign_updated_device', json);
+                resolve(json);
+            }
+
+            if (!response.ok) {
+                const error = new Error(json.message || response.statusText);
+                error.code = response.status;
+                throw error;
+            }
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
 }
 
 function _getProductDevice({ commit }) {
@@ -211,12 +272,12 @@ function _getProductDevice({ commit }) {
             });
             const json = await response.json();
 
-            if(response.ok){
+            if (response.ok) {
                 commit('_assign_product_devices', json.data);
                 resolve(json);
             }
 
-            if(!response.ok){
+            if (!response.ok) {
                 const error = new Error(json.message || response.statusText);
                 error.code = response.status;
                 throw error;

@@ -8,7 +8,7 @@
                 </div>
                 <v-text-field required v-model="deviceName" :rules="[rules.required]" label="Device Name" clearable
                     placeholder="Example: LIT-Smart-Lamp3"></v-text-field>
-                <v-btn type="submit" v-ripple size="x-large"
+                <v-btn type="submit" v-ripple size="x-large" :disabled="!form"
                     class="w-full rounded font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg disabled:bg-slate-300">Edit
                     <v-icon icon="mdi-pencil"></v-icon></v-btn>
             </v-form>
@@ -18,9 +18,11 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
 const store = useStore();
+const route = useRoute();
 const props = defineProps({
     device: Object
 })
@@ -36,35 +38,21 @@ const getProductDevice = async () => {
 }
 getProductDevice();
 
-const pattern = /^[+]?\d+(\.\d+)?$/;
-
 const handleUpdateDevice = (emit) => {
     if (!deviceName.value) {
         alert('Text field cant be empty.');
         return;
     }
 
-    // if (!pattern.test(deviceVoltage.value) || !pattern.test(deviceCurrent.value) || !pattern.test(devicePower.value)){
-    //     alert('Voltage, Current, and Power must be numeric (0-9) only.');
-    //     return;
-    // }
-
-    const newDevice = {
-        data: {
-            device_name: deviceName.value
-        },
-        deviceId
-    }
-
+    const body = { device_name: deviceName.value }
     const updateDataDevice = async () => {
         try {
-            await store.dispatch('_updateDataDevice', newDevice);
+            await store.dispatch('_updateDataDevice', { body, deviceId });
             emit('notify', true, `${deviceName.value} is edited`);
             emit('close');
         }
         catch (error) {
             emit('notify', true, `${error}`);
-            alert(error);
         }
     }
 
@@ -76,13 +64,9 @@ const handleUpdateDevice = (emit) => {
 const form = ref(true);
 const rules = ref(
     {
-        numberOnly: value => {
-            return pattern.test(value) || 'Float only (0-9).';
-
-        },
         required: value => !!value || 'Required.'
     }
 )
-const deviceId = ref(props.device?.id);
+const deviceId = route.params.deviceId;
 const deviceName = ref(props.device?.device_name);
 </script>

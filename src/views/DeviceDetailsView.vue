@@ -83,7 +83,8 @@
                             </div>
                             <div class="daily-goal">
                                 <h3 class="font-bold text-xl inline-block">Average Daily Usage:</h3>
-                                <h4 class="text-lg"><span class="font-bold text-2xl">{{ deviceUsagesToday.kwh || 0 }}</span> kWH
+                                <h4 class="text-lg"><span class="font-bold text-2xl">{{ deviceUsagesToday.kwh || 0 }}</span>
+                                    kWH
                                 </h4>
                             </div>
                         </div>
@@ -275,65 +276,45 @@ const selectChartCategory = (item) => {
 })();
 
 // Async Methods --------
+
 const updateDeviceState = async () => {
-    const url = `${BASE_URL}/user_devices/update_state/${deviceId}`
     const body = { state: !device.value.state };
-
     try {
-        const data = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body)
-        });
-        const json = await data.json();
-        store.commit('_assign_updated_device', json);
-
-        if (json.state) {
-            emitNotify(true, true, `${json.device_name} is on`)
+        const device = await store.dispatch('_updateDeviceState', {body, deviceId});
+        if (device.state) {
+            emitNotify(true, true, `${device.device_name} is on`)
         }
         else {
-            emitNotify(true, true, `${json.device_name} is off`)
+            emitNotify(true, true, `${device.device_name} is off`)
         }
-
     }
     catch (error) {
         emitNotify(true, false, error);
+        console.error(error);
     }
-};
+}
 
 const updateDeviceFavorite = async () => {
-    const url = `${BASE_URL}/user_devices/update_favorite/${deviceId}`
     const body = { is_favorite: !device.value.is_favorite };
     try {
-        const data = await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body)
-        });
-        const json = await data.json();
-        store.commit('_assign_updated_device', json);
-
-        if (json.is_favorite) {
-            emitNotify(true, true, `${json.device_name} is your favorite(s)`)
+        const device = await store.dispatch('_updateDeviceFavorite', {body, deviceId});
+        if (device.is_favorite) {
+            emitNotify(true, true, `${device.device_name} is your favorite(s)`)
         }
         else {
-            emitNotify(true, true, `${json.device_name} is removed from your favorite(s)`)
+            emitNotify(true, true, `${device.device_name} is removed from your favorite(s)`)
         }
     }
     catch (error) {
         emitNotify(true, false, error);
+        console.error(error);
     }
-};
+}
 
 const handleDeleteDevice = () => {
     const deleteDataDevice = async () => {
         try {
             const device = await store.dispatch('_deleteDataDevice', deviceId);
-            console.log(device)
             emitNotify(true, false, `${device.data.device_name} is deleted`);
             router.replace({ name: 'Devices' })
         }

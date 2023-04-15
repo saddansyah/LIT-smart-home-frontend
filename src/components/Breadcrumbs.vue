@@ -11,21 +11,42 @@
 </template>
 
 <script setup>
-import { ref, computed, watchEffect } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, watchEffect, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-const route = useRoute();
+const _route = useRoute();
+const store = useStore();
 
-const routePath = computed({
-  get: () => route.fullPath
-});
+const route = {
+  name: computed(() => _route.name || ''),
+  path: computed(() => _route.path || ''),
+  deviceParams: computed(() => Number(_route.params.deviceId) || '')
+}
+const device = computed(() => store?.state?.device?.devices.find(device => device.id === route.deviceParams.value) || '');
 
-const breadcrumbs = ref(["Home", ""]);
+// const breadcrumbs = ref(["Home", ""]);
+const breadcrumbs = ref([
+  {
+    title: 'Home',
+    href: '/'
+  },
+  {
+    title: '',
+    href: ''
+  }]
+);
 
 watchEffect(() => {
-  const newPath = routePath.value.split('/');
-  newPath.shift()
-  breadcrumbs.value = ["Home", ...newPath]
+  const newBreadcrumbItems = [{ title: device.value.device_name || route.name.value, disabled: false, to: route.path.value }];
+
+  route.deviceParams.value && newBreadcrumbItems.unshift({ title: 'Devices', disabled: false, to: '/devices' }); // if device params exist, insert parent route
+
+  breadcrumbs.value = [{
+    title: 'Home',
+    href: '/'
+  }, ...newBreadcrumbItems];
+
 });
 
 </script>

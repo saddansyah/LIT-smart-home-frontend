@@ -38,29 +38,24 @@ const props = defineProps({
 const store = useStore();
 const emit = defineEmits(['notify'])
 
-const backendUrl = 'http://127.0.0.1:8000/api/devices/';
 const deviceId = props.device.id;
 
 const updateDeviceState = async () => {
-  const url = backendUrl + 'update_state/';
-  const body = { state: !props.device.state };
-
-  try {
-    const data = await fetch(url + deviceId, {
-      method: 'PATCH',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body)
-    });
-    const json = await data.json();
-    store.commit('_assign_updated_device', json);
-  }
-  catch (error) {
-    emitNotify(true, true, error);
-    console.error(error);
-  }
-};
+    const body = { state: !props.device.state };
+    try {
+        const device = await store.dispatch('_updateDeviceState', {body, deviceId});
+        if (device.state) {
+            emitNotify(true, true, `${device.device_name} is on`)
+        }
+        else {
+            emitNotify(true, true, `${device.device_name} is off`)
+        }
+    }
+    catch (error) {
+        emitNotify(true, false, error);
+        console.error(error);
+    }
+}
 
 // Snackbar
 const emitNotify = (state, success, message) => {

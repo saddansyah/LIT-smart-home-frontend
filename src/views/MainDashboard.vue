@@ -49,7 +49,12 @@
                 </button>
               </div>
               <div class="content-top-right">
-                <a href="/"><v-icon icon="mdi-information-outline" class="text-gray-400" /></a>
+                <v-tooltip location="top"
+                  text="All devices energy usage in kWH by specific time range">
+                  <template v-slot:activator="{ props }">
+                    <v-icon v-bind="props" icon="mdi-information-outline" class="text-gray-400" />
+                  </template>
+                </v-tooltip>
               </div>
             </div>
             <div class="main-content flex flex-row gap-4 items-center">

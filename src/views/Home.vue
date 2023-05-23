@@ -1,23 +1,5 @@
 <template>
-    <Navbar>
-        <template #main-dashboard>
-            <RouterLink to="/">Main Dashboard</RouterLink>
-        </template>
-        <template #energy-consumption>
-            <RouterLink to="/energy-consumption">Energy Consumption</RouterLink>
-        </template>
-        <template #devices>
-            <RouterLink to="/devices" :class="route.fullPath.includes('devices') && 'router-link-exact-active'">Devices
-            </RouterLink>
-        </template>
-        <template #about>
-            <RouterLink to="/about">About</RouterLink>
-        </template>
-        <template #user>
-            <RouterLink class="flex justify-center items-center" to="/user">{{ username }}<v-icon end
-                    icon="mdi-account-outline"></v-icon></RouterLink>
-        </template>
-    </Navbar>
+    <Navbar :username="username"/>
 
     <div v-if="notify.success">
         <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
@@ -33,14 +15,13 @@
 
 <script setup>
 import { ref } from "vue";
-import { RouterLink, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { Navbar, Footer, NotifySnackbar, WarningSnackbar } from "@/utils/componentLoader";
 
 const username = JSON.parse(localStorage.getItem('user')).name;
 
 const store = useStore();
-const route = useRoute();
+
 
 const isDeviceLoading = ref(false);
 

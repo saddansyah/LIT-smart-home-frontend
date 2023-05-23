@@ -5,7 +5,8 @@
     <div v-else>
         <WarningSnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
     </div>
-    <section class="login bg-slate-100">
+    <div class="h-screen flex items-center justify-center">
+        <section class="login bg-slate-100 w-full h-fit">
         <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 ">
                 <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
@@ -62,6 +63,8 @@
             </div>
         </div>
     </section>
+    </div>
+
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-  <main class="container p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
+  <main class="container text-base p-4 mx-auto mt-32 md:mt-40 lg:mt-32">
     <div class="mb-12">
       <h1 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600">Main Dashboard</h1>
     </div>
@@ -49,8 +49,7 @@
                 </button>
               </div>
               <div class="content-top-right">
-                <v-tooltip location="top"
-                  text="All devices energy usage in kWH by specific time range">
+                <v-tooltip location="top" text="All devices energy usage in kWH by specific time range">
                   <template v-slot:activator="{ props }">
                     <v-icon v-bind="props" icon="mdi-information-outline" class="text-gray-400" />
                   </template>
@@ -112,9 +111,9 @@
           <div v-ripple
             class="flex flex-col gap-6 md:col-span-1 lg:row-span-1 lg:col-span-2 lg:row-start-3 p-6 bg-slate-50 rounded-xl shadow hover:bg-slate-200 transition-all">
             <div class="content-top flex flex-row justify-between gap-8">
-              <h3 class="font-bold text-xl inline-block">Highest Devices Consumption</h3>
+              <h3 class="font-bold text-xl inline-block basis-3/5">Highest Devices Consumption</h3>
               <RouterLink :to="{ name: 'Devices' }">
-                <h3 class="text-base underline text-gray-400">View All</h3>
+                <h3 class="underline text-gray-400 text-sm md:text-base basis-2/5">View All</h3>
               </RouterLink>
             </div>
             <div v-if="isUsageLoading">
@@ -138,16 +137,18 @@
           <div v-ripple
             class="inline-block row-span-3 md:col-span-3 lg:row-span-3 lg:col-span-4 p-6 bg-slate-50 rounded-xl shadow hover:bg-slate-200 transition-all">
             <div class="content-top mb-3 flex justify-between items-start">
-              <h3 class="font-bold text-xl lg:text-2xl inline-block">Daily Energy Consumption</h3>
-              <button v-ripple @click="refreshFetch()"
-                class="inline-block text-base px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
-                <div v-if="isUsageLoading">
-                  <ButtonLoading />
-                </div>
-                <div v-else>
-                  Refresh <v-icon icon="mdi-refresh"></v-icon>
-                </div>
-              </button>
+              <h3 class="font-bold text-xl lg:text-2xl inline-block basis-3/5">Daily Energy Consumption</h3>
+              <div class="basis-2/5 text-end">
+                <button v-ripple @click="refreshFetch()"
+                  class="inline-block text-base px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                  <div v-if="isUsageLoading">
+                    <ButtonLoading />
+                  </div>
+                  <div v-else>
+                    <span class="hidden md:block">Refresh</span> <v-icon icon="mdi-refresh"></v-icon>
+                  </div>
+                </button>
+              </div>
             </div>
             <div class="main-content graph">
               <div v-if="isUsageLoading">

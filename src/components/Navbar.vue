@@ -3,7 +3,7 @@
     <div class="container p-4 flex flex-wrap items-center justify-between mx-auto">
       <a href="/" class="flex items-center md:mb-4 lg:mb-0">
         <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 mr-3 sm:h-9" alt="Flowbite Logo" />
-        <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Smart Home</span>
+        <span class="self-center text-xl font-semibold whitespace-nowrap text-white">Smart Home</span>
       </a>
 
       <v-menu>
@@ -19,7 +19,7 @@
           </button>
         </template>
 
-        <v-list density="compact" bg-color="#334155" class="text-white">
+        <v-list density="compact" bg-color="#334155 " class="text-white">
           <v-list-item v-for="(item, id) in navbarItems" :key="id" :value="item.value">
             <RouterLink  :to="item.path">{{ item.title }}</RouterLink>
           </v-list-item>
@@ -31,26 +31,26 @@
         <ul class="flex flex-col rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-base">
           <li>
             <a
-              class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+              class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 text-gray-300 md:hover:text-white hover:text-white md:hover:bg-transparent">
               <RouterLink to="/">Main Dashboard</RouterLink>
             </a>
           </li>
           <li>
             <span
-              class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+              class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 text-gray-300 md:hover:text-white hover:text-white md:hover:bg-transparent">
               <RouterLink to="/energy-consumption">Energy Consumption</RouterLink>
             </span>
           </li>
           <li>
             <span
-              class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+              class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 text-gray-300 md:hover:text-white hover:text-white md:hover:bg-transparent">
               <RouterLink to="/devices" :class="route.fullPath.includes('devices') && 'router-link-exact-active'">Devices
               </RouterLink>
             </span>
           </li>
           <li>
             <span
-              class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+              class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 text-gray-300 md:hover:text-white hover:text-white md:hover:bg-transparent">
               <RouterLink to="/about">About</RouterLink>
             </span>
           </li>

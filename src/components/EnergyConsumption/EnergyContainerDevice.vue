@@ -1,8 +1,8 @@
 <template>
     <!-- <RouterLink :to="{ name: 'Device Details', params: { deviceId: device.id } }"> -->
     <div @click.stop="$event => router.replace({ name: 'Device Details', params: { deviceId: device.id } })"
-        class="main cursor-pointer w-full h-96 mb-6 p-4 rounded-xl outline outline-2 outline-gray-200 hover:outline-sky-500 hover:shadow-lg ease-in-out transition-all">
-        <div class="device-container flex flex-row w-full h-full gap-6">
+        class="main cursor-pointer w-full h-fit mb-6 p-4 rounded-xl outline outline-2 outline-gray-200 hover:outline-sky-500 hover:shadow-lg ease-in-out transition-all">
+        <div class="device-container flex flex-col lg:flex-row w-full h-full gap-6">
             <div v-ripple
                 class="device-title flex flex-col basis-[20%] min-w-fit p-6 bg-slate-50 rounded-xl shadow justify-center">
                 <v-icon :icon="device.icon_url" class="text-4xl lg:text-6xl text-sky-800 mb-4"></v-icon>
@@ -24,7 +24,7 @@
                 <h3 class="font-bold text-2xl lg:text-4xl mb-1">{{ lastDeviceUsages.kwh || 0 }}</h3>
                 <h4 class="text-base text-gray-400 mt-1">kilowatt-hour (kWH)</h4>
             </div>
-            <div v-ripple class="inline-block min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow">
+            <div v-ripple class="hidden lg:block min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow">
                 <div v-if="isLoading">
                     <GraphLoading />
                 </div>

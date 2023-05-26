@@ -6,8 +6,8 @@
     <div class="mb-9">
       <v-text-field name="Search" v-model="searchText" append-icon="mdi-magnify" clear-icon="mdi-close" label="Search"
         hide-details clearable></v-text-field>
-      <div class="filter-wrapper flex flex-row justify-between">
-        <div class="content-left">
+      <div class="filter-wrapper flex flex-col md:flex-row justify-between">
+        <div class="content-left inline-block">
           <button v-ripple
             class="inline-block mt-6 mr-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50">
             {{ selectedDeviceCategory }}
@@ -45,8 +45,8 @@
             <v-icon icon="mdi-menu-down"></v-icon>
           </button>
         </div>
-        <button v-ripple
-          class="inline-block mt-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50">
+        <button class="inline-block mt-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50" v-ripple
+          >
           {{ selectedType }}
           <v-menu activator="parent">
             <v-list>
@@ -63,8 +63,8 @@
       <MainDashboardLoading />
     </div>
     <div class="" v-else>
-      <div class="main-container flex lg:flex-row lg:gap-12 w-full h-full">
-        <div class="card rounded-lg w-64 h-fit shadow bg-slate-50">
+      <div class="main-container flex flex-col lg:flex-row lg:gap-12 w-full h-full">
+        <div class="card rounded-lg w-full mb-12 md:mb-0 md:w-64 h-fit shadow bg-slate-50">
           <v-tabs v-model="tab" color="blue-darken-3" direction="vertical" density="comfortable" mandatory hide-slider
             grow>
             <v-tab value="all" prepend-icon="mdi-view-dashboard" selected-class="bg-sky-200">All</v-tab>

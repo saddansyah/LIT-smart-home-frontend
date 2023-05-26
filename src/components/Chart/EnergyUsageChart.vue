@@ -83,7 +83,7 @@ const initChart = () => {
                     bottom: 30
                 }
             },
-            responsive: true,
+            responsive: true
         }
     });
 
@@ -117,7 +117,7 @@ watch(selectedChartType, () => {
         </div>
     </div>
     <div class="w-full h-full">
-        <canvas :id="chartId" width="auto"> </canvas>
+        <canvas :id="chartId" height="auto"> </canvas>
     </div>
 </template>
 

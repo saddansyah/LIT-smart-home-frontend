@@ -1,7 +1,7 @@
 <template>
   <div @click.prevent="$event => updateDeviceState()" v-ripple
-    :class="'button inline-block max-w-sm h-20 w-48 lg:h-24 lg:w-64 px-4 mr-5  rounded-xl shadow transition-all ' + ' ' + (props.device.state ? 'bg-sky-600 hover:bg-sky-700 text-white animate-pulse ' : 'bg-slate-50 hover:bg-gray-200')">
-    <div class="flex flex-row h-full w-full items-center justify-between">
+    :class="'button inline-block max-w-sm h-20 w-52 lg:h-24 lg:w-64 px-4 mr-5 rounded-xl shadow transition-all ' + ' ' + (props.device.state ? 'bg-sky-600 hover:bg-sky-700 text-white animate-pulse ' : 'bg-slate-50 hover:bg-gray-200')">
+    <div class="flex flex-row gap-2 h-full w-full items-center justify-between">
       <div class="content-left flex flex-row items-center gap-4">
         <!-- <img src="#" alt="icon"> -->
         <v-icon :icon="device.icon_url" size="x-large"

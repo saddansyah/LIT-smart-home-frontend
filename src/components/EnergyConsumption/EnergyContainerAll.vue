@@ -1,8 +1,8 @@
 <template>
     <div class="main inline-block w-full">
-        <div class="main-top flex w-full h-fit lg:flex-row gap-6">
+        <div class="main-top flex flex-col w-full h-fit lg:flex-row gap-6">
             <div v-ripple
-                class="energy-usage basis-1/2 flex flex-col w-fit gap-6 rounded-xl shadow bg-slate-50 hover:bg-slate-200 transition-all p-6 ">
+                class="energy-usage w-full flex flex-col lg:basis-1/2 lg:w-fit gap-6 rounded-xl shadow bg-slate-50 hover:bg-slate-200 transition-all p-6 ">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Energy Usage</h3>
                 <div class="energy-usage-main flex gap-2 items-center">
                     <div class="text-6xl lg:text-8xl">⚡</div>

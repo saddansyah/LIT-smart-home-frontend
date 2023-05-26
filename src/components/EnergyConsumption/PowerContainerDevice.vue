@@ -1,8 +1,8 @@
 <template>
     <div @click.stop.prevent="$event => router.replace({ name: 'Device Details', params: { deviceId: device.id } })"
-        class="main cursor-pointer w-full h-96 mb-6 p-4 rounded-xl outline outline-2 outline-gray-200 hover:outline-sky-500 hover:shadow-lg ease-in-out transition-all">
+        class="main cursor-pointer w-full h-fit mb-6 p-4 rounded-xl outline outline-2 outline-gray-200 hover:outline-sky-500 hover:shadow-lg ease-in-out transition-all">
         <!-- <RouterLink :to="{ name: 'Device Details', params: { deviceId: device.id } }"> -->
-        <div class="device-container flex flex-row w-full h-full gap-6">
+        <div class="device-container flex flex-col lg:flex-row w-full h-full gap-6">
             <div v-ripple
                 class="device-title flex flex-col basis-[20%] min-w-fit p-6 bg-slate-50 rounded-xl shadow justify-center">
                 <v-icon :icon="device.icon_url" class="text-4xl lg:text-6xl text-sky-800 mb-4"></v-icon>
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div v-ripple
-                class="inline-block w-full h-full min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow justify-center">
+                class="hidden lg:block w-full h-full min-w-fit basis-[60%] p-6 bg-slate-50 rounded-xl shadow justify-center">
                 <div v-if="isLoading">
                     <GraphLoading />
                 </div>

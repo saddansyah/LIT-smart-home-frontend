@@ -1,16 +1,19 @@
 <template>
-    <Navbar :username="username"/>
+    <div class=" h-screen">
+        <Navbar :username="username" />
 
-    <div v-if="notify.success">
-        <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
-    </div>
-    <div v-else>
-        <WarningSnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
-    </div>
-    
-    <RouterView :username="username" :isDeviceLoading="isDeviceLoading" @notify="emitNotify"/>
+        <div v-if="notify.success">
+            <NotifySnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+        </div>
+        <div v-else>
+            <WarningSnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
+        </div>
 
-    <Footer />
+        <RouterView :username="username" :isDeviceLoading="isDeviceLoading" @notify="emitNotify" />
+
+        <Footer />
+
+    </div>
 </template>
 
 <script setup>

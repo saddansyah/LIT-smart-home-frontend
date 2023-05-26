@@ -4,10 +4,10 @@
             <MainDashboardLoading />
         </div>
         <div v-else>
-            <div class="content-top mb-9 flex flex-row justify-between">
+            <div class="content-top md:mt-9 lg:mt-0 mb-9 flex flex-col gap-3 md:flex-row justify-between">
                 <div class="content-top-left">
-                    <div class="device-name flex flex-row gap-2 items-start">
-                        <h2 class="text-3xl font-bold md:mt-12 lg:mt-0 lg:text-4xl text-sky-600 mb-3">{{ device.device_name
+                    <div class="device-name flex flex-row gap-2 items-center">
+                        <h2 class="text-3xl font-bold lg:text-4xl text-sky-600">{{ device.device_name
                         }}
                         </h2>
                         <button @click.prevent="$event => updateDeviceFavorite()" class="mr-2 text-yellow-500 text-xl">
@@ -19,24 +19,28 @@
                             </div>
                         </button>
                     </div>
-                    <v-chip size="large" color="green" class="font-semibold">{{ device.category }}</v-chip>
-                    <div class="device-state inline-block">
-                        <div v-if="device.state">
-                            <v-chip size="large" prepend-icon="mdi-power" color="blue"
-                                class="ml-3 font-semibold">ON</v-chip>
-                        </div>
-                        <div v-else>
-                            <v-chip size="large" prepend-icon="mdi-power" color="grey"
-                                class="ml-3 font-semibold">OFF</v-chip>
+                    <div class="chip mt-3">
+                        <v-chip size="large" color="green" class="font-semibold">{{ device.category }}</v-chip>
+                        <div class="device-state inline-block">
+                            <div v-if="device.state">
+                                <v-chip size="large" prepend-icon="mdi-power" color="blue"
+                                    class="ml-3 font-semibold">ON</v-chip>
+                            </div>
+                            <div v-else>
+                                <v-chip size="large" prepend-icon="mdi-power" color="grey"
+                                    class="ml-3 font-semibold">OFF</v-chip>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button v-ripple @click="$event => updateDeviceState()"
-                    :class="'self-start h-fit px-6 py-2 rounded-full font-semibold text-white shadow-lg transition-all duration-500 ' + (!device.state ? 'bg-sky-600' : 'bg-red-400 animate-pulse')">{{
-                        !device.state
-                        ? 'Turn On ' : 'Save your energy ' }}<v-icon icon="mdi-power"></v-icon></button>
+                <div class="content-top-right ">
+                    <button v-ripple @click="$event => updateDeviceState()"
+                        :class="'self-start h-fit px-6 py-2 rounded-full font-semibold text-white shadow-lg transition-all duration-500 ' + (!device.state ? 'bg-sky-600' : 'bg-red-400 animate-pulse')">{{
+                            !device.state
+                            ? 'Turn On ' : 'Save your energy ' }}<v-icon icon="mdi-power"></v-icon></button>
+                </div>
             </div>
-            <div class="main-content flex flex-row w-full gap-20">
+            <div class="main-content flex flex-col lg:flex-row w-full gap-20">
                 <div class="side-content flex flex-col">
                     <div class="p-4 self-center">
                         <v-icon :icon="device?.icon_url" class="text-9xl scale-125 text-sky-800"></v-icon>
@@ -63,7 +67,8 @@
                                 class="self-start h-fit w-full mt-3 px-4 py-2 rounded-lg font-semibold text-white bg-red-400 shadow-lg">Delete
                                 <v-icon icon="mdi-delete"></v-icon></button>
                         </template>
-                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()" :isLoading="isUsageLoading"/>
+                        <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()"
+                            :isLoading="isUsageLoading" />
                     </v-dialog>
 
                 </div>
@@ -279,7 +284,7 @@ const selectChartCategory = (item) => {
 const updateDeviceState = async () => {
     const body = { state: !device.value.state };
     try {
-        const device = await store.dispatch('_updateDeviceState', {body, deviceId});
+        const device = await store.dispatch('_updateDeviceState', { body, deviceId });
         if (device.state) {
             emitNotify(true, true, `${device.device_name} is on`)
         }
@@ -296,7 +301,7 @@ const updateDeviceState = async () => {
 const updateDeviceFavorite = async () => {
     const body = { is_favorite: !device.value.is_favorite };
     try {
-        const device = await store.dispatch('_updateDeviceFavorite', {body, deviceId});
+        const device = await store.dispatch('_updateDeviceFavorite', { body, deviceId });
         if (device.is_favorite) {
             emitNotify(true, true, `${device.device_name} is your favorite(s)`)
         }

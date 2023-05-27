@@ -19,6 +19,7 @@
 		"chart.js": "^4.2.1",
 		"dotenv": "^16.0.3",
 		"fetch-intercept": "^2.4.0",
+		"gh-pages": "^5.0.0",
 		"json-server": "^0.17.2",
 		"laravel-echo": "^1.15.1",
 		"marked": "^4.2.12",

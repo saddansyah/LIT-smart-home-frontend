@@ -44,11 +44,16 @@ const fetchDataDevices = async () => {
 };
 fetchDataDevices();
 
-// WebSocket
+// WebSocket (Pusher)
+const pusherKey = import.meta.env.VITE_APP_PUSHER_KEY;
+const pusherCluster = import.meta.env.VITE_APP_PUSHER_CLUSTER;
+const pusherChannel = import.meta.env.VITE_APP_PUSHER_CHANNEL;
+const pusherEvent = import.meta.env.VITE_APP_PUSHER_EVENT;
+
 const fetchEvent = () => {
-    let pusher = new Pusher('725f787442f74a5259b4', { cluster: 'ap1' });
-    pusher.subscribe('usage-channel');
-    pusher.bind('new-data', (data) => {
+    let pusher = new Pusher(pusherKey, { cluster: pusherCluster });
+    pusher.subscribe(pusherChannel);
+    pusher.bind(pusherEvent, (data) => {
         fetchDataDevices();
     })
 }

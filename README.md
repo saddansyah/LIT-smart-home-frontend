@@ -27,22 +27,25 @@ npm run build
 
 ## 📁 Folder Structure
 ```
-- public               
-- src           
-  - assets              # assets files: icons, svg, css, etc
-  - components          # components: breadcrumbs, navbar, etc
-  - plugins             # plugins: vuetify, etc
-  - router              # routes folder
-  - stores              # state management using vuex
-  - views               # views files: home, about, etc
-  - App.vue             # main file that contains routes and router-view
-  - main.js             # Vue App that mounted to index.html
-- index.html            # server initialization
-- tailwind.config.js    # config file for tailwind css
-- postcss.config.js     # config file for postcss (coresponding with tailwind css)
-- vite.config.js        # config file for vite bundler
-- package.json          # dependency and npm scripts
+├── public               
+├── src           
+│   ├── assets                  # assets files: icons, svg, css, etc
+│   ├── components              # components: breadcrumbs, navbar, etc
+│   ├── plugins                 # plugins: vuetify, etc
+│   ├── router                  # routes folder
+│   ├── stores                  # state management using vuex
+│   ├── utils                   # contains utility functions
+│   ├── views                   # views files: home, about, etc
+│   ├── App.vue                 # main file that contains routes and router-view
+│   ├── fetchInterceptor.js     # intercept every fetch request
+│   ├── main.js                 # Vue App that mounted to index.html and some configuration
+├── index.html                  # frontend initialization
+├── tailwind.config.js          # config file for tailwind css
+├── postcss.config.js           # config file for postcss (correspond with tailwind css)
+├── vite.config.js              # config file for vite bundler
+├── package.json                # dependency and npm scripts
 ```
+
 
 ## 👨‍💻 Contributor
 - [Saddan Syah Akbar](https://github.com/saddansyah)

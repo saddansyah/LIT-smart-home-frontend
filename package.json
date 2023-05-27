@@ -10,7 +10,7 @@
 		"build": "vite build",
 		"preview": "vite preview --port 4173",
 		"lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-		"predeploy": "npm run build",
+		"predeploy": "vite build",
 		"deploy": "gh-pages -d build"
 	},
 	"dependencies": {
@@ -80,6 +80,5 @@
 		"vue3 enterprise starter",
 		"vue 3 enterprise starter"
 	],
-	"author": "saddansyah",
-	"homepage": "https://saddansyah.github.io/LIT-smart-home-frontend"
+	"author": "saddansyah"
 }

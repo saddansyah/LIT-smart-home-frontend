@@ -17,8 +17,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
+import Pusher from 'pusher-js'
+
 import { Navbar, Footer, NotifySnackbar, WarningSnackbar } from "@/utils/componentLoader";
 
 const username = JSON.parse(localStorage.getItem('user')).name;
@@ -29,7 +31,7 @@ const store = useStore();
 const isDeviceLoading = ref(false);
 
 // Pre-fetch to put on the vuex store
-(async function fetchDataDevices() {
+const fetchDataDevices = async () => {
     try {
         isDeviceLoading.value = true
         await store.dispatch('_fetchDataDevices');
@@ -39,7 +41,22 @@ const isDeviceLoading = ref(false);
         emitNotify(true, false, error);
         console.error(error);
     }
-})();
+};
+fetchDataDevices();
+
+// WebSocket
+const fetchEvent = () => {
+    let pusher = new Pusher('725f787442f74a5259b4', { cluster: 'ap1' });
+    pusher.subscribe('usage-channel');
+    pusher.bind('new-data', (data) => {
+        fetchDataDevices();
+    })
+}
+
+onMounted(() => {
+    fetchEvent();
+})
+
 
 // Snackbars
 const notify = ref({
@@ -53,7 +70,6 @@ const emitNotify = (state, success, message) => {
     notify.value.success = success;
     notify.value.message = message;
 }
-
 
 
 </script>

@@ -145,7 +145,7 @@
                     <ButtonLoading />
                   </div>
                   <div v-else>
-                    <span class="hidden md:block">Refresh</span> <v-icon icon="mdi-refresh"></v-icon>
+                    <v-icon icon="mdi-refresh"></v-icon>
                   </div>
                 </button>
               </div>

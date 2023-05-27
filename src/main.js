@@ -16,9 +16,9 @@ import "./assets/main.css";
 // Init
 const app = createApp(App);
 const vuetify = createVuetify({
-    components,
-    directives,
-  })
+  components,
+  directives,
+})
 
 app.use(store);
 app.use(router);

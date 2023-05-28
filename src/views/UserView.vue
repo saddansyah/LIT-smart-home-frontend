@@ -44,7 +44,7 @@ const handleLogout = (emit) => {
     }
   }
 
-  if (localStorage.getItem('access_token')) {
+  if (sessionStorage.getItem('access_token')) {
     logout();
   }
 }

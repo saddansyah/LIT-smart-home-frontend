@@ -42,7 +42,6 @@ function _login({ commit }, payload) {
                 sessionStorage.setItem('access_token', login.access_token);
                 sessionStorage.setItem('user', JSON.stringify({ "name": login.data.name, "email": login.data.email }));
                 commit('SET_TOKEN', login.access_token, { root: true }); // akses commit yg di root (index.js)
-                // commit('_assign_data_user', login.data);
                 resolve(login);
             }
 
@@ -100,7 +99,6 @@ function _logout({ commit }, payload) {
                 sessionStorage.removeItem('access_token');
                 sessionStorage.removeItem('user');
                 commit('REMOVE_TOKEN', null, { root: true });
-                // commit('_remove_data_user', null);
                 window.location.replace(window.location.href); // refresh page
             }
 

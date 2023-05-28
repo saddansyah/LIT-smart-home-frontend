@@ -45,8 +45,8 @@
             <v-icon icon="mdi-menu-down"></v-icon>
           </button>
         </div>
-        <button class="inline-block mt-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50" v-ripple
-          >
+        <button class="inline-block mt-6 px-3 py-1 rounded-full text-base outline outline-2 outline-gray-300 bg-slate-50"
+          v-ripple>
           {{ selectedType }}
           <v-menu activator="parent">
             <v-list>
@@ -133,13 +133,22 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import { useStore } from "vuex";
-import { EnergyContainerAll, PowerContainerAll, EnergyContainerDevice, PowerContainerDevice, MainDashboardLoading, GraphLoading, BasicLoading, LineLoading } from "@/utils/componentLoader.js";
+import {
+  EnergyContainerAll,
+  PowerContainerAll,
+  EnergyContainerDevice,
+  PowerContainerDevice,
+  MainDashboardLoading,
+  GraphLoading,
+  BasicLoading,
+  LineLoading
+} from "@/utils/componentLoader.js";
 
 const store = useStore();
 
-const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const { isDeviceLoading, fetchEvent } = defineProps(['isDeviceLoading', 'fetchEvent']);
 const emit = defineEmits(['notify']);
 const isUsageLoading = ref(false)
 
@@ -259,12 +268,17 @@ const refreshFetch = () => {
     fetchTotalUsage('hourly');
   }
 }
+watch(selectedDate, refreshFetch);
 
-watch(selectedDate, refreshFetch)
+// WebSocket Fetch Refresh when event is occured
+onMounted(() => {
+  fetchEvent(refreshFetch);
+})
+
 
 // Snackbar
 const emitNotify = (state, success, message) => {
-    emit('notify', state, success, message)
+  emit('notify', state, success, message)
 }
 
 </script>

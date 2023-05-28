@@ -1,5 +1,5 @@
 <template>
-    <div class=" h-screen">
+    <div>
         <Navbar :username="username" />
 
         <div v-if="notify.success">
@@ -9,7 +9,7 @@
             <WarningSnackbar :message="notify.message" :state="notify.state" @close="$event => notify.state = false" />
         </div>
 
-        <RouterView :username="username" :isDeviceLoading="isDeviceLoading" @notify="emitNotify" />
+        <RouterView :username="username" :isDeviceLoading="isDeviceLoading" :fetchEvent="fetchEvent" @notify="emitNotify"/>
 
         <Footer />
 
@@ -26,7 +26,6 @@ import { Navbar, Footer, NotifySnackbar, WarningSnackbar } from "@/utils/compone
 const username = JSON.parse(sessionStorage.getItem('user')).name;
 
 const store = useStore();
-
 
 const isDeviceLoading = ref(false);
 
@@ -50,16 +49,16 @@ const pusherCluster = import.meta.env.VITE_APP_PUSHER_CLUSTER;
 const pusherChannel = import.meta.env.VITE_APP_PUSHER_CHANNEL;
 const pusherEvent = import.meta.env.VITE_APP_PUSHER_EVENT;
 
-const fetchEvent = () => {
+const fetchEvent = (fetchFunction) => {
     let pusher = new Pusher(pusherKey, { cluster: pusherCluster });
     pusher.subscribe(pusherChannel);
     pusher.bind(pusherEvent, (data) => {
-        fetchDataDevices();
+        fetchFunction();
     })
 }
 
 onMounted(() => {
-    fetchEvent();
+    fetchEvent(fetchDataDevices);
 })
 
 

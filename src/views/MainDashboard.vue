@@ -182,19 +182,29 @@
 </template> 
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useStore } from 'vuex';
 import Chart from 'chart.js/auto'
 
-import { FavoriteDevicesCard, EnergyUsageChart, FavoriteDeviceLoading, MainDashboardLoading, GraphLoading, BasicLoading, LineLoading, ButtonLoading } from "@/utils/componentLoader.js";
+import {
+  FavoriteDevicesCard,
+  EnergyUsageChart,
+  FavoriteDeviceLoading,
+  MainDashboardLoading,
+  GraphLoading,
+  BasicLoading,
+  LineLoading,
+  ButtonLoading
+} from "@/utils/componentLoader.js";
 import { today, yesterday, currentWeek, pastWeek, currentMonth, pastMonth } from '@/utils/getTime';
 import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 
 const store = useStore();
-const { isDeviceLoading } = defineProps(['isDeviceLoading']);
+const { isDeviceLoading, fetchEvent } = defineProps(['isDeviceLoading', 'fetchEvent']);
 const emit = defineEmits(['notify'])
 const isUsageLoading = ref(false)
+
 
 // Pre-fetch total usage ----
 async function fetchTotalUsage(timeRange) {
@@ -270,7 +280,12 @@ const refreshFetch = () => {
     fetchTotalUsage('hourly');
   }
 }
-watch(selectedDate, refreshFetch)
+watch(selectedDate, refreshFetch);
+
+// WebSocket Fetch Refresh when event is occured
+onMounted(() => {
+  fetchEvent(refreshFetch);
+})
 
 // Snackbar
 const emitNotify = (state, success, message) => {

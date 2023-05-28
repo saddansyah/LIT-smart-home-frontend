@@ -104,6 +104,22 @@
                 </div>
                 <p class="text-base underline text-gray-400">Set your goals here</p>
               </div>
+              <div class="mt-5">
+                <div v-if="isUsageLoading">
+                  <LineLoading/>
+                </div>
+                <div v-else>
+                  <v-dialog v-model="calculatorDialog" persistent>
+                    <template v-slot:activator="{ props }">
+                      <button v-ripple v-bind="props"
+                        class="inline-block text-base px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                        Usage Calculator <v-icon icon="mdi-calculator"></v-icon></button>
+                    </template>
+                    <UsageCalculator @close="$event => calculatorDialog = false"
+                      :totalUsagesCurrentMonth="totalUsagesCurrentMonth?.kwh" />
+                  </v-dialog>
+                </div>
+              </div>
             </div>
           </div>
           <!--  -->
@@ -189,6 +205,7 @@ import Chart from 'chart.js/auto'
 
 import {
   FavoriteDevicesCard,
+  UsageCalculator,
   EnergyUsageChart,
   FavoriteDeviceLoading,
   MainDashboardLoading,
@@ -204,7 +221,7 @@ const store = useStore();
 const { isDeviceLoading, fetchEvent } = defineProps(['isDeviceLoading', 'fetchEvent']);
 const emit = defineEmits(['notify'])
 const isUsageLoading = ref(false)
-
+const calculatorDialog = ref(false);
 
 // Pre-fetch total usage ----
 async function fetchTotalUsage(timeRange) {

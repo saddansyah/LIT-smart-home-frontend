@@ -1,5 +1,6 @@
 // Main Dashboard Components
 import FavoriteDevicesCard from '@/components/FavoriteDevicesCard.vue';
+import UsageCalculator from '@/components/UsageCalculator.vue'
 
 // Energy Consumption Components
 import EnergyContainerAll from '@/components/EnergyConsumption/EnergyContainerAll.vue';
@@ -27,7 +28,6 @@ import ButtonLoading from '@/components/Loading/ButtonLoading.vue';
 import NotifySnackbar from '@/components/Snackbars/NotifySnackbar.vue';
 import WarningSnackbar from '@/components/Snackbars/WarningSnackbar.vue';
 
-
 // Other Components
 import ModalDelete from '@/components/ModalDelete.vue';
 import ModalLogout from '@/components/ModalLogout.vue';
@@ -36,6 +36,7 @@ import Footer from '@/components/Footer.vue';
 
 export {
     FavoriteDevicesCard,
+    UsageCalculator,
     EnergyContainerAll,
     PowerContainerAll,
     EnergyContainerDevice,

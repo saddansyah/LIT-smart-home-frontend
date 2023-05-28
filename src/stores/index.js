@@ -6,7 +6,7 @@ import auth from './auth.store';
 
 export default createStore({
   state: {
-    access_token: localStorage.getItem('access_token')
+    access_token: sessionStorage.getItem('access_token')
   },
   mutations: {
     SET_TOKEN(state, payload){

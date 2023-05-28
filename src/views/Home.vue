@@ -23,7 +23,7 @@ import Pusher from 'pusher-js'
 
 import { Navbar, Footer, NotifySnackbar, WarningSnackbar } from "@/utils/componentLoader";
 
-const username = JSON.parse(localStorage.getItem('user')).name;
+const username = JSON.parse(sessionStorage.getItem('user')).name;
 
 const store = useStore();
 

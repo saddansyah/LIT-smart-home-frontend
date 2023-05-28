@@ -39,8 +39,8 @@ function _login({ commit }, payload) {
             const login = await response.json()
 
             if (response.ok) {
-                localStorage.setItem('access_token', login.access_token);
-                localStorage.setItem('user', JSON.stringify({ "name": login.data.name, "email": login.data.email }));
+                sessionStorage.setItem('access_token', login.access_token);
+                sessionStorage.setItem('user', JSON.stringify({ "name": login.data.name, "email": login.data.email }));
                 commit('SET_TOKEN', login.access_token, { root: true }); // akses commit yg di root (index.js)
                 // commit('_assign_data_user', login.data);
                 resolve(login);
@@ -71,10 +71,6 @@ function _register({ commit }, payload) {
             console.log(response)
 
             if (response.ok) {
-                // localStorage.setItem('access_token', register.access_token);
-                // localStorage.setItem('user', JSON.stringify({ "name": register.data.name, "email": register.data.email }));
-                // commit('SET_TOKEN', register.access_token, { root: true }); // akses commit yg di root (index.js)
-                // commit('_assign_data_user', register.access_token)
                 resolve(register);
             }
 
@@ -101,8 +97,8 @@ function _logout({ commit }, payload) {
             const logout = response.json();
 
             if (response.ok) {
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('user');
+                sessionStorage.removeItem('access_token');
+                sessionStorage.removeItem('user');
                 commit('REMOVE_TOKEN', null, { root: true });
                 // commit('_remove_data_user', null);
                 window.location.replace(window.location.href); // refresh page

@@ -10,8 +10,8 @@
 		"build": "vite build",
 		"preview": "vite preview --port 4173",
 		"lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-		"predeploy": "vite build",
-		"deploy": "gh-pages -d build"
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d dist"
 	},
 	"dependencies": {
 		"@mdi/font": "^7.1.96",
@@ -19,7 +19,6 @@
 		"chart.js": "^4.2.1",
 		"dotenv": "^16.0.3",
 		"fetch-intercept": "^2.4.0",
-		"gh-pages": "^5.0.0",
 		"json-server": "^0.17.2",
 		"laravel-echo": "^1.15.1",
 		"marked": "^4.2.12",
@@ -38,6 +37,7 @@
 		"cssnano": "^5.1.13",
 		"eslint": "^8.23.1",
 		"eslint-plugin-vue": "^9.5.1",
+		"gh-pages": "^5.0.0",
 		"postcss": "^8.4.21",
 		"postcss-import": "^15.0.0",
 		"prettier": "^2.7.1",

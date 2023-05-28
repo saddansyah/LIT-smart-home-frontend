@@ -32,32 +32,32 @@
           <li>
             <a
               class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 text-gray-300 md:hover:text-white hover:text-white md:hover:bg-transparent">
-              <RouterLink to="/">Main Dashboard</RouterLink>
+              <RouterLink :to="navbarItems[0].path">{{ navbarItems[0].title }}</RouterLink>
             </a>
           </li>
           <li>
             <span
               class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 text-gray-300 md:hover:text-white hover:text-white md:hover:bg-transparent">
-              <RouterLink to="/energy-consumption">Energy Consumption</RouterLink>
+              <RouterLink :to="navbarItems[1].path">{{ navbarItems[1].title }}</RouterLink>
             </span>
           </li>
           <li>
             <span
               class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 text-gray-300 md:hover:text-white hover:text-white md:hover:bg-transparent">
-              <RouterLink to="/devices" :class="route.fullPath.includes('devices') && 'router-link-exact-active'">Devices
+              <RouterLink :to="navbarItems[2].path" :class="route.fullPath.includes('devices') && 'router-link-exact-active'">{{ navbarItems[2].title }}
               </RouterLink>
             </span>
           </li>
           <li>
             <span
               class="block py-2 pl-3 pr-4 rounded hover:bg-gray-100 text-gray-300 md:hover:text-white hover:text-white md:hover:bg-transparent">
-              <RouterLink to="/about">About</RouterLink>
+              <RouterLink :to="navbarItems[3].path">{{ navbarItems[3].title }}</RouterLink>
             </span>
           </li>
           <li>
             <v-chip class="user-button hover:font-bold hover:bg-blue-900" size="large" color="blue-darken-1"
               variant="outlined">
-              <RouterLink class="flex justify-center items-center" to="/user">{{ username }}<v-icon end
+              <RouterLink class="flex justify-center items-center" :to="navbarItems[4].path">{{ username }}<v-icon end
                   icon="mdi-account-outline"></v-icon></RouterLink>
             </v-chip>
           </li>
@@ -75,12 +75,6 @@ import Breadcrumbs from "./Breadcrumbs.vue";
 
 const { username } = defineProps(['username']);
 const route = useRoute();
-
-const items = ref([
-  { text: 'Real-Time', icon: 'mdi-clock' },
-  { text: 'Audience', icon: 'mdi-account' },
-  { text: 'Conversions', icon: 'mdi-flag' },
-]);
 
 const navbarItems = ref([
   { title: 'Main Dashboard', value: 'mainDashboard', path: '/' },

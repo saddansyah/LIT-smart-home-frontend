@@ -226,6 +226,7 @@ async function fetchTotalUsage(timeRange) {
     catch (error) {
         emit('notify', true, false, error);
         console.error(error);
+        isUsageLoading.value = false
     }
 };
 fetchTotalUsage('hourly');

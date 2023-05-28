@@ -19,6 +19,7 @@ const mutations = {
 const actions = {
     _fetchDataDeviceUsages,
     _fetchDataTotalUsages,
+    _downloadUsagePdf
 }
 
 export default {
@@ -88,4 +89,34 @@ function _fetchDataTotalUsages({ commit }, timeRange) {
     }
     )
 }
+
+function _downloadUsagePdf({ commit }) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(`${BASE_URL}/device_usages/pdf`, {
+                headers: {
+                    'Accept': 'application/pdf',
+                }
+            });
+            const blob = await response.blob();
+            
+            if (response.ok) {
+                var file = window.URL.createObjectURL(blob);
+                window.location.assign(file);
+                resolve(blob);
+            }
+
+            if (!response.ok) {
+                const error = new Error("Error while downloading PDF");
+                error.code = response.status;
+                throw error;
+            }
+
+        }
+        catch (error) {
+            console.error(error);
+            reject(error);
+        }
+    });
+};
 

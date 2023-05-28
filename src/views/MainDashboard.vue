@@ -106,7 +106,7 @@
               </div>
               <div class="mt-5">
                 <div v-if="isUsageLoading">
-                  <LineLoading/>
+                  <LineLoading />
                 </div>
                 <div v-else>
                   <v-dialog v-model="calculatorDialog" persistent>
@@ -154,16 +154,29 @@
             class="inline-block row-span-3 md:col-span-3 lg:row-span-3 lg:col-span-4 p-6 bg-slate-50 rounded-xl shadow hover:bg-slate-200 transition-all">
             <div class="content-top mb-3 flex justify-between items-start">
               <h3 class="font-bold text-xl lg:text-2xl inline-block basis-3/5">Daily Energy Consumption</h3>
-              <div class="basis-2/5 text-end">
-                <button v-ripple @click="refreshFetch()"
-                  class="inline-block text-base px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
-                  <div v-if="isUsageLoading">
-                    <ButtonLoading />
-                  </div>
-                  <div v-else>
-                    <v-icon icon="mdi-refresh"></v-icon>
-                  </div>
-                </button>
+              <div class="basis-2/5 text-end flex flex-row justify-end space-x-2">
+                <div class="download-pdf">
+                  <button v-ripple @click="downloadUsagePdf"
+                    class="inline-block text-base px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                    <div v-if="isDownloadLoading">
+                      <ButtonLoading />
+                    </div>
+                    <div v-else>
+                      <v-icon icon="mdi-download"></v-icon>
+                    </div>
+                  </button>
+                </div>
+                <div class="refresh">
+                  <button v-ripple @click="refreshFetch()"
+                    class="inline-block text-base px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                    <div v-if="isUsageLoading">
+                      <ButtonLoading />
+                    </div>
+                    <div v-else>
+                      <v-icon icon="mdi-refresh"></v-icon>
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="main-content graph">
@@ -220,7 +233,8 @@ import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 const store = useStore();
 const { isDeviceLoading, fetchEvent } = defineProps(['isDeviceLoading', 'fetchEvent']);
 const emit = defineEmits(['notify'])
-const isUsageLoading = ref(false)
+const isUsageLoading = ref(false);
+const isDownloadLoading = ref(false);
 const calculatorDialog = ref(false);
 
 // Pre-fetch total usage ----
@@ -233,6 +247,7 @@ async function fetchTotalUsage(timeRange) {
   catch (error) {
     emitNotify(true, false, error)
     console.error(error);
+    isUsageLoading.value = false
   }
 };
 fetchTotalUsage('hourly');
@@ -303,6 +318,20 @@ watch(selectedDate, refreshFetch);
 onMounted(() => {
   fetchEvent(refreshFetch);
 })
+
+// Download Usage PDF
+const downloadUsagePdf = async () => {
+  try {
+    isDownloadLoading.value = true
+    await store.dispatch('_downloadUsagePdf');
+    isDownloadLoading.value = false
+  }
+  catch (error) {
+    emitNotify(true, false, error)
+    console.error(error);
+    isDownloadLoading.value = false
+  }
+}
 
 // Snackbar
 const emitNotify = (state, success, message) => {

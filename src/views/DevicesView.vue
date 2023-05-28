@@ -93,7 +93,6 @@ const devices = computed(() => store?.state?.device?.devices);
 const { isDeviceLoading } = defineProps(['isDeviceLoading']);
 const emit = defineEmits(['notify'])
 
-const isUsageLoading = ref(false)
 const addDialog = ref(false);
 
 const searchText = ref('')

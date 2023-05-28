@@ -100,15 +100,26 @@
             class="energy-chart mt-6 rounded-xl w-full fit shadow bg-slate-50 hover:bg-slate-200 transition-all p-6">
             <div class="content-top flex justify-between items-start">
                 <h3 class="font-bold text-xl lg:text-2xl inline-block">Energy Chart</h3>
-                <button v-ripple @click="$event => $emit('refreshChart')"
-                    class="inline-block px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
-                    <div v-if="isLoading">
-                        <ButtonLoading />
-                    </div>
-                    <div v-else>
-                        Refresh <v-icon icon="mdi-refresh"></v-icon>
-                    </div>
-                </button>
+                <div class="content-top-right flex flex-row space-x-2">
+                    <button v-ripple @click="downloadUsagePdf"
+                        class="inline-block text-base px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                        <div v-if="isDownloadLoading">
+                            <ButtonLoading />
+                        </div>
+                        <div v-else>
+                            <v-icon icon="mdi-download"></v-icon>
+                        </div>
+                    </button>
+                    <button v-ripple @click="$event => $emit('refreshChart')"
+                        class="inline-block px-4 py-2 rounded-lg font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-lg">
+                        <div v-if="isLoading">
+                            <ButtonLoading />
+                        </div>
+                        <div v-else>
+                            <v-icon icon="mdi-refresh"></v-icon>
+                        </div>
+                    </button>
+                </div>
             </div>
             <div class="chart mt-6">
                 <div v-if="isLoading">
@@ -147,6 +158,7 @@ import { chartObjectBuilder } from '@/utils/chartObjectBuilder';
 
 const store = useStore();
 const { selectedDate, isLoading } = defineProps(['selectedDate', 'isLoading'])
+const isDownloadLoading = ref(false)
 
 // Total Usages (Chart) -----
 const totalUsages = computed(() => store?.state?.deviceUsage?.totalUsages);
@@ -171,5 +183,19 @@ const energyGoalMonthly = ref(energyGoal * 30);
 const goalPercentageToday = computed(() => Math.round((Number(totalUsagesToday.value?.kwh) / Number(energyGoalToday.value)) * 100) || 0);
 const goalPercentageWeekly = computed(() => Math.round((Number(totalUsagesCurrentWeek.value?.kwh) / Number(energyGoalWeekly.value)) * 100) || 0);
 const goalPercentageMonthly = computed(() => Math.round((Number(totalUsagesCurrentMonth.value?.kwh) / Number(energyGoalMonthly.value)) * 100) || 0);
+
+// Download Usage PDF
+const downloadUsagePdf = async () => {
+  try {
+    isDownloadLoading.value = true
+    await store.dispatch('_downloadUsagePdf');
+    isDownloadLoading.value = false
+  }
+  catch (error) {
+    emitNotify(true, false, error)
+    console.error(error);
+    isDownloadLoading.value = false
+  }
+}
 
 </script>

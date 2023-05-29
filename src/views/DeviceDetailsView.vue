@@ -68,7 +68,7 @@
                                 <v-icon icon="mdi-delete"></v-icon></button>
                         </template>
                         <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()"
-                            :isLoading="isUsageLoading" />
+                            :isLoading="isUsageLoading" :name="device.device_name"/>
                     </v-dialog>
 
                 </div>

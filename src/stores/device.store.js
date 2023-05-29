@@ -1,5 +1,6 @@
 const state = () => ({
     devices: [],
+    device: [],
     productDevices: []
 }) // fungsi yang mengembalikan suatu object
 
@@ -20,7 +21,9 @@ const mutations = {
         state.devices = [payload, ...state.devices]
     },
     _assign_updated_device(state, payload) {
-        state.devices = state.devices.map(item => item.id !== payload.id ? item : payload).sort((a, b) => { return Number(b.is_favorite) - Number(a.is_favorite) })
+        state.devices = state.devices
+            .map(item => item.id !== payload.id ? item : payload)
+            .sort((a, b) => { return Number(b.is_favorite) - Number(a.is_favorite) })
     },
     _assign_deleted_device(state, payload) {
         state.devices = state.devices.filter(item => item.id !== payload.id)

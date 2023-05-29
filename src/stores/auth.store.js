@@ -52,7 +52,9 @@ function _login({ commit }, payload) {
             }
 
         }
-        catch (error) {
+        catch (_error) {
+            const error = _error.toString().includes('!DOCTYPE') ? `Error on server, please wait.` : _error
+            console.error(error);
             reject(error);
         }
     })
@@ -80,6 +82,7 @@ function _register({ commit }, payload) {
             }
         }
         catch (error) {
+            console.error(error);
             reject(error);
         }
     })
@@ -109,6 +112,7 @@ function _logout({ commit }, payload) {
             }
         }
         catch (error) {
+            console.error(error);
             reject(error);
         }
     })

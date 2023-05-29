@@ -6,7 +6,7 @@
 }
 
 .user-button:has(.router-link-exact-active) {
-  @apply text-white font-bold bg-blue-500;
+  @apply text-white font-bold bg-white;
 }
 
 ::-webkit-scrollbar {

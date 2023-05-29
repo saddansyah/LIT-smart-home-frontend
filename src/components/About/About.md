@@ -1,5 +1,5 @@
 <h1 align="center">
-  ⚡ Smart Home - LIT
+  ⚡ LIT - Smart Home Dashboard
 </h1>
 
 ## ❓ About 

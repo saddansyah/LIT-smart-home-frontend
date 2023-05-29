@@ -43,7 +43,7 @@
                                     <v-icon icon="mdi-delete" size="large"></v-icon></button>
                             </template>
                             <ModalDelete @close="$event => deleteDialog = false" @delete="$event => handleDeleteDevice()"
-                                :isLoading="isLoading" />
+                                :isLoading="isLoading" :name="props.device.device_name"/>
                         </v-dialog>
                     </div>
                 </div>
@@ -72,8 +72,8 @@ const isLoading = ref(false);
 const handleDeleteDevice = async () => {
     isLoading.value = true
     try {
-        await store.dispatch('_deleteDataDevice', deviceId);
         emitNotify(true, true, `${props.device.device_name} is deleted`);
+        await store.dispatch('_deleteDataDevice', deviceId);
         isLoading.value = false;
     }
     catch (error) {
@@ -84,7 +84,7 @@ const handleDeleteDevice = async () => {
 
 const updateDeviceFavorite = async () => {
     const body = { is_favorite: !props.device.is_favorite };
-    console.log(body);
+    
     try {
         const device = await store.dispatch('_updateDeviceFavorite', { body, deviceId });
         if (device.is_favorite) {

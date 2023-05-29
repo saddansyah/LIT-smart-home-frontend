@@ -2,16 +2,17 @@
     "name": "LIT Smart Home",
     "short_name": "LIT Smart Home",
     "description": "LIT Smart Home is a IoT dashboard application prototype for your smart home.",
-    "start_url": "/index.html",
+    "start_url": "/",
     "display": "standalone",
-    "background_color": "#FFE9D2",
+    "background_color": "#ffffff",
     "theme_color": "#0284c7",
     "orientation": "portrait-primary",
     "icons": [
         {
             "src": "logoLIT-02.png",
             "type": "image/png",
-            "sizes": "512x512"
+            "sizes": "512x512",
+            "purpose": "maskable any"
         }
     ]
 }

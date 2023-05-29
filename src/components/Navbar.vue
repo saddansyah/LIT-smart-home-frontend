@@ -55,7 +55,7 @@
             </span>
           </li>
           <li>
-            <v-chip class="user-button hover:font-bold hover:bg-blue-900" size="large" color="blue-darken-1"
+            <v-chip class="user-button hover:font-bold hover:bg-gray-200" size="large" color="blue-darken-1"
               variant="outlined">
               <RouterLink class="flex justify-center items-center" :to="navbarItems[4].path">{{ username }}<v-icon end
                   icon="mdi-account-outline"></v-icon></RouterLink>

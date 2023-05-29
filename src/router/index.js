@@ -109,7 +109,7 @@ const router = createRouter({
       name: 'NotFound',
       component: NotFound,
       meta: {
-        title: "Not Found :( | Smart Home"
+        title: "Page Not Found | Smart Home"
       }
     }
   ],

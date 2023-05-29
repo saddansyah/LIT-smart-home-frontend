@@ -2,7 +2,7 @@
   <nav class="bg-slate-800 fixed top-0 right-0 left-0 z-10">
     <div class="container p-4 flex flex-wrap items-center justify-between mx-auto">
       <a href="/" class="flex items-center md:mb-4 lg:mb-0">
-        <img src="https://lunar-inovasi.co.id/_nuxt/img/logoLIT.d7081bb.svg" class="h-6 mr-3 sm:h-9 bg-white rounded p-1.5" alt="Flowbite Logo" />
+        <img src="/logoLIT-02.png" class="h-8 mr-3 sm:h-9 rounded" alt="Flowbite Logo" />
         <span class="self-center text-xl font-semibold whitespace-nowrap text-white">Smart Home Dashboard</span>
       </a>
 

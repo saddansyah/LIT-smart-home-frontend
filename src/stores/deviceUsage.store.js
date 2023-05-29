@@ -99,11 +99,27 @@ function _downloadUsagePdf({ commit }) {
                 }
             });
             const blob = await response.blob();
-            
+
             if (response.ok) {
-                var file = window.URL.createObjectURL(blob);
-                window.location.assign(file);
+                const file = window.URL.createObjectURL(new Blob([blob]));
+
+                const link = document.createElement('a');
+                link.href = file;
+                link.setAttribute(
+                    'download',
+                    `usage.pdf`,
+                );
+
+                // Auto Download
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+
+                // for preview
+                // window.location.assign(file);
+                
                 resolve(blob);
+
             }
 
             if (!response.ok) {

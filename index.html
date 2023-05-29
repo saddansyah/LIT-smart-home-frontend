@@ -3,6 +3,9 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="LIT Smart Home is a IoT dashboard application prototype for your smart home.">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0284c7">
   <link rel="icon" href="/logoLIT.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Smart Home</title>
@@ -15,6 +18,15 @@
 
 <body>
   <div id="app"></div>
+  <script>
+    if('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./serviceWorker.js')
+          .then((reg) => console.log('Success: ' +  reg.scope))
+          .catch((err) => console.error('Failure: ', err))
+      })
+    }
+  </script>
   <script type="module" src="/src/main.js"></script>
 </body>
 

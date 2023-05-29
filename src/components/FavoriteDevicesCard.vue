@@ -11,10 +11,10 @@
             props.device.device_name.substr(0,
               12) + '...' : props.device.device_name }}</h2>
           <div v-if="device.state">
-            <h4 class="font-light text-sm lg:text-base">State: ON</h4>
+            <p class="font-light text-sm lg:text-base">State: ON</p>
           </div>
           <div v-else>
-            <h4 class="font-light text-sm lg:text-base">State: OFF</h4>
+            <p class="font-light text-sm lg:text-base">State: OFF</p>
           </div>
         </div>
       </div>

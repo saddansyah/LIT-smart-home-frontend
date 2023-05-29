@@ -8,7 +8,7 @@
     </div>
     <div v-else>
       <div class="mb-9">
-        <h3 class="mb-3 lg:text-xl font-semibold">Your Favorite Devices</h3>
+        <h2 class="mb-3 lg:text-xl font-semibold">Your Favorite Devices</h2>
         <div class="overflow-x-auto overflow-y-hidden whitespace-nowrap pb-2">
           <div v-if="devices.find(item => item.is_favorite)">
             <FavoriteDevicesCard v-for="device in devices.filter(item => item.is_favorite === 1)" :key="device.id"
@@ -29,7 +29,7 @@
     </div>
     <div class="mt-6">
       <div class="lg:text-xl font-semibold">
-        <h3 class="mb-3">Your Energy Consumption</h3>
+        <h2 class="mb-3">Your Energy Consumption</h2>
         <div class="grid lg:grid-rows-3 lg:grid-cols-6 gap-6 h-fit">
           <!-- Card 1 -->
           <div v-ripple :ripple="{ class: 'text-red' }"
@@ -81,7 +81,7 @@
               </div>
             </div>
             <div class="daily-goal">
-              <h3 class="font-bold text-lg inline-block mb-3">Daily Goal:</h3>
+              <h2 class="font-bold text-lg inline-block mb-3">Daily Goal:</h2>
               <div class="progress-bar">
                 <v-progress-linear model-value="40" buffer-value="55" color="blue" height="12"
                   class="mb-3"></v-progress-linear>

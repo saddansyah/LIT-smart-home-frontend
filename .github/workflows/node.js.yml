@@ -20,24 +20,29 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-
-    - run: npm ci
-    - run: npm run build --if-present
+        
+    - name: Build
+      run: |
+          npm ci
+          npm run build --if-present
+      env:
+        VITE_APP_BASE_URL: ${{ secrets.VITE_APP_BASE_URL }}
+        VITE_APP_PUSHER_KEY: ${{ secrets.VITE_APP_PUSHER_KEY }}
+        VITE_APP_PUSHER_CHANNEL: ${{ secrets.VITE_APP_PUSHER_CHANNEL }}
+        VITE_APP_PUSHER_EVENT: ${{ secrets.VITE_APP_PUSHER_EVENT }}
+        VITE_APP_PUSHER_CLUSTER: ${{ secrets.VITE_APP_PUSHER_CLUSTER }}
 
     - name: Deploy
-      run: |
-        git config --global user.name $user_name
-        git config --global user.email $user_email
-        git remote set-url origin https://${github_token}@github.com/${repository}
-        npm run deploy
-      env:
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        github_token: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
-        repository: ${{ github.repository }}
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: dist

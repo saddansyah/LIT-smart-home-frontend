@@ -40,6 +40,8 @@ npm run build
 │   ├── fetchInterceptor.js     # intercept every fetch request
 │   ├── main.js                 # Vue App that mounted to index.html and some configuration
 ├── index.html                  # frontend initialization
+├── manifest.json               # PWA manifest configuration
+├── serviceWorker.js            # PWA service workers 
 ├── tailwind.config.js          # config file for tailwind css
 ├── postcss.config.js           # config file for postcss (correspond with tailwind css)
 ├── vite.config.js              # config file for vite bundler

@@ -99,7 +99,7 @@ function _logout({ commit }, payload) {
                 sessionStorage.removeItem('access_token');
                 sessionStorage.removeItem('user');
                 commit('REMOVE_TOKEN', null, { root: true });
-                window.location.replace(window.location.href); // refresh page
+                window.location.replace('/'); // refresh page
             }
 
             if (!response.ok) {

@@ -111,7 +111,7 @@ const onSubmit = () => {
         try {
             const login = await store.dispatch('_login', body);
             emitNotify(true, true, login.message);
-            window.location.replace(window.location.href); // refresh page
+            window.location.replace('/'); // refresh page
             isLoading.value = false
             form.value = true;
         }
